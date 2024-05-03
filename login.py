@@ -1,12 +1,17 @@
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash
+from flask_login import logout_user, login_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email
+
+from app import app
+
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -18,6 +23,7 @@ def login():
             return redirect(url_for('index'))  # Redirect to the homepage or dashboard
         flash('Invalid email or password')
     return render_template('login.html', form=form)
+
 
 @app.route('/logout')
 def logout():

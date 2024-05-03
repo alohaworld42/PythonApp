@@ -19,4 +19,3 @@ def create_app(config_class=DevelopmentConfig):
     app.register_blueprint(main_blueprint)
 
     return app
-
