@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block title %}Connect WooCommerce{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="py-4 px-6 bg-gradient-to-r from-green-900 to-green-800">
+            <h2 class="text-2xl font-bold text-white">Connect WooCommerce Store</h2>
+        </div>
+        
+        <div class="p-6">
+            <div class="flex justify-center mb-6">
+                <img src="{{ url_for('static', filename='images/woocommerce-logo.png') }}" alt="WooCommerce" class="h-16">
+            </div>
+            
+            <p class="text-gray-600 mb-6">Enter your WooCommerce store details to connect your store and import your purchase history.</p>
+            
+            <form method="POST" action="{{ url_for('integrations.connect_woocommerce') }}">
+                <div class="mb-4">
+                    <label for="store_url" class="block text-gray-700 text-sm font-bold mb-2">Store URL</label>
+                    <div class="flex">
+                        <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md">
+                            https://
+                        </span>
+                        <input type="text" id="store_url" name="store_url" placeholder="your-store.com" required
+                               class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-r-lg focus:ring-green-800 focus:border-green-800 block w-full p-2.5">
+                    </div>
+                    <p class="mt-1 text-sm text-gray-500">Enter your WooCommerce store URL (e.g., your-store.com)</p>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="consumer_key" class="block text-gray-700 text-sm font-bold mb-2">Consumer Key</label>
+                    <input type="text" id="consumer_key" name="consumer_key" required
+                           class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-800 focus:border-green-800 block w-full p-2.5">
+                </div>
+                
+                <div class="mb-6">
+                    <label for="consumer_secret" class="block text-gray-700 text-sm font-bold mb-2">Consumer Secret</label>
+                    <input type="password" id="consumer_secret" name="consumer_secret" required
+                           class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-800 focus:border-green-800 block w-full p-2.5">
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-gradient-to-r from-green-900 to-green-800 hover:from-green-800 hover:to-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Connect Store
+                    </button>
+                    <a href="{{ url_for('integrations.index') }}" class="text-sm text-green-800 hover:text-green-900">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+            
+            <div class="mt-8 border-t border-gray-200 pt-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-2">How to get your API credentials</h3>
+                <ol class="list-decimal list-inside text-gray-600 space-y-2">
+                    <li>Log in to your WordPress admin dashboard</li>
+                    <li>Go to WooCommerce > Settings > Advanced > REST API</li>
+                    <li>Click "Add key" and set permissions to "Read"</li>
+                    <li>Copy the Consumer Key and Consumer Secret</li>
+                </ol>
+                
+                <h3 class="text-lg font-bold text-gray-800 mt-6 mb-2">What happens next?</h3>
+                <ol class="list-decimal list-inside text-gray-600 space-y-2">
+                    <li>We'll verify your API credentials</li>
+                    <li>After verification, we'll import your purchase history</li>
+                    <li>Your purchases will appear in your dashboard</li>
+                    <li>You can choose which purchases to share with friends</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

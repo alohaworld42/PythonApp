@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+
+{% block title %}Notification Settings{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="py-4 px-6 bg-gradient-to-r from-green-900 to-green-800">
+        <h2 class="text-2xl font-bold text-white">Notification Settings</h2>
+    </div>
+    <div class="p-6">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            
+            <div class="mb-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Email Notifications</h3>
+                
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        {{ form.email_friend_requests(class="mr-2") }}
+                        <span class="text-gray-700">Friend requests</span>
+                    </label>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        {{ form.email_comments(class="mr-2") }}
+                        <span class="text-gray-700">Comments on your shared purchases</span>
+                    </label>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        {{ form.email_likes(class="mr-2") }}
+                        <span class="text-gray-700">Likes on your shared purchases</span>
+                    </label>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        {{ form.email_new_friend_purchases(class="mr-2") }}
+                        <span class="text-gray-700">New purchases from friends</span>
+                    </label>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        {{ form.email_system_updates(class="mr-2") }}
+                        <span class="text-gray-700">System updates and announcements</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">In-App Notifications</h3>
+                
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        {{ form.app_friend_requests(class="mr-2") }}
+                        <span class="text-gray-700">Friend requests</span>
+                    </label>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        {{ form.app_comments(class="mr-2") }}
+                        <span class="text-gray-700">Comments on your shared purchases</span>
+                    </label>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        {{ form.app_likes(class="mr-2") }}
+                        <span class="text-gray-700">Likes on your shared purchases</span>
+                    </label>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        {{ form.app_new_friend_purchases(class="mr-2") }}
+                        <span class="text-gray-700">New purchases from friends</span>
+                    </label>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        {{ form.app_system_updates(class="mr-2") }}
+                        <span class="text-gray-700">System updates and announcements</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Notification Frequency</h3>
+                
+                <div class="mb-4">
+                    {{ form.notification_frequency.label(class="block text-gray-700 text-sm font-bold mb-2") }}
+                    {{ form.notification_frequency(class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline") }}
+                </div>
+            </div>
+            
+            <div class="flex items-center justify-between">
+                {{ form.submit(class="bg-gradient-to-r from-green-900 to-green-800 hover:from-green-800 hover:to-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline") }}
+                <a href="{{ url_for('user.profile') }}" class="text-sm text-green-800 hover:text-green-900">Back to Profile</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,173 @@
+{% extends "layout.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-800">Welcome, {{ current_user.name }}!</h1>
+    <p class="text-gray-600">Here's an overview of your shopping activity.</p>
+</div>
+
+<!-- Quick Stats -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-700">Total Purchases</h3>
+            <span class="text-green-800"><i class="fas fa-shopping-bag"></i></span>
+        </div>
+        <p class="text-3xl font-bold text-gray-800">{{ purchases|length }}</p>
+        <p class="text-sm text-gray-500 mt-2">From all connected stores</p>
+    </div>
+    
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-700">Shared Items</h3>
+            <span class="text-green-800"><i class="fas fa-share-alt"></i></span>
+        </div>
+        <p class="text-3xl font-bold text-gray-800">{{ shared_count }}</p>
+        <p class="text-sm text-gray-500 mt-2">Visible to your friends</p>
+    </div>
+    
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-700">Friends</h3>
+            <span class="text-green-800"><i class="fas fa-users"></i></span>
+        </div>
+        <p class="text-3xl font-bold text-gray-800">{{ friends_count }}</p>
+        <p class="text-sm text-gray-500 mt-2">Connected on BuyRoll</p>
+    </div>
+    
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-700">This Month</h3>
+            <span class="text-green-800"><i class="fas fa-calendar-alt"></i></span>
+        </div>
+        <p class="text-3xl font-bold text-gray-800">${{ monthly_spending }}</p>
+        <p class="text-sm text-gray-500 mt-2">Total spending</p>
+    </div>
+</div>
+
+<!-- Recent Purchases -->
+<div class="bg-white rounded-lg shadow-md mb-8">
+    <div class="border-b border-gray-200 p-6">
+        <div class="flex justify-between items-center">
+            <h2 class="text-xl font-bold text-gray-800">Recent Purchases</h2>
+            <a href="{{ url_for('user.purchases') }}" class="text-green-800 hover:text-green-900 font-medium">View All</a>
+        </div>
+    </div>
+    
+    <div class="p-6">
+        {% if purchases %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for purchase in purchases[:6] %}
+                <div class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <div class="h-48 overflow-hidden">
+                        <img src="{{ purchase.product.image_url }}" alt="{{ purchase.product.title }}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-semibold text-gray-800 line-clamp-2">{{ purchase.product.title }}</h3>
+                            <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded">{{ purchase.product.category }}</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-2">{{ purchase.store_name }}</p>
+                        <div class="flex justify-between items-center">
+                            <p class="text-lg font-bold text-gray-800">${{ purchase.product.price }}</p>
+                            <p class="text-sm text-gray-500">{{ purchase.purchase_date.strftime('%b %d, %Y') }}</p>
+                        </div>
+                        <div class="mt-4 flex justify-between items-center">
+                            <form action="{{ url_for('user.toggle_share', purchase_id=purchase.id) }}" method="post">
+                                <button type="submit" class="text-sm {% if purchase.is_shared %}text-green-800{% else %}text-gray-500{% endif %} hover:text-green-900 font-medium flex items-center">
+                                    <i class="fas {% if purchase.is_shared %}fa-toggle-on{% else %}fa-toggle-off{% endif %} mr-1"></i>
+                                    {% if purchase.is_shared %}Shared{% else %}Not Shared{% endif %}
+                                </button>
+                            </form>
+                            <a href="#" class="text-sm text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-external-link-alt mr-1"></i> View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-8">
+                <p class="text-gray-500 mb-4">No purchases found. Connect your stores to import your purchase history.</p>
+                <a href="#" class="bg-gradient-to-r from-green-900 to-green-800 hover:from-green-800 hover:to-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Connect Store
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Friend Activity -->
+<div class="bg-white rounded-lg shadow-md">
+    <div class="border-b border-gray-200 p-6">
+        <div class="flex justify-between items-center">
+            <h2 class="text-xl font-bold text-gray-800">Friend Activity</h2>
+            <a href="{{ url_for('social.feed') }}" class="text-green-800 hover:text-green-900 font-medium">View Feed</a>
+        </div>
+    </div>
+    
+    <div class="p-6">
+        {% if friend_activity %}
+            <div class="space-y-6">
+                {% for activity in friend_activity %}
+                <div class="flex">
+                    <img src="{{ url_for('static', filename='images/profiles/' + activity.user.profile_image) }}" alt="{{ activity.user.name }}" class="h-12 w-12 rounded-full object-cover mr-4">
+                    <div class="flex-1">
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-semibold text-gray-800">{{ activity.user.name }}</h3>
+                                <span class="text-sm text-gray-500">{{ activity.purchase_date.strftime('%b %d, %Y') }}</span>
+                            </div>
+                            <p class="text-gray-600 mb-4">{{ activity.share_comment or 'Shared a purchase' }}</p>
+                            <div class="flex bg-white border border-gray-200 rounded-lg overflow-hidden">
+                                <div class="w-24 h-24">
+                                    <img src="{{ activity.product.image_url }}" alt="{{ activity.product.title }}" class="w-full h-full object-cover">
+                                </div>
+                                <div class="p-3 flex-1">
+                                    <h4 class="font-medium text-gray-800 line-clamp-1">{{ activity.product.title }}</h4>
+                                    <p class="text-sm text-gray-600 mb-1">{{ activity.store_name }}</p>
+                                    <p class="font-bold text-gray-800">${{ activity.product.price }}</p>
+                                </div>
+                            </div>
+                            <div class="mt-3 flex items-center space-x-4">
+                                <button class="text-sm text-gray-500 hover:text-green-800 flex items-center">
+                                    <i class="far fa-heart mr-1"></i> Like
+                                </button>
+                                <button class="text-sm text-gray-500 hover:text-green-800 flex items-center">
+                                    <i class="far fa-comment mr-1"></i> Comment
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-8">
+                <p class="text-gray-500 mb-4">No friend activity yet. Connect with friends to see their shared purchases.</p>
+                <a href="{{ url_for('social.search_friends') }}" class="bg-gradient-to-r from-green-900 to-green-800 hover:from-green-800 hover:to-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Find Friends
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Sample data for demonstration
+    document.addEventListener('DOMContentLoaded', function() {
+        // This would be replaced with actual data from the backend
+        const purchases = {{ purchases|length }};
+        const shared_count = Math.floor(purchases * 0.7);
+        const friends_count = 12;
+        const monthly_spending = 325.50;
+        
+        // Update the dashboard with sample data if needed
+    });
+</script>
+{% endblock %}

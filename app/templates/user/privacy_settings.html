@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+
+{% block title %}Privacy Settings{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="py-4 px-6 bg-gradient-to-r from-green-900 to-green-800">
+        <h2 class="text-2xl font-bold text-white">Privacy Settings</h2>
+    </div>
+    <div class="p-6">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            
+            <div class="mb-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Profile Visibility</h3>
+                
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        {{ form.profile_visibility(class="mr-2") }}
+                        <span class="text-gray-700">Make my profile visible to everyone</span>
+                    </label>
+                    <p class="text-sm text-gray-500 mt-1 ml-6">When disabled, only your friends can see your profile</p>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        {{ form.show_email(class="mr-2") }}
+                        <span class="text-gray-700">Show my email address on my profile</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Purchase Sharing</h3>
+                
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        {{ form.default_sharing(class="mr-2") }}
+                        <span class="text-gray-700">Share new purchases by default</span>
+                    </label>
+                    <p class="text-sm text-gray-500 mt-1 ml-6">You can still toggle sharing for individual purchases</p>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        {{ form.show_price(class="mr-2") }}
+                        <span class="text-gray-700">Show prices of shared purchases</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Friend Requests</h3>
+                
+                <div class="mb-4">
+                    {{ form.friend_requests.label(class="block text-gray-700 text-sm font-bold mb-2") }}
+                    {{ form.friend_requests(class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline") }}
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4">Data Usage</h3>
+                
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        {{ form.analytics_consent(class="mr-2") }}
+                        <span class="text-gray-700">Allow anonymous usage data collection for analytics</span>
+                    </label>
+                    <p class="text-sm text-gray-500 mt-1 ml-6">This helps us improve the platform</p>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        {{ form.personalized_recommendations(class="mr-2") }}
+                        <span class="text-gray-700">Enable personalized recommendations</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="flex items-center justify-between">
+                {{ form.submit(class="bg-gradient-to-r from-green-900 to-green-800 hover:from-green-800 hover:to-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline") }}
+                <a href="{{ url_for('user.profile') }}" class="text-sm text-green-800 hover:text-green-900">Back to Profile</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
