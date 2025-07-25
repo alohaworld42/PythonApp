@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Interactions Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Social Interactions Test</h1>
+        
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Test Purchase Item</h2>
+            <div class="flex items-center space-x-4 mb-4">
+                <img src="https://via.placeholder.com/100" alt="Test Product" class="w-20 h-20 object-cover rounded">
+                <div>
+                    <h3 class="font-semibold">Test Product</h3>
+                    <p class="text-gray-600">$29.99</p>
+                    <p class="text-sm text-gray-500">Shared by Test User</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4 mb-4">
+                <button id="likeBtn" class="flex items-center space-x-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
+                    </svg>
+                    <span id="likeText">Like</span>
+                    <span id="likeCount" class="bg-red-600 px-2 py-1 rounded-full text-xs">0</span>
+                </button>
+                
+                <button id="saveBtn" class="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                    </svg>
+                    <span id="saveText">Save</span>
+                </button>
+            </div>
+            
+            <div class="mb-4">
+                <textarea id="commentInput" placeholder="Add a comment..." class="w-full p-3 border border-gray-300 rounded-lg resize-none" rows="3"></textarea>
+                <button id="commentBtn" class="mt-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors">
+                    Add Comment
+                </button>
+            </div>
+            
+            <div id="comments" class="space-y-3">
+                <h4 class="font-semibold">Comments:</h4>
+                <!-- Comments will be loaded here -->
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">API Test Results</h2>
+            <div id="testResults" class="space-y-2 text-sm font-mono">
+                <!-- Test results will appear here -->
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold mb-4">Notifications</h2>
+            <div class="flex items-center space-x-4 mb-4">
+                <button id="getNotificationsBtn" class="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors">
+                    Get Notifications
+                </button>
+                <button id="markAllReadBtn" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors">
+                    Mark All Read
+                </button>
+                <span id="unreadCount" class="bg-red-500 text-white px-3 py-1 rounded-full text-sm">0</span>
+            </div>
+            <div id="notifications" class="space-y-2">
+                <!-- Notifications will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock data for testing (in real app, this would come from the server)
+        let currentUser = { id: 1, name: 'Test User' };
+        let testPurchase = { id: 1 };
+        let isLiked = false;
+        let isSaved = false;
+        let likeCount = 0;
+        
+        // Helper function to log test results
+        function logResult(message, success = true) {
+            const resultsDiv = document.getElementById('testResults');
+            const div = document.createElement('div');
+            div.className = success ? 'text-green-600' : 'text-red-600';
+            div.textContent = `${new Date().toLocaleTimeString()}: ${message}`;
+            resultsDiv.appendChild(div);
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+        }
+        
+        // Mock API functions (in real app, these would make actual HTTP requests)
+        async function mockApiCall(endpoint, method = 'GET', data = null) {
+            logResult(`${method} ${endpoint}${data ? ' with data: ' + JSON.stringify(data) : ''}`);
+            
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 200));
+            
+            // Mock responses based on endpoint
+            if (endpoint.includes('/like')) {
+                isLiked = !isLiked;
+                likeCount += isLiked ? 1 : -1;
+                return {
+                    success: true,
+                    action: isLiked ? 'liked' : 'unliked',
+                    liked: isLiked,
+                    likes_count: likeCount
+                };
+            } else if (endpoint.includes('/save')) {
+                isSaved = !isSaved;
+                return {
+                    success: true,
+                    action: isSaved ? 'saved' : 'unsaved',
+                    saved: isSaved
+                };
+            } else if (endpoint.includes('/comment')) {
+                return {
+                    success: true,
+                    comment: {
+                        id: Date.now(),
+                        content: data.content,
+                        created_at: new Date().toISOString(),
+                        user: currentUser
+                    }
+                };
+            } else if (endpoint.includes('/notifications')) {
+                return {
+                    notifications: [
+                        {
+                            id: 1,
+                            type: 'like',
+                            message: 'Someone liked your purchase',
+                            is_read: false,
+                            created_at: new Date().toISOString()
+                        },
+                        {
+                            id: 2,
+                            type: 'comment',
+                            message: 'Someone commented on your purchase',
+                            is_read: false,
+                            created_at: new Date().toISOString()
+                        }
+                    ],
+                    unread_count: 2
+                };
+            }
+            
+            return { success: true };
+        }
+        
+        // Like functionality
+        document.getElementById('likeBtn').addEventListener('click', async () => {
+            try {
+                const response = await mockApiCall(`/api/feed/item/${testPurchase.id}/like`, 'POST');
+                
+                if (response.success) {
+                    const likeBtn = document.getElementById('likeBtn');
+                    const likeText = document.getElementById('likeText');
+                    const likeCountSpan = document.getElementById('likeCount');
+                    
+                    if (response.liked) {
+                        likeBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
+                        likeBtn.classList.add('bg-red-600', 'hover:bg-red-700');
+                        likeText.textContent = 'Unlike';
+                    } else {
+                        likeBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
+                        likeBtn.classList.add('bg-red-500', 'hover:bg-red-600');
+                        likeText.textContent = 'Like';
+                    }
+                    
+                    likeCountSpan.textContent = response.likes_count;
+                    logResult(`Successfully ${response.action} purchase`);
+                }
+            } catch (error) {
+                logResult(`Error: ${error.message}`, false);
+            }
+        });
+        
+        // Save functionality
+        document.getElementById('saveBtn').addEventListener('click', async () => {
+            try {
+                const response = await mockApiCall(`/api/feed/item/${testPurchase.id}/save`, 'POST');
+                
+                if (response.success) {
+                    const saveBtn = document.getElementById('saveBtn');
+                    const saveText = document.getElementById('saveText');
+                    
+                    if (response.saved) {
+                        saveBtn.classList.remove('bg-blue-500', 'hover:bg-blue-600');
+                        saveBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                        saveText.textContent = 'Unsave';
+                    } else {
+                        saveBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                        saveBtn.classList.add('bg-blue-500', 'hover:bg-blue-600');
+                        saveText.textContent = 'Save';
+                    }
+                    
+                    logResult(`Successfully ${response.action} purchase`);
+                }
+            } catch (error) {
+                logResult(`Error: ${error.message}`, false);
+            }
+        });
+        
+        // Comment functionality
+        document.getElementById('commentBtn').addEventListener('click', async () => {
+            const commentInput = document.getElementById('commentInput');
+            const content = commentInput.value.trim();
+            
+            if (!content) {
+                logResult('Comment cannot be empty', false);
+                return;
+            }
+            
+            try {
+                const response = await mockApiCall(`/api/feed/item/${testPurchase.id}/comment`, 'POST', { content });
+                
+                if (response.success) {
+                    const commentsDiv = document.getElementById('comments');
+                    const commentDiv = document.createElement('div');
+                    commentDiv.className = 'bg-gray-50 p-3 rounded-lg';
+                    commentDiv.innerHTML = `
+                        <div class="flex items-center space-x-2 mb-1">
+                            <span class="font-semibold text-sm">${response.comment.user.name}</span>
+                            <span class="text-xs text-gray-500">${new Date(response.comment.created_at).toLocaleString()}</span>
+                        </div>
+                        <p class="text-sm">${response.comment.content}</p>
+                    `;
+                    commentsDiv.appendChild(commentDiv);
+                    
+                    commentInput.value = '';
+                    logResult('Successfully added comment');
+                }
+            } catch (error) {
+                logResult(`Error: ${error.message}`, false);
+            }
+        });
+        
+        // Notifications functionality
+        document.getElementById('getNotificationsBtn').addEventListener('click', async () => {
+            try {
+                const response = await mockApiCall('/api/notifications');
+                
+                if (response.notifications) {
+                    const notificationsDiv = document.getElementById('notifications');
+                    const unreadCountSpan = document.getElementById('unreadCount');
+                    
+                    notificationsDiv.innerHTML = '';
+                    
+                    response.notifications.forEach(notification => {
+                        const notifDiv = document.createElement('div');
+                        notifDiv.className = `p-3 rounded-lg ${notification.is_read ? 'bg-gray-50' : 'bg-blue-50 border-l-4 border-blue-500'}`;
+                        notifDiv.innerHTML = `
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="font-medium text-sm">${notification.message}</p>
+                                    <p class="text-xs text-gray-500">${new Date(notification.created_at).toLocaleString()}</p>
+                                </div>
+                                ${!notification.is_read ? '<span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">New</span>' : ''}
+                            </div>
+                        `;
+                        notificationsDiv.appendChild(notifDiv);
+                    });
+                    
+                    unreadCountSpan.textContent = response.unread_count;
+                    logResult(`Loaded ${response.notifications.length} notifications`);
+                }
+            } catch (error) {
+                logResult(`Error: ${error.message}`, false);
+            }
+        });
+        
+        // Mark all notifications as read
+        document.getElementById('markAllReadBtn').addEventListener('click', async () => {
+            try {
+                const response = await mockApiCall('/api/notifications/read-all', 'PUT');
+                
+                if (response.success) {
+                    const unreadCountSpan = document.getElementById('unreadCount');
+                    unreadCountSpan.textContent = '0';
+                    
+                    // Update notification styling
+                    const notifications = document.querySelectorAll('#notifications > div');
+                    notifications.forEach(notif => {
+                        notif.className = 'p-3 rounded-lg bg-gray-50';
+                        const newBadge = notif.querySelector('.bg-blue-500');
+                        if (newBadge) {
+                            newBadge.remove();
+                        }
+                    });
+                    
+                    logResult('All notifications marked as read');
+                }
+            } catch (error) {
+                logResult(`Error: ${error.message}`, false);
+            }
+        });
+        
+        // Initialize the page
+        logResult('Social interactions test page loaded');
+        logResult('Click the buttons above to test the functionality');
+    </script>
+</body>
+</html>

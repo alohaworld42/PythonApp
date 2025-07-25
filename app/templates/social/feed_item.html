@@ -1,0 +1,125 @@
+<!-- Feed Item Component -->
+<div class="bg-white rounded-lg shadow-md p-6 feed-item" data-purchase-id="{{ purchase.id }}">
+    <!-- User Info -->
+    <div class="flex items-center mb-4">
+        <img src="{{ url_for('static', filename='images/profile/' + (purchase.user.profile_image or 'default.jpg')) }}" 
+             alt="{{ purchase.user.name }}" 
+             class="w-10 h-10 rounded-full mr-3">
+        <div>
+            <h3 class="font-semibold text-gray-800">{{ purchase.user.name }}</h3>
+            <p class="text-gray-500 text-sm">{{ purchase.purchase_date.strftime('%B %d, %Y') }}</p>
+        </div>
+    </div>
+
+    <!-- Purchase Content -->
+    <div class="flex flex-col md:flex-row">
+        <!-- Product Image -->
+        {% if purchase.product.image_url %}
+        <div class="md:w-1/3 mb-4 md:mb-0 md:mr-6">
+            <img src="{{ purchase.product.image_url }}" 
+                 alt="{{ purchase.product.title }}" 
+                 class="w-full h-48 object-cover rounded-lg">
+        </div>
+        {% endif %}
+
+        <!-- Product Details -->
+        <div class="flex-1">
+            <h4 class="text-lg font-semibold text-gray-800 mb-2">{{ purchase.product.title }}</h4>
+            {% if purchase.product.description %}
+            <p class="text-gray-600 mb-3">{{ purchase.product.description[:200] }}{% if purchase.product.description|length > 200 %}...{% endif %}</p>
+            {% endif %}
+            
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-2xl font-bold text-green-800">${{ "%.2f"|format(purchase.product.price) }}</span>
+                <span class="text-sm text-gray-500">from {{ purchase.store_name }}</span>
+            </div>
+
+            {% if purchase.share_comment %}
+            <div class="bg-gray-50 rounded-lg p-3 mb-4">
+                <p class="text-gray-700 italic">"{{ purchase.share_comment }}"</p>
+            </div>
+            {% endif %}
+
+            <!-- Interaction Buttons -->
+            <div class="flex items-center space-x-6 mb-4">
+                <!-- Like Button -->
+                <button onclick="toggleLike({{ purchase.id }})" 
+                        class="flex items-center space-x-1 text-gray-600 hover:text-red-600 transition-colors like-btn"
+                        data-purchase-id="{{ purchase.id }}"
+                        data-liked="{{ user_liked|lower }}">
+                    <svg class="w-5 h-5 {{ 'text-red-600 fill-current' if user_liked else '' }}" 
+                         fill="{{ 'currentColor' if user_liked else 'none' }}" 
+                         stroke="currentColor" 
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                    </svg>
+                    <span class="like-count">{{ likes_count }}</span>
+                    <span class="like-text">{{ 'Unlike' if user_liked else 'Like' }}</span>
+                </button>
+
+                <!-- Comment Button -->
+                <button onclick="toggleCommentForm({{ purchase.id }})" 
+                        class="flex items-center space-x-1 text-gray-600 hover:text-blue-600 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.955 8.955 0 01-2.126-.275c-1.15-.29-2.204-.803-3.1-1.493L3 21l2.395-4.726c-.69-.896-1.203-1.95-1.493-3.1A8.955 8.955 0 013 12c0-4.418 3.582-8 8-8s8 3.582 8 8z"></path>
+                    </svg>
+                    <span>{{ comments_count }}</span>
+                    <span>Comment</span>
+                </button>
+
+                <!-- Save Button -->
+                <button onclick="toggleSave({{ purchase.id }})" 
+                        class="flex items-center space-x-1 text-gray-600 hover:text-yellow-600 transition-colors save-btn"
+                        data-purchase-id="{{ purchase.id }}"
+                        data-saved="{{ user_saved|lower }}">
+                    <svg class="w-5 h-5 {{ 'text-yellow-600 fill-current' if user_saved else '' }}" 
+                         fill="{{ 'currentColor' if user_saved else 'none' }}" 
+                         stroke="currentColor" 
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                    </svg>
+                    <span class="save-text">{{ 'Unsave' if user_saved else 'Save' }}</span>
+                </button>
+            </div>
+
+            <!-- Comment Form (Hidden by default) -->
+            <div id="comment-form-{{ purchase.id }}" class="hidden mb-4">
+                <form onsubmit="submitComment(event, {{ purchase.id }})" class="flex">
+                    <input type="text" 
+                           name="content" 
+                           placeholder="Write a comment..." 
+                           class="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                           required>
+                    <button type="submit" 
+                            class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-r-lg focus:outline-none focus:shadow-outline">
+                        Post
+                    </button>
+                </form>
+            </div>
+
+            <!-- Display Comments -->
+            <div id="comments-{{ purchase.id }}" class="comments-section">
+                {% set comments = purchase.interactions.filter_by(type='comment').order_by('created_at').all() %}
+                {% if comments %}
+                <div class="space-y-2">
+                    {% for comment in comments %}
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <div class="flex items-center mb-1">
+                            <img src="{{ url_for('static', filename='images/profile/' + (comment.user.profile_image or 'default.jpg')) }}" 
+                                 alt="{{ comment.user.name }}" 
+                                 class="w-6 h-6 rounded-full mr-2">
+                            <span class="font-semibold text-sm text-gray-800">{{ comment.user.name }}</span>
+                            <span class="text-xs text-gray-500 ml-2">{{ comment.created_at.strftime('%b %d') }}</span>
+                        </div>
+                        <p class="text-gray-700 text-sm">{{ comment.content }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

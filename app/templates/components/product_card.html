@@ -1,0 +1,363 @@
+<!-- Enhanced Product Card Component -->
+<!-- Usage: {% include 'components/product_card.html' with context %} -->
+<!-- Required variables: purchase, show_user (optional), card_type (optional: 'dashboard', 'feed', 'grid', 'list') -->
+
+{% set card_type = card_type or 'grid' %}
+{% set show_user = show_user or false %}
+{% set user_has_liked = current_user and purchase.interactions.filter_by(user_id=current_user.id, type='like').first() %}
+{% set user_has_saved = current_user and purchase.interactions.filter_by(user_id=current_user.id, type='save').first() %}
+{% set like_count = purchase.interactions.filter_by(type='like').count() %}
+{% set comment_count = purchase.interactions.filter_by(type='comment').count() %}
+{% set can_share = current_user and current_user.id == purchase.user_id %}
+{% set is_shared = purchase.is_shared %}
+{% set sharing_status = 'shared' if is_shared else 'private' %}
+
+<div class="product-card {{ card_type }}-card bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden border border-gray-200"
+     data-purchase-id="{{ purchase.id }}"
+     data-store="{{ purchase.store_name }}" 
+     data-sharing="{{ 'shared' if purchase.is_shared else 'private' }}"
+     data-date="{{ purchase.purchase_date.isoformat() }}"
+     data-price="{{ purchase.product.price }}"
+     data-category="{{ purchase.product.category or '' }}"
+     role="article"
+     aria-label="Product card for {{ purchase.product.title }}">
+    
+    {% if card_type == 'list' %}
+        <!-- List View Layout -->
+        <div class="flex">
+            <!-- Product Image -->
+            <div class="w-32 h-32 sm:w-24 sm:h-24 flex-shrink-0 relative">
+                <div class="w-full h-full bg-gray-100 rounded-lg overflow-hidden relative">
+                    <!-- Enhanced responsive image with optimized loading -->
+                    <img src="{{ purchase.product.image_url or url_for('static', filename='images/placeholder-product.svg') }}" 
+                         alt="{{ purchase.product.title }}" 
+                         class="product-image w-full h-full object-cover transition-all duration-300 hover:scale-105"
+                         loading="lazy"
+                         data-purchase-id="{{ purchase.id }}"
+                         onerror="handleImageError(this)"
+                         onload="handleImageLoad(this)"
+                         style="opacity: 0;"
+                         sizes="(max-width: 640px) 96px, (max-width: 768px) 128px, 192px"
+                         srcset="{{ purchase.product.image_url or url_for('static', filename='images/placeholder-product.svg') }}">
+                    
+                    <!-- Enhanced loading placeholder with skeleton animation -->
+                    <div class="loading-placeholder absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse flex items-center justify-center">
+                        <div class="flex flex-col items-center">
+                            <i class="fas fa-image text-gray-400 text-2xl mb-1"></i>
+                            <div class="w-8 h-1 bg-gray-300 rounded animate-pulse"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sharing Status Indicator -->
+                <div class="absolute top-2 right-2">
+                    {% if purchase.is_shared %}
+                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full backdrop-blur-sm">
+                            <i class="fas fa-share-alt mr-1"></i>Shared
+                        </span>
+                    {% else %}
+                        <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-1 rounded-full backdrop-blur-sm">
+                            <i class="fas fa-lock mr-1"></i>Private
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Product Details -->
+            <div class="flex-1 p-4 flex flex-col justify-between">
+                <div>
+                    <!-- User Info (if showing user) -->
+                    {% if show_user and purchase.user %}
+                    <div class="flex items-center mb-2">
+                        <img src="{{ url_for('static', filename='images/profile/' + (purchase.user.profile_image or 'default.jpg')) }}" 
+                             alt="{{ purchase.user.name }}" 
+                             class="w-6 h-6 rounded-full mr-2 object-cover">
+                        <span class="text-sm text-gray-600 font-medium">{{ purchase.user.name }}</span>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Product Title and Category -->
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-lg font-semibold text-gray-800 line-clamp-2 flex-1 mr-2">{{ purchase.product.title }}</h3>
+                        {% if purchase.product.category %}
+                            <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-1 rounded flex-shrink-0">{{ purchase.product.category }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Store and Date -->
+                    <div class="flex justify-between items-center mb-2">
+                        <p class="text-gray-600 text-sm">{{ purchase.store_name }}</p>
+                        <p class="text-sm text-gray-500">{{ purchase.purchase_date.strftime('%b %d, %Y') }}</p>
+                    </div>
+                    
+                    <!-- Price -->
+                    <p class="text-xl font-bold text-gray-800 mb-2">${{ "%.2f"|format(purchase.product.price) }}</p>
+                    
+                    <!-- Share Comment -->
+                    {% if purchase.share_comment %}
+                    <div class="bg-gray-50 p-2 rounded-lg mb-2">
+                        <p class="text-sm text-gray-700 italic line-clamp-2">"{{ purchase.share_comment }}"</p>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex justify-between items-center mt-2">
+                    <!-- Sharing Toggle (only for purchase owner) -->
+                    {% if can_share %}
+                    <div class="flex items-center">
+                        <label class="toggle-switch mr-2" aria-label="Toggle sharing for {{ purchase.product.title }}">
+                            <input type="checkbox" 
+                                   class="sharing-toggle" 
+                                   data-purchase-id="{{ purchase.id }}"
+                                   {{ 'checked' if purchase.is_shared else '' }}>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span class="text-sm text-gray-600">
+                            {{ 'Shared' if purchase.is_shared else 'Share' }}
+                        </span>
+                    </div>
+                    {% else %}
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-500 italic">
+                            {% if purchase.is_shared %}
+                                <i class="fas fa-share-alt mr-1 text-green-600"></i>Shared by {{ purchase.user.name }}
+                            {% else %}
+                                <i class="fas fa-lock mr-1"></i>Private
+                            {% endif %}
+                        </span>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Interaction Buttons -->
+                    <div class="flex items-center space-x-3">
+                        {% if show_user %}
+                        <!-- Like Button -->
+                        <button class="like-button {{ 'liked text-red-500' if user_has_liked else 'text-gray-500 hover:text-red-500' }} transition-colors" 
+                                data-purchase-id="{{ purchase.id }}"
+                                aria-label="{{ 'Unlike' if user_has_liked else 'Like' }} this item">
+                            <i class="{{ 'fas' if user_has_liked else 'far' }} fa-heart"></i>
+                            <span class="like-count text-xs ml-1">{{ purchase.interactions.filter_by(type='like').count() }}</span>
+                        </button>
+                        
+                        <!-- Comment Button -->
+                        <button class="comment-button text-gray-500 hover:text-blue-500 transition-colors" 
+                                data-purchase-id="{{ purchase.id }}"
+                                aria-label="Comment on this item">
+                            <i class="far fa-comment"></i>
+                            <span class="comment-count text-xs ml-1">{{ purchase.interactions.filter_by(type='comment').count() }}</span>
+                        </button>
+                        
+                        <!-- Save Button -->
+                        <button class="save-button {{ 'saved text-yellow-500' if user_has_saved else 'text-gray-500 hover:text-yellow-500' }} transition-colors" 
+                                data-purchase-id="{{ purchase.id }}"
+                                aria-label="{{ 'Unsave' if user_has_saved else 'Save' }} this item">
+                            <i class="{{ 'fas' if user_has_saved else 'far' }} fa-bookmark"></i>
+                        </button>
+                        {% endif %}
+                        
+                        <!-- View Details Button -->
+                        <button class="text-gray-500 hover:text-green-600 transition-colors" 
+                                onclick="viewProductDetails({{ purchase.id }})"
+                                aria-label="View product details">
+                            <i class="fas fa-external-link-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Comments Section (for feed items) -->
+                {% if show_user %}
+                <div class="border-t border-gray-100 mt-3 pt-3">
+                    <!-- Comment Form (initially hidden) -->
+                    <div id="comment-form-{{ purchase.id }}" class="hidden mb-3">
+                        <form onsubmit="submitComment(event, {{ purchase.id }})" class="flex space-x-2">
+                            <input type="text" 
+                                   name="content" 
+                                   placeholder="Add a comment..." 
+                                   class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                   required>
+                            <button type="submit" 
+                                    class="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors">
+                                Post
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Existing Comments -->
+                    {% if purchase.interactions.filter_by(type='comment').count() > 0 %}
+                    <div id="comments-{{ purchase.id }}" class="space-y-2">
+                        {% for comment in purchase.interactions.filter_by(type='comment').order_by('created_at desc').limit(3) %}
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <div class="flex items-center mb-1">
+                                <img src="{{ url_for('static', filename='images/profile/' + (comment.user.profile_image or 'default.jpg')) }}" 
+                                     alt="{{ comment.user.name }}" 
+                                     class="w-6 h-6 rounded-full mr-2 object-cover">
+                                <span class="font-semibold text-sm text-gray-800">{{ comment.user.name }}</span>
+                                <span class="text-xs text-gray-500 ml-2">{{ comment.created_at.strftime('%b %d') }}</span>
+                            </div>
+                            <p class="text-gray-700 text-sm">{{ comment.content }}</p>
+                        </div>
+                        {% endfor %}
+                        
+                        {% if purchase.interactions.filter_by(type='comment').count() > 3 %}
+                        <button class="text-sm text-gray-500 hover:text-gray-700 transition-colors" 
+                                onclick="loadMoreComments({{ purchase.id }})">
+                            View {{ purchase.interactions.filter_by(type='comment').count() - 3 }} more comments
+                        </button>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+    {% else %}
+        <!-- Grid View Layout (Default) -->
+        <div class="relative">
+            <!-- Product Image -->
+            <div class="h-48 sm:h-40 overflow-hidden relative bg-gray-100">
+                <!-- Enhanced responsive image with optimized loading -->
+                <img src="{{ purchase.product.image_url or url_for('static', filename='images/placeholder-product.svg') }}" 
+                     alt="{{ purchase.product.title }}" 
+                     class="product-image w-full h-full object-cover hover:scale-105 transition-all duration-300"
+                     loading="lazy"
+                     data-purchase-id="{{ purchase.id }}"
+                     onerror="handleImageError(this)"
+                     onload="handleImageLoad(this)"
+                     style="opacity: 0;"
+                     sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                     srcset="{{ purchase.product.image_url or url_for('static', filename='images/placeholder-product.svg') }}">
+                
+                <!-- Enhanced loading placeholder with skeleton animation -->
+                <div class="loading-placeholder absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse flex items-center justify-center">
+                    <div class="flex flex-col items-center">
+                        <i class="fas fa-image text-gray-400 text-3xl mb-2"></i>
+                        <div class="w-12 h-1 bg-gray-300 rounded animate-pulse"></div>
+                    </div>
+                </div>
+                
+                <!-- Sharing Status Indicator -->
+                <div class="absolute top-2 right-2">
+                    {% if purchase.is_shared %}
+                        <span class="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full backdrop-blur-sm">
+                            <i class="fas fa-share-alt mr-1"></i>Shared
+                        </span>
+                    {% else %}
+                        <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2 py-1 rounded-full backdrop-blur-sm">
+                            <i class="fas fa-lock mr-1"></i>Private
+                        </span>
+                    {% endif %}
+                </div>
+                
+                <!-- Category Badge -->
+                {% if purchase.product.category %}
+                <div class="absolute top-2 left-2">
+                    <span class="bg-white bg-opacity-90 text-gray-800 text-xs font-medium px-2 py-1 rounded backdrop-blur-sm">{{ purchase.product.category }}</span>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Product Details -->
+            <div class="p-4">
+                <!-- User Info (if showing user) -->
+                {% if show_user and purchase.user %}
+                <div class="flex items-center mb-3">
+                    <img src="{{ url_for('static', filename='images/profile/' + (purchase.user.profile_image or 'default.jpg')) }}" 
+                         alt="{{ purchase.user.name }}" 
+                         class="w-8 h-8 rounded-full mr-2 object-cover">
+                    <div>
+                        <span class="text-sm font-medium text-gray-800">{{ purchase.user.name }}</span>
+                        <p class="text-xs text-gray-500">{{ purchase.purchase_date.strftime('%b %d, %Y') }}</p>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Product Title -->
+                <h3 class="text-lg font-semibold text-gray-800 line-clamp-2 mb-2">{{ purchase.product.title }}</h3>
+                
+                <!-- Store and Date (if not showing user) -->
+                {% if not show_user %}
+                <div class="flex justify-between items-center mb-2">
+                    <p class="text-gray-600 text-sm">{{ purchase.store_name }}</p>
+                    <p class="text-sm text-gray-500">{{ purchase.purchase_date.strftime('%b %d, %Y') }}</p>
+                </div>
+                {% endif %}
+                
+                <!-- Price -->
+                <p class="text-xl font-bold text-gray-800 mb-3">${{ "%.2f"|format(purchase.product.price) }}</p>
+                
+                <!-- Share Comment -->
+                {% if purchase.share_comment %}
+                <div class="bg-gray-50 p-3 rounded-lg mb-3">
+                    <p class="text-sm text-gray-700 italic line-clamp-3">"{{ purchase.share_comment }}"</p>
+                </div>
+                {% endif %}
+                
+                <!-- Action Buttons -->
+                <div class="flex justify-between items-center">
+                    <!-- Sharing Toggle (only for purchase owner) -->
+                    {% if can_share %}
+                    <div class="flex items-center">
+                        <label class="toggle-switch mr-2" aria-label="Toggle sharing for {{ purchase.product.title }}">
+                            <input type="checkbox" 
+                                   class="sharing-toggle" 
+                                   data-purchase-id="{{ purchase.id }}"
+                                   {{ 'checked' if purchase.is_shared else '' }}>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span class="text-sm text-gray-600">
+                            {{ 'Shared' if purchase.is_shared else 'Share' }}
+                        </span>
+                    </div>
+                    {% else %}
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-500 italic">
+                            {% if purchase.is_shared %}
+                                <i class="fas fa-share-alt mr-1 text-green-600"></i>Shared by {{ purchase.user.name }}
+                            {% else %}
+                                <i class="fas fa-lock mr-1"></i>Private
+                            {% endif %}
+                        </span>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Interaction Buttons -->
+                    <div class="flex items-center space-x-3">
+                        {% if show_user %}
+                        <!-- Like Button -->
+                        <button class="like-button {{ 'liked text-red-500' if user_has_liked else 'text-gray-500 hover:text-red-500' }} transition-colors" 
+                                data-purchase-id="{{ purchase.id }}"
+                                aria-label="{{ 'Unlike' if user_has_liked else 'Like' }} this item">
+                            <i class="{{ 'fas' if user_has_liked else 'far' }} fa-heart"></i>
+                            <span class="like-count text-xs ml-1">{{ purchase.interactions.filter_by(type='like').count() }}</span>
+                        </button>
+                        
+                        <!-- Comment Button -->
+                        <button class="comment-button text-gray-500 hover:text-blue-500 transition-colors" 
+                                data-purchase-id="{{ purchase.id }}"
+                                aria-label="Comment on this item">
+                            <i class="far fa-comment"></i>
+                            <span class="comment-count text-xs ml-1">{{ purchase.interactions.filter_by(type='comment').count() }}</span>
+                        </button>
+                        
+                        <!-- Save Button -->
+                        <button class="save-button {{ 'saved text-yellow-500' if user_has_saved else 'text-gray-500 hover:text-yellow-500' }} transition-colors" 
+                                data-purchase-id="{{ purchase.id }}"
+                                aria-label="{{ 'Unsave' if user_has_saved else 'Save' }} this item">
+                            <i class="{{ 'fas' if user_has_saved else 'far' }} fa-bookmark"></i>
+                        </button>
+                        {% endif %}
+                        
+                        <!-- View Details Button -->
+                        <button class="text-gray-500 hover:text-green-600 transition-colors" 
+                                onclick="viewProductDetails({{ purchase.id }})"
+                                aria-label="View product details">
+                            <i class="fas fa-external-link-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>

@@ -77,3 +77,18 @@ CREATE TABLE IF NOT EXISTS store_integration (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user (id)
 );
+
+-- Notifications table
+CREATE TABLE IF NOT EXISTS notification (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    type VARCHAR(20) NOT NULL,
+    message VARCHAR(255) NOT NULL,
+    related_user_id INTEGER,
+    related_purchase_id INTEGER,
+    is_read BOOLEAN NOT NULL DEFAULT 0,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user (id),
+    FOREIGN KEY (related_user_id) REFERENCES user (id),
+    FOREIGN KEY (related_purchase_id) REFERENCES purchase (id)
+);

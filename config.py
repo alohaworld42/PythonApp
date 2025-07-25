@@ -1,9 +1,16 @@
 import os
 from datetime import timedelta
+from dotenv import load_dotenv
+
+# Load environment variables from a .env file if it exists
+load_dotenv()
 
 class Config:
     # Flask settings
     SECRET_KEY = os.environ.get('SECRET_KEY') or '3b1f45b0c645c4427a3b2a3e3e73c1ed3a3b2a3e3e73c1ed'
+    
+    # Site URL for email links
+    SITE_URL = os.environ.get('SITE_URL') or 'http://localhost:5000'
     
     # Database settings
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///buyroll.db'

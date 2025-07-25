@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-900">Saved Items</h1>
+        <a href="{{ url_for('social.feed') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
+            Back to Feed
+        </a>
+    </div>
+
+    {% if saved_purchases %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for item in saved_purchases %}
+                {% set purchase = item.purchase %}
+                {% set product = purchase.product %}
+                {% set user = purchase.user %}
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    {% if product.image_url %}
+                        <img src="{{ product.image_url }}" alt="{{ product.title }}" class="w-full h-48 object-cover">
+                    {% else %}
+                        <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                            <span class="text-gray-500">No Image</span>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg mb-2">{{ product.title }}</h3>
+                        
+                        {% if product.description %}
+                            <p class="text-gray-600 text-sm mb-3 line-clamp-2">{{ product.description }}</p>
+                        {% endif %}
+                        
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xl font-bold text-green-600">
+                                {{ product.currency }}{{ "%.2f"|format(product.price) }}
+                            </span>
+                            {% if product.category %}
+                                <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
+                                    {{ product.category }}
+                                </span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="border-t pt-3">
+                            <div class="flex items-center justify-between text-sm text-gray-500">
+                                <div class="flex items-center">
+                                    <img src="{{ user.profile_image or '/static/images/default-avatar.png' }}" 
+                                         alt="{{ user.name }}" class="w-6 h-6 rounded-full mr-2">
+                                    <span>{{ user.name }}</span>
+                                </div>
+                                <span>{{ purchase.purchase_date.strftime('%b %d, %Y') }}</span>
+                            </div>
+                            
+                            <div class="text-xs text-gray-400 mt-1">
+                                Saved {{ item.saved_at.strftime('%b %d, %Y at %I:%M %p') }}
+                            </div>
+                            
+                            {% if purchase.share_comment %}
+                                <div class="mt-2 p-2 bg-gray-50 rounded text-sm">
+                                    <strong>{{ user.name }}:</strong> {{ purchase.share_comment }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mt-4 flex justify-between items-center">
+                            <form method="POST" action="{{ url_for('social.save_purchase', purchase_id=purchase.id) }}" class="inline">
+                                <button type="submit" class="text-red-600 hover:text-red-800 text-sm font-medium">
+                                    Remove from Saved
+                                </button>
+                            </form>
+                            
+                            {% if purchase.store_name %}
+                                <span class="text-xs text-gray-500">from {{ purchase.store_name }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-12">
+            <div class="text-gray-400 mb-4">
+                <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                </svg>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No saved items yet</h3>
+            <p class="text-gray-500 mb-4">Start saving items from your friends' purchases to see them here.</p>
+            <a href="{{ url_for('social.feed') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
+                Browse Feed
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

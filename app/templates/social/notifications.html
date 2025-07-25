@@ -1,0 +1,106 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Notifications</h1>
+            {% if unread_count > 0 %}
+                <p class="text-gray-600 mt-1">{{ unread_count }} unread notification{{ 's' if unread_count != 1 else '' }}</p>
+            {% endif %}
+        </div>
+        <div class="flex space-x-3">
+            {% if unread_count > 0 %}
+                <form method="POST" action="{{ url_for('social.mark_all_notifications_read_route') }}" class="inline">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
+                        Mark All Read
+                    </button>
+                </form>
+            {% endif %}
+            <a href="{{ url_for('social.feed') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
+                Back to Feed
+            </a>
+        </div>
+    </div>
+
+    {% if notifications %}
+        <div class="space-y-4">
+            {% for notification in notifications %}
+                <div class="bg-white rounded-lg shadow-md p-4 {% if not notification.is_read %}border-l-4 border-blue-500{% endif %}">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center mb-2">
+                                {% if notification.type == 'like' %}
+                                    <div class="bg-red-100 p-2 rounded-full mr-3">
+                                        <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                {% elif notification.type == 'comment' %}
+                                    <div class="bg-blue-100 p-2 rounded-full mr-3">
+                                        <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                        </svg>
+                                    </div>
+                                {% elif notification.type == 'friend_request' %}
+                                    <div class="bg-green-100 p-2 rounded-full mr-3">
+                                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                                        </svg>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="flex-1">
+                                    <p class="text-gray-900 font-medium">{{ notification.message }}</p>
+                                    <p class="text-gray-500 text-sm">{{ notification.created_at.strftime('%b %d, %Y at %I:%M %p') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center space-x-2">
+                            {% if not notification.is_read %}
+                                <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">New</span>
+                                <form method="POST" action="{{ url_for('social.mark_notification_read_route', notification_id=notification.id) }}" class="inline">
+                                    <button type="submit" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                        Mark Read
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    {% if notification.type in ['like', 'comment'] and notification.related_purchase_id %}
+                        <div class="mt-3 p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center text-sm text-gray-600">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                </svg>
+                                Related to your purchase
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        
+        {% if notifications|length >= 50 %}
+            <div class="text-center mt-8">
+                <p class="text-gray-500">Showing latest 50 notifications</p>
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="text-center py-12">
+            <div class="text-gray-400 mb-4">
+                <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4.828 4.828A4 4 0 015.636 4H20a2 2 0 012 2v12a2 2 0 01-2 2H9.192a4 4 0 01-2.829-1.172L4.828 4.828z" />
+                </svg>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No notifications yet</h3>
+            <p class="text-gray-500 mb-4">When friends interact with your posts or send friend requests, you'll see notifications here.</p>
+            <a href="{{ url_for('social.feed') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
+                Browse Feed
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

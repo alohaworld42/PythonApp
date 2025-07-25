@@ -10,6 +10,7 @@
     <div class="p-6">
         <form method="POST" action="">
             {{ form.hidden_tag() }}
+            <input type="hidden" name="_csrf_token" value="{{ session.get('_csrf_token', '') }}">
             
             <div class="mb-4">
                 {{ form.email.label(class="block text-gray-700 text-sm font-bold mb-2") }}

@@ -1,8 +1,14 @@
 import threading
 import time
 import logging
-import schedule
 from datetime import datetime, timedelta
+
+try:
+    import schedule
+    SCHEDULE_AVAILABLE = True
+except ImportError:
+    SCHEDULE_AVAILABLE = False
+    schedule = None
 from flask import current_app
 from app import db
 from app.models.store_integration import StoreIntegration
@@ -84,6 +90,10 @@ def run_scheduler():
     """Run the scheduler in a loop."""
     global scheduler_running
     
+    if not SCHEDULE_AVAILABLE:
+        logger.warning("Schedule module not available, scheduler disabled")
+        return
+    
     logger.info("Starting scheduler thread")
     
     # Schedule the sync job to run every hour
@@ -131,3 +141,11 @@ def stop_scheduler():
     else:
         logger.info("Scheduler stopped")
         scheduler_thread = None
+
+def init_scheduler(app):
+    """Initialize the scheduler for the Flask app."""
+    if not SCHEDULE_AVAILABLE:
+        logger.warning("Schedule module not available, scheduler initialization skipped")
+        return
+    
+    start_scheduler(app)

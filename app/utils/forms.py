@@ -100,3 +100,40 @@ class ResetPasswordForm(FlaskForm):
     password = PasswordField('New Password', validators=[DataRequired(), Length(min=8)])
     confirm_password = PasswordField('Confirm New Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Reset Password')
+
+class DashboardSettingsForm(FlaskForm):
+    """Form for dashboard customization settings."""
+    default_view = SelectField('Default View', choices=[
+        ('grid', 'Grid View'),
+        ('list', 'List View')
+    ])
+    
+    items_per_page = SelectField('Items Per Page', choices=[
+        ('12', '12 items'),
+        ('24', '24 items'),
+        ('36', '36 items'),
+        ('48', '48 items')
+    ])
+    
+    default_sort = SelectField('Default Sort Order', choices=[
+        ('date-desc', 'Newest First'),
+        ('date-asc', 'Oldest First'),
+        ('price-desc', 'Price: High to Low'),
+        ('price-asc', 'Price: Low to High'),
+        ('store', 'Store Name')
+    ])
+    
+    # Widget visibility settings
+    show_quick_stats = BooleanField('Show Quick Stats', default=True)
+    show_friend_activity = BooleanField('Show Friend Activity', default=True)
+    show_recent_purchases = BooleanField('Show Recent Purchases', default=True)
+    show_spending_chart = BooleanField('Show Spending Chart', default=False)
+    
+    # Widget order settings
+    widget_order = StringField('Widget Order (JSON)', default='["quick_stats", "recent_purchases", "friend_activity"]')
+    
+    # Layout settings
+    sidebar_collapsed = BooleanField('Collapse Sidebar by Default', default=False)
+    compact_mode = BooleanField('Compact Mode', default=False)
+    
+    submit = SubmitField('Save Dashboard Settings')

@@ -243,3 +243,49 @@ def setup_shopify_webhooks(shop, access_token):
         return False
     
     return True
+
+def get_shopify_auth_url(shop, redirect_uri, scopes='read_orders,read_products'):
+    """Get Shopify OAuth authorization URL."""
+    client = ShopifyClient()
+    return client.get_auth_url(shop, redirect_uri, scopes)
+
+def get_shopify_access_token(shop, code):
+    """Get Shopify access token from authorization code."""
+    client = ShopifyClient()
+    return client.get_access_token(shop, code)
+
+def create_shopify_integration(user_id, shop, access_token):
+    """Create a new Shopify integration for a user."""
+    # Check if integration already exists
+    existing_integration = StoreIntegration.query.filter_by(
+        user_id=user_id,
+        platform='shopify',
+        store_url=shop
+    ).first()
+    
+    if existing_integration:
+        # Update existing integration
+        existing_integration.access_token = access_token
+        existing_integration.updated_at = datetime.utcnow()
+        db.session.commit()
+        return existing_integration
+    
+    # Create new integration
+    integration = StoreIntegration(
+        user_id=user_id,
+        platform='shopify',
+        store_url=shop,
+        access_token=access_token,
+        store_metadata={}
+    )
+    
+    db.session.add(integration)
+    db.session.commit()
+    
+    # Set up webhooks
+    try:
+        setup_shopify_webhooks(shop, access_token)
+    except Exception as e:
+        current_app.logger.error(f"Failed to set up webhooks: {e}")
+    
+    return integration

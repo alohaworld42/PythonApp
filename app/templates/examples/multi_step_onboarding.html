@@ -1,0 +1,179 @@
+{% extends "layout.html" %}
+
+{% block title %}Complete Your Profile{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="py-6 px-8 bg-gradient-to-r from-green-900 to-green-800">
+        <h2 class="text-3xl font-bold text-white text-center">Complete Your Profile</h2>
+        <p class="text-green-100 text-center mt-2">Help us personalize your BuyRoll experience</p>
+    </div>
+    
+    <div class="p-8">
+        <!-- Multi-step form using the component -->
+        {% set form_steps = [
+            {
+                'title': 'Personal Information',
+                'description': 'Tell us a bit about yourself',
+                'fields': [
+                    {
+                        'field': form.name,
+                        'label': 'Full Name',
+                        'help_text': 'This will be displayed to your friends'
+                    },
+                    {
+                        'type': 'row',
+                        'fields': [
+                            {
+                                'field': form.first_name,
+                                'label': 'First Name'
+                            },
+                            {
+                                'field': form.last_name,
+                                'label': 'Last Name'
+                            }
+                        ]
+                    },
+                    {
+                        'field': form.bio,
+                        'label': 'Bio',
+                        'help_text': 'Tell your friends about yourself (optional)'
+                    }
+                ]
+            },
+            {
+                'title': 'Shopping Preferences',
+                'description': 'Help us understand your shopping habits',
+                'fields': [
+                    {
+                        'field': form.favorite_categories,
+                        'label': 'Favorite Shopping Categories',
+                        'help_text': 'Select your top 3 categories'
+                    },
+                    {
+                        'field': form.budget_range,
+                        'label': 'Monthly Shopping Budget',
+                        'help_text': 'This helps us provide better recommendations'
+                    },
+                    {
+                        'field': form.shopping_frequency,
+                        'label': 'How often do you shop online?'
+                    }
+                ]
+            },
+            {
+                'title': 'Privacy Settings',
+                'description': 'Control what you share with friends',
+                'fields': [
+                    {
+                        'field': form.default_sharing,
+                        'label': 'Share new purchases by default'
+                    },
+                    {
+                        'field': form.show_prices,
+                        'label': 'Show purchase prices to friends'
+                    },
+                    {
+                        'field': form.profile_visibility,
+                        'label': 'Make my profile public'
+                    }
+                ],
+                'footer_text': 'You can change these settings anytime in your account preferences'
+            }
+        ] %}
+        
+        <!-- Multi-step form using the multi_step_form.html component -->
+        {% include 'components/multi_step_form.html' with 
+            steps=form_steps, 
+            form_action=url_for('user.complete_onboarding'),
+            form_method='POST',
+            show_progress_bar=true %}
+    </div>
+</div>
+
+<!-- Custom JavaScript for this specific form -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.multi-step-form');
+    
+    // Custom validation for favorite categories (multi-select)
+    const categoriesField = form.querySelector('select[name="favorite_categories"]');
+    if (categoriesField && categoriesField.multiple) {
+        categoriesField.addEventListener('change', function() {
+            const selected = Array.from(this.selectedOptions);
+            if (selected.length > 3) {
+                // Remove the last selected option if more than 3
+                selected[selected.length - 1].selected = false;
+                
+                // Show notification
+                showNotification('You can select up to 3 categories only', 'warning');
+            }
+        });
+    }
+    
+    // Custom submission handling
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Show loading state
+        const submitButton = form.querySelector('button[type="submit"]');
+        const originalText = submitButton.textContent;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Completing Setup...';
+        submitButton.disabled = true;
+        
+        // Simulate API call
+        setTimeout(() => {
+            // In real implementation, this would be an actual API call
+            showNotification('Profile completed successfully! Redirecting...', 'success');
+            
+            setTimeout(() => {
+                window.location.href = '{{ url_for("main.dashboard") }}';
+            }, 2000);
+        }, 2000);
+    });
+    
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 transition-all duration-300 transform translate-x-full`;
+        
+        const styles = {
+            success: 'bg-green-100 border-l-4 border-green-500 text-green-700',
+            error: 'bg-red-100 border-l-4 border-red-500 text-red-700',
+            warning: 'bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700',
+            info: 'bg-blue-100 border-l-4 border-blue-500 text-blue-700'
+        };
+        
+        notification.className += ` ${styles[type] || styles.info}`;
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <div class="flex-1">
+                    <p class="font-medium">${message}</p>
+                </div>
+                <button class="ml-4 text-current opacity-70 hover:opacity-100" onclick="this.parentElement.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.classList.remove('translate-x-full');
+        }, 100);
+        
+        setTimeout(() => {
+            notification.classList.add('translate-x-full');
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 300);
+        }, 5000);
+    }
+});
+</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/form-components.js') }}"></script>
+{% endblock %}

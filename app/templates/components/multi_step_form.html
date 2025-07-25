@@ -1,0 +1,350 @@
+<!-- Multi-Step Form Component -->
+<!-- Usage: {% include 'components/multi_step_form.html' with steps=form_steps, form_action='/submit', form_method='POST' %} -->
+
+<form class="multi-step-form" 
+      action="{{ form_action or '' }}" 
+      method="{{ form_method or 'POST' }}" 
+      data-form-validator="true"
+      data-validate-on-blur="true"
+      data-show-success-states="true">
+    
+    {{ csrf_token() if csrf_token }}
+    
+    <!-- Step Indicator -->
+    <div class="step-indicator flex justify-center items-center mb-8 flex-wrap">
+        {% for step in steps %}
+            <div class="step-indicator-item w-8 h-8 rounded-full flex items-center justify-center mx-2 transition-all duration-200 
+                        {% if loop.index0 == 0 %}bg-green-500 text-white{% else %}bg-gray-300 text-gray-600{% endif %}">
+                {{ loop.index }}
+            </div>
+            {% if not loop.last %}
+                <div class="step-connector w-12 h-1 bg-gray-300 mx-2 transition-all duration-200"></div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    
+    <!-- Form Steps -->
+    {% for step in steps %}
+        <div class="form-step {% if loop.index0 != 0 %}hidden{% endif %}" data-step="{{ loop.index0 }}">
+            <!-- Step Header -->
+            {% if step.title %}
+                <div class="step-header text-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ step.title }}</h3>
+                    {% if step.description %}
+                        <p class="text-gray-600">{{ step.description }}</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+            
+            <!-- Step Fields -->
+            <div class="step-content space-y-4">
+                {% if step.fields %}
+                    {% for field_config in step.fields %}
+                        {% if field_config.type == 'row' %}
+                            <!-- Form Row -->
+                            <div class="form-row flex gap-4">
+                                {% for row_field in field_config.fields %}
+                                    <div class="form-col flex-1">
+                                        {% include 'components/form_field.html' with 
+                                            field=row_field.field, 
+                                            label=row_field.label,
+                                            help_text=row_field.help_text,
+                                            **row_field.kwargs %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <!-- Single Field -->
+                            {% include 'components/form_field.html' with 
+                                field=field_config.field, 
+                                label=field_config.label,
+                                help_text=field_config.help_text,
+                                **field_config.kwargs %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                
+                <!-- Custom Step Content -->
+                {% if step.template %}
+                    {% include step.template %}
+                {% endif %}
+            </div>
+            
+            <!-- Step Footer -->
+            {% if step.footer_text %}
+                <div class="step-footer text-center mt-6">
+                    <p class="text-sm text-gray-600">{{ step.footer_text }}</p>
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+    
+    <!-- Navigation Buttons -->
+    <div class="step-navigation flex justify-between items-center mt-8 pt-6 border-t border-gray-200">
+        <button type="button" 
+                class="btn-secondary px-6 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed" 
+                disabled>
+            <i class="fas fa-arrow-left mr-2"></i>Previous
+        </button>
+        
+        <button type="button" 
+                class="btn-primary px-6 py-2 rounded-lg">
+            Next<i class="fas fa-arrow-right ml-2"></i>
+        </button>
+    </div>
+    
+    <!-- Progress Bar (Alternative to step indicator) -->
+    {% if show_progress_bar %}
+        <div class="progress-bar mt-6">
+            <div class="progress-track bg-gray-200 h-2 rounded-full overflow-hidden">
+                <div class="progress-fill bg-green-500 h-full transition-all duration-300 rounded-full" 
+                     style="width: {{ (100 / steps|length) }}%"></div>
+            </div>
+            <div class="progress-text text-center mt-2 text-sm text-gray-600">
+                Step <span class="current-step">1</span> of <span class="total-steps">{{ steps|length }}</span>
+            </div>
+        </div>
+    {% endif %}
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.multi-step-form');
+    if (!form) return;
+    
+    const steps = form.querySelectorAll('.form-step');
+    const stepIndicators = form.querySelectorAll('.step-indicator-item');
+    const stepConnectors = form.querySelectorAll('.step-connector');
+    const prevButton = form.querySelector('.step-navigation button:first-child');
+    const nextButton = form.querySelector('.step-navigation button:last-child');
+    const progressFill = form.querySelector('.progress-fill');
+    const currentStepSpan = form.querySelector('.current-step');
+    
+    let currentStep = 0;
+    const totalSteps = steps.length;
+    
+    // Initialize form validator if not already done
+    if (!form.formValidator) {
+        form.formValidator = new FormValidator(form, {
+            validateOnBlur: true,
+            showSuccessStates: true
+        });
+    }
+    
+    function updateStepDisplay() {
+        // Hide all steps
+        steps.forEach((step, index) => {
+            if (index === currentStep) {
+                step.classList.remove('hidden');
+                step.style.opacity = '0';
+                step.style.transform = 'translateX(20px)';
+                
+                // Animate in
+                setTimeout(() => {
+                    step.style.transition = 'all 0.3s ease-in-out';
+                    step.style.opacity = '1';
+                    step.style.transform = 'translateX(0)';
+                }, 50);
+            } else {
+                step.classList.add('hidden');
+            }
+        });
+        
+        // Update step indicators
+        stepIndicators.forEach((indicator, index) => {
+            if (index < currentStep) {
+                // Completed step
+                indicator.className = 'step-indicator-item w-8 h-8 rounded-full flex items-center justify-center mx-2 transition-all duration-200 bg-green-500 text-white';
+                indicator.innerHTML = '<i class="fas fa-check text-sm"></i>';
+            } else if (index === currentStep) {
+                // Current step
+                indicator.className = 'step-indicator-item w-8 h-8 rounded-full flex items-center justify-center mx-2 transition-all duration-200 bg-green-500 text-white';
+                indicator.textContent = index + 1;
+            } else {
+                // Future step
+                indicator.className = 'step-indicator-item w-8 h-8 rounded-full flex items-center justify-center mx-2 transition-all duration-200 bg-gray-300 text-gray-600';
+                indicator.textContent = index + 1;
+            }
+        });
+        
+        // Update connectors
+        stepConnectors.forEach((connector, index) => {
+            if (index < currentStep) {
+                connector.className = 'step-connector w-12 h-1 bg-green-500 mx-2 transition-all duration-200';
+            } else {
+                connector.className = 'step-connector w-12 h-1 bg-gray-300 mx-2 transition-all duration-200';
+            }
+        });
+        
+        // Update navigation buttons
+        prevButton.disabled = currentStep === 0;
+        
+        if (currentStep === totalSteps - 1) {
+            nextButton.innerHTML = 'Submit<i class="fas fa-check ml-2"></i>';
+            nextButton.type = 'submit';
+        } else {
+            nextButton.innerHTML = 'Next<i class="fas fa-arrow-right ml-2"></i>';
+            nextButton.type = 'button';
+        }
+        
+        // Update progress bar
+        if (progressFill) {
+            const progress = ((currentStep + 1) / totalSteps) * 100;
+            progressFill.style.width = progress + '%';
+        }
+        
+        if (currentStepSpan) {
+            currentStepSpan.textContent = currentStep + 1;
+        }
+        
+        // Focus first input in current step
+        const firstInput = steps[currentStep].querySelector('input, textarea, select');
+        if (firstInput) {
+            setTimeout(() => firstInput.focus(), 300);
+        }
+    }
+    
+    function validateCurrentStep() {
+        const currentStepElement = steps[currentStep];
+        const stepInputs = currentStepElement.querySelectorAll('input, textarea, select');
+        
+        let stepValid = true;
+        
+        stepInputs.forEach(input => {
+            const fieldName = input.name || input.id;
+            const fieldConfig = form.formValidator.fields.get(fieldName);
+            if (fieldConfig) {
+                fieldConfig.isDirty = true;
+                if (!form.formValidator.validateField(fieldName)) {
+                    stepValid = false;
+                }
+            }
+        });
+        
+        return stepValid;
+    }
+    
+    function nextStep() {
+        if (currentStep >= totalSteps - 1) return;
+        
+        // Validate current step
+        if (!validateCurrentStep()) {
+            // Shake the form to indicate errors
+            form.style.animation = 'shake 0.5s ease-in-out';
+            setTimeout(() => {
+                form.style.animation = '';
+            }, 500);
+            return;
+        }
+        
+        // Animate out current step
+        const currentStepElement = steps[currentStep];
+        currentStepElement.style.transition = 'all 0.3s ease-in-out';
+        currentStepElement.style.opacity = '0';
+        currentStepElement.style.transform = 'translateX(-20px)';
+        
+        setTimeout(() => {
+            currentStep++;
+            updateStepDisplay();
+        }, 300);
+    }
+    
+    function previousStep() {
+        if (currentStep <= 0) return;
+        
+        // Animate out current step
+        const currentStepElement = steps[currentStep];
+        currentStepElement.style.transition = 'all 0.3s ease-in-out';
+        currentStepElement.style.opacity = '0';
+        currentStepElement.style.transform = 'translateX(20px)';
+        
+        setTimeout(() => {
+            currentStep--;
+            updateStepDisplay();
+        }, 300);
+    }
+    
+    // Event listeners
+    nextButton.addEventListener('click', function(e) {
+        if (this.type === 'button') {
+            e.preventDefault();
+            nextStep();
+        }
+        // If type is 'submit', let the form handle submission
+    });
+    
+    prevButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        previousStep();
+    });
+    
+    // Keyboard navigation
+    form.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+            e.preventDefault();
+            if (currentStep < totalSteps - 1) {
+                nextStep();
+            } else {
+                form.dispatchEvent(new Event('submit'));
+            }
+        }
+    });
+    
+    // Initialize display
+    updateStepDisplay();
+});
+</script>
+
+<style>
+/* Additional styles for multi-step form animations */
+.form-step {
+    transition: all 0.3s ease-in-out;
+}
+
+.step-indicator-item {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.step-indicator-item.active {
+    box-shadow: 0 4px 8px rgba(85, 151, 15, 0.3);
+    transform: scale(1.1);
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 640px) {
+    .step-indicator {
+        margin-bottom: 1rem;
+    }
+    
+    .step-indicator-item {
+        width: 1.75rem;
+        height: 1.75rem;
+        font-size: 0.75rem;
+        margin: 0 0.25rem;
+    }
+    
+    .step-connector {
+        width: 2rem;
+    }
+    
+    .step-navigation {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .step-navigation button {
+        width: 100%;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+}
+</style>

@@ -1,15 +1,17 @@
 import os
 import secrets
 from PIL import Image
-from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
+from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app, jsonify
 from flask_login import login_required, current_user, logout_user
 from app import db, bcrypt
 from app.models.user import User
 from app.models.purchase import Purchase
 from app.models.connection import Connection
+from app.services.purchase_sharing_service import PurchaseSharingService
 from app.utils.forms import (
     UpdateProfileForm, ChangePasswordForm, 
-    PrivacySettingsForm, NotificationSettingsForm
+    PrivacySettingsForm, NotificationSettingsForm,
+    DashboardSettingsForm
 )
 
 user_bp = Blueprint('user', __name__)
@@ -171,16 +173,201 @@ def purchases():
 @login_required
 def toggle_share(purchase_id):
     """Toggle sharing status of a purchase."""
-    purchase = Purchase.query.get_or_404(purchase_id)
-    if purchase.user_id != current_user.id:
-        flash('You do not have permission to modify this purchase.', 'danger')
+    share_comment = request.form.get('share_comment', '')
+    
+    result = PurchaseSharingService.toggle_sharing(
+        purchase_id, 
+        current_user.id, 
+        share_comment if share_comment else None
+    )
+    
+    if result['success']:
+        flash(result['message'], 'success')
+    else:
+        flash(result['message'], 'danger')
+    
+    # Handle AJAX requests
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify(result)
+    
+    return redirect(request.referrer or url_for('user.purchases'))
+
+@user_bp.route('/purchases/<int:purchase_id>/update_comment', methods=['POST'])
+@login_required
+def update_share_comment(purchase_id):
+    """Update share comment for a purchase."""
+    comment = request.form.get('comment', '').strip()
+    
+    result = PurchaseSharingService.update_share_comment(
+        purchase_id, 
+        current_user.id, 
+        comment
+    )
+    
+    if result['success']:
+        flash(result['message'], 'success')
+    else:
+        flash(result['message'], 'danger')
+    
+    # Handle AJAX requests
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify(result)
+    
+    return redirect(request.referrer or url_for('user.purchases'))
+
+@user_bp.route('/purchases/bulk_share', methods=['POST'])
+@login_required
+def bulk_share():
+    """Bulk update sharing status for multiple purchases."""
+    purchase_ids = request.form.getlist('purchase_ids')
+    action = request.form.get('action')  # 'share' or 'unshare'
+    
+    if not purchase_ids or action not in ['share', 'unshare']:
+        flash('Invalid request.', 'danger')
         return redirect(url_for('user.purchases'))
     
-    purchase.is_shared = not purchase.is_shared
+    # Convert to integers
+    try:
+        purchase_ids = [int(pid) for pid in purchase_ids]
+    except ValueError:
+        flash('Invalid purchase IDs.', 'danger')
+        return redirect(url_for('user.purchases'))
+    
+    is_shared = action == 'share'
+    result = PurchaseSharingService.bulk_update_sharing(
+        current_user.id, 
+        purchase_ids, 
+        is_shared
+    )
+    
+    if result['success']:
+        flash(result['message'], 'success')
+    else:
+        flash('Failed to update purchases.', 'danger')
+    
+    return redirect(url_for('user.purchases'))
+
+@user_bp.route('/purchases/shared')
+@login_required
+def shared_purchases():
+    """View user's shared purchases."""
+    shared_purchases = PurchaseSharingService.get_user_shared_purchases(current_user.id)
+    stats = PurchaseSharingService.get_sharing_stats(current_user.id)
+    
+    return render_template(
+        'user/shared_purchases.html', 
+        title='Shared Purchases', 
+        purchases=shared_purchases,
+        stats=stats
+    )
+
+@user_bp.route('/dashboard_settings', methods=['GET', 'POST'])
+@login_required
+def dashboard_settings():
+    """Dashboard customization settings route."""
+    form = DashboardSettingsForm()
+    
+    # Get user settings from database
+    settings = current_user.settings or {}
+    
+    if form.validate_on_submit():
+        # Update dashboard settings
+        settings['dashboard'] = {
+            'default_view': form.default_view.data,
+            'items_per_page': int(form.items_per_page.data),
+            'default_sort': form.default_sort.data,
+            'widgets': {
+                'show_quick_stats': form.show_quick_stats.data,
+                'show_friend_activity': form.show_friend_activity.data,
+                'show_recent_purchases': form.show_recent_purchases.data,
+                'show_spending_chart': form.show_spending_chart.data,
+                'order': form.widget_order.data
+            },
+            'layout': {
+                'sidebar_collapsed': form.sidebar_collapsed.data,
+                'compact_mode': form.compact_mode.data
+            }
+        }
+        
+        current_user.settings = settings
+        db.session.commit()
+        flash('Your dashboard settings have been updated!', 'success')
+        return redirect(url_for('user.dashboard_settings'))
+    elif request.method == 'GET':
+        # Set form defaults from user settings
+        dashboard = settings.get('dashboard', {})
+        widgets = dashboard.get('widgets', {})
+        layout = dashboard.get('layout', {})
+        
+        form.default_view.data = dashboard.get('default_view', 'grid')
+        form.items_per_page.data = str(dashboard.get('items_per_page', 12))
+        form.default_sort.data = dashboard.get('default_sort', 'date-desc')
+        
+        form.show_quick_stats.data = widgets.get('show_quick_stats', True)
+        form.show_friend_activity.data = widgets.get('show_friend_activity', True)
+        form.show_recent_purchases.data = widgets.get('show_recent_purchases', True)
+        form.show_spending_chart.data = widgets.get('show_spending_chart', False)
+        form.widget_order.data = widgets.get('order', '["quick_stats", "recent_purchases", "friend_activity"]')
+        
+        form.sidebar_collapsed.data = layout.get('sidebar_collapsed', False)
+        form.compact_mode.data = layout.get('compact_mode', False)
+    
+    return render_template('user/dashboard_settings.html', title='Dashboard Settings', form=form)
+
+@user_bp.route('/dashboard_settings/reset', methods=['POST'])
+@login_required
+def reset_dashboard_settings():
+    """Reset dashboard settings to defaults."""
+    settings = current_user.settings or {}
+    
+    # Reset dashboard settings to defaults
+    settings['dashboard'] = {
+        'default_view': 'grid',
+        'items_per_page': 12,
+        'default_sort': 'date-desc',
+        'widgets': {
+            'show_quick_stats': True,
+            'show_friend_activity': True,
+            'show_recent_purchases': True,
+            'show_spending_chart': False,
+            'order': '["quick_stats", "recent_purchases", "friend_activity"]'
+        },
+        'layout': {
+            'sidebar_collapsed': False,
+            'compact_mode': False
+        }
+    }
+    
+    current_user.settings = settings
+    db.session.commit()
+    flash('Dashboard settings have been reset to defaults!', 'success')
+    
+    # Handle AJAX requests
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify({'success': True, 'message': 'Dashboard settings reset successfully'})
+    
+    return redirect(url_for('user.dashboard_settings'))
+
+@user_bp.route('/dashboard_settings/widget_order', methods=['POST'])
+@login_required
+def update_widget_order():
+    """Update widget order via AJAX."""
+    widget_order = request.json.get('order', [])
+    
+    if not isinstance(widget_order, list):
+        return jsonify({'success': False, 'message': 'Invalid widget order format'})
+    
+    settings = current_user.settings or {}
+    if 'dashboard' not in settings:
+        settings['dashboard'] = {}
+    if 'widgets' not in settings['dashboard']:
+        settings['dashboard']['widgets'] = {}
+    
+    settings['dashboard']['widgets']['order'] = str(widget_order)
+    current_user.settings = settings
     db.session.commit()
     
-    flash('Sharing status updated!', 'success')
-    return redirect(url_for('user.purchases'))
+    return jsonify({'success': True, 'message': 'Widget order updated successfully'})
 
 @user_bp.route('/analytics')
 @login_required

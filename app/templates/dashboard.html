@@ -4,170 +4,616 @@
 
 {% block content %}
 <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-800">Welcome, {{ current_user.name }}!</h1>
-    <p class="text-gray-600">Here's an overview of your shopping activity.</p>
-</div>
-
-<!-- Quick Stats -->
-<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-    <div class="bg-white p-6 rounded-lg shadow-md">
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-semibold text-gray-700">Total Purchases</h3>
-            <span class="text-green-800"><i class="fas fa-shopping-bag"></i></span>
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">Welcome, {{ current_user.name }}!</h1>
+            <p class="text-gray-600">Here's an overview of your shopping activity.</p>
         </div>
-        <p class="text-3xl font-bold text-gray-800">{{ purchases|length }}</p>
-        <p class="text-sm text-gray-500 mt-2">From all connected stores</p>
-    </div>
-    
-    <div class="bg-white p-6 rounded-lg shadow-md">
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-semibold text-gray-700">Shared Items</h3>
-            <span class="text-green-800"><i class="fas fa-share-alt"></i></span>
+        <div class="flex items-center space-x-4">
+            <a href="{{ url_for('user.dashboard_settings') }}" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg flex items-center">
+                <i class="fas fa-cog mr-2"></i>
+                Customize Dashboard
+            </a>
         </div>
-        <p class="text-3xl font-bold text-gray-800">{{ shared_count }}</p>
-        <p class="text-sm text-gray-500 mt-2">Visible to your friends</p>
-    </div>
-    
-    <div class="bg-white p-6 rounded-lg shadow-md">
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-semibold text-gray-700">Friends</h3>
-            <span class="text-green-800"><i class="fas fa-users"></i></span>
-        </div>
-        <p class="text-3xl font-bold text-gray-800">{{ friends_count }}</p>
-        <p class="text-sm text-gray-500 mt-2">Connected on BuyRoll</p>
-    </div>
-    
-    <div class="bg-white p-6 rounded-lg shadow-md">
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-semibold text-gray-700">This Month</h3>
-            <span class="text-green-800"><i class="fas fa-calendar-alt"></i></span>
-        </div>
-        <p class="text-3xl font-bold text-gray-800">${{ monthly_spending }}</p>
-        <p class="text-sm text-gray-500 mt-2">Total spending</p>
     </div>
 </div>
 
-<!-- Recent Purchases -->
-<div class="bg-white rounded-lg shadow-md mb-8">
-    <div class="border-b border-gray-200 p-6">
-        <div class="flex justify-between items-center">
-            <h2 class="text-xl font-bold text-gray-800">Recent Purchases</h2>
-            <a href="{{ url_for('user.purchases') }}" class="text-green-800 hover:text-green-900 font-medium">View All</a>
-        </div>
-    </div>
-    
-    <div class="p-6">
-        {% if purchases %}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {% for purchase in purchases[:6] %}
-                <div class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                    <div class="h-48 overflow-hidden">
-                        <img src="{{ purchase.product.image_url }}" alt="{{ purchase.product.title }}" class="w-full h-full object-cover">
+<!-- Dashboard Widgets Container -->
+<div id="dashboard-widgets" class="{{ 'compact-mode' if dashboard_settings.layout.compact_mode else '' }}">
+    <!-- Widgets will be dynamically loaded here based on user preferences -->
+</div>
+
+<!-- Widget Templates (Hidden) -->
+<div id="widget-templates" style="display: none;">
+    <!-- Quick Stats Widget Template -->
+    <div id="quick-stats-template" class="widget-template">
+        <div class="widget-container mb-8" data-widget="quick_stats">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Total Purchases</h3>
+                        <span class="text-green-800"><i class="fas fa-shopping-bag"></i></span>
                     </div>
-                    <div class="p-4">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="text-lg font-semibold text-gray-800 line-clamp-2">{{ purchase.product.title }}</h3>
-                            <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded">{{ purchase.product.category }}</span>
+                    <p class="text-3xl font-bold text-gray-800">{{ purchases|length }}</p>
+                    <p class="text-sm text-gray-500 mt-2">From all connected stores</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Shared Items</h3>
+                        <span class="text-green-800"><i class="fas fa-share-alt"></i></span>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-800">{{ shared_count }}</p>
+                    <p class="text-sm text-gray-500 mt-2">Visible to your friends</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Friends</h3>
+                        <span class="text-green-800"><i class="fas fa-users"></i></span>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-800">{{ friends_count }}</p>
+                    <p class="text-sm text-gray-500 mt-2">Connected on BuyRoll</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-700">This Month</h3>
+                        <span class="text-green-800"><i class="fas fa-calendar-alt"></i></span>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-800">${{ monthly_spending }}</p>
+                    <p class="text-sm text-gray-500 mt-2">Total spending</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Purchases Widget Template -->
+    <div id="recent-purchases-template" class="widget-template">
+        <div class="widget-container mb-8" data-widget="recent_purchases">
+            <div class="bg-white rounded-lg shadow-md">
+                <div class="border-b border-gray-200 p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold text-gray-800">Recent Purchases</h2>
+                        <a href="{{ url_for('user.purchases') }}" class="text-green-800 hover:text-green-900 font-medium">View All</a>
+                    </div>
+                    
+                    <!-- Filter and Sort Controls -->
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center space-x-4">
+                            <div>
+                                <label for="dashboard-filter-store" class="block text-sm font-medium text-gray-700 mb-1">Store</label>
+                                <select id="dashboard-filter-store" class="border border-gray-300 rounded-md px-3 py-2 text-sm">
+                                    <option value="">All Stores</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="dashboard-filter-sharing" class="block text-sm font-medium text-gray-700 mb-1">Sharing</label>
+                                <select id="dashboard-filter-sharing" class="border border-gray-300 rounded-md px-3 py-2 text-sm">
+                                    <option value="">All Items</option>
+                                    <option value="shared">Shared Only</option>
+                                    <option value="private">Private Only</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="dashboard-sort-by" class="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
+                                <select id="dashboard-sort-by" class="border border-gray-300 rounded-md px-3 py-2 text-sm">
+                                    <option value="date-desc">Newest First</option>
+                                    <option value="date-asc">Oldest First</option>
+                                    <option value="price-desc">Price: High to Low</option>
+                                    <option value="price-asc">Price: Low to High</option>
+                                    <option value="store">Store Name</option>
+                                </select>
+                            </div>
                         </div>
-                        <p class="text-gray-600 text-sm mb-2">{{ purchase.store_name }}</p>
-                        <div class="flex justify-between items-center">
-                            <p class="text-lg font-bold text-gray-800">${{ purchase.product.price }}</p>
-                            <p class="text-sm text-gray-500">{{ purchase.purchase_date.strftime('%b %d, %Y') }}</p>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="toggleDashboardView('grid')" id="dashboard-grid-view" class="p-2 text-gray-600 hover:text-gray-800 border rounded bg-gray-200">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                            <button onclick="toggleDashboardView('list')" id="dashboard-list-view" class="p-2 text-gray-600 hover:text-gray-800 border rounded">
+                                <i class="fas fa-list"></i>
+                            </button>
                         </div>
-                        <div class="mt-4 flex justify-between items-center">
-                            <form action="{{ url_for('user.toggle_share', purchase_id=purchase.id) }}" method="post">
-                                <button type="submit" class="text-sm {% if purchase.is_shared %}text-green-800{% else %}text-gray-500{% endif %} hover:text-green-900 font-medium flex items-center">
-                                    <i class="fas {% if purchase.is_shared %}fa-toggle-on{% else %}fa-toggle-off{% endif %} mr-1"></i>
-                                    {% if purchase.is_shared %}Shared{% else %}Not Shared{% endif %}
-                                </button>
-                            </form>
-                            <a href="#" class="text-sm text-gray-500 hover:text-gray-700">
-                                <i class="fas fa-external-link-alt mr-1"></i> View Details
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    {% if purchases %}
+                        <div id="dashboard-purchases-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {% for purchase in purchases %}
+                            <div class="dashboard-purchase-item bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow relative"
+                                 data-store="{{ purchase.store_name }}" 
+                                 data-sharing="{{ 'shared' if purchase.is_shared else 'private' }}"
+                                 data-date="{{ purchase.purchase_date.isoformat() }}"
+                                 data-price="{{ purchase.product.price }}">
+                                <div class="h-48 overflow-hidden relative">
+                                    <img src="{{ purchase.product.image_url }}" alt="{{ purchase.product.title }}" class="w-full h-full object-cover">
+                                    <!-- Sharing Status Indicator -->
+                                    <div class="absolute top-2 right-2">
+                                        {% if purchase.is_shared %}
+                                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                                <i class="fas fa-share-alt mr-1"></i>Shared
+                                            </span>
+                                        {% else %}
+                                            <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
+                                                <i class="fas fa-lock mr-1"></i>Private
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h3 class="text-lg font-semibold text-gray-800 line-clamp-2">{{ purchase.product.title }}</h3>
+                                        {% if purchase.product.category %}
+                                            <span class="bg-gray-100 text-gray-800 text-xs font-medium px-2.5 py-0.5 rounded">{{ purchase.product.category }}</span>
+                                        {% endif %}
+                                    </div>
+                                    <p class="text-gray-600 text-sm mb-2">{{ purchase.store_name }}</p>
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-lg font-bold text-gray-800">${{ purchase.product.price }}</p>
+                                        <p class="text-sm text-gray-500">{{ purchase.purchase_date.strftime('%b %d, %Y') }}</p>
+                                    </div>
+                                    
+                                    <!-- Share Comment -->
+                                    {% if purchase.share_comment %}
+                                    <div class="bg-gray-50 p-3 rounded-lg mb-3">
+                                        <p class="text-sm text-gray-700 italic">"{{ purchase.share_comment }}"</p>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    <div class="mt-4 flex justify-between items-center">
+                                        <button onclick="toggleShare({{ purchase.id }}, {{ purchase.is_shared|lower }})" 
+                                                class="text-sm {% if purchase.is_shared %}text-green-600 hover:text-green-800{% else %}text-gray-500 hover:text-gray-700{% endif %} font-medium flex items-center">
+                                            <i class="fas {% if purchase.is_shared %}fa-toggle-on{% else %}fa-toggle-off{% endif %} mr-1"></i>
+                                            {% if purchase.is_shared %}Shared{% else %}Share{% endif %}
+                                        </button>
+                                        <a href="{{ url_for('user.purchases') }}" class="text-sm text-gray-500 hover:text-gray-700">
+                                            <i class="fas fa-external-link-alt mr-1"></i> View All
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-8">
+                            <p class="text-gray-500 mb-4">No purchases found. Connect your stores to import your purchase history.</p>
+                            <a href="#" class="bg-gradient-to-r from-green-900 to-green-800 hover:from-green-800 hover:to-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                Connect Store
                             </a>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
-                {% endfor %}
             </div>
-        {% else %}
-            <div class="text-center py-8">
-                <p class="text-gray-500 mb-4">No purchases found. Connect your stores to import your purchase history.</p>
-                <a href="#" class="bg-gradient-to-r from-green-900 to-green-800 hover:from-green-800 hover:to-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Connect Store
-                </a>
-            </div>
-        {% endif %}
-    </div>
-</div>
-
-<!-- Friend Activity -->
-<div class="bg-white rounded-lg shadow-md">
-    <div class="border-b border-gray-200 p-6">
-        <div class="flex justify-between items-center">
-            <h2 class="text-xl font-bold text-gray-800">Friend Activity</h2>
-            <a href="{{ url_for('social.feed') }}" class="text-green-800 hover:text-green-900 font-medium">View Feed</a>
         </div>
     </div>
-    
-    <div class="p-6">
-        {% if friend_activity %}
-            <div class="space-y-6">
-                {% for activity in friend_activity %}
-                <div class="flex">
-                    <img src="{{ url_for('static', filename='images/profiles/' + activity.user.profile_image) }}" alt="{{ activity.user.name }}" class="h-12 w-12 rounded-full object-cover mr-4">
-                    <div class="flex-1">
-                        <div class="bg-gray-50 rounded-lg p-4">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="font-semibold text-gray-800">{{ activity.user.name }}</h3>
-                                <span class="text-sm text-gray-500">{{ activity.purchase_date.strftime('%b %d, %Y') }}</span>
-                            </div>
-                            <p class="text-gray-600 mb-4">{{ activity.share_comment or 'Shared a purchase' }}</p>
-                            <div class="flex bg-white border border-gray-200 rounded-lg overflow-hidden">
-                                <div class="w-24 h-24">
-                                    <img src="{{ activity.product.image_url }}" alt="{{ activity.product.title }}" class="w-full h-full object-cover">
+
+    <!-- Friend Activity Widget Template -->
+    <div id="friend-activity-template" class="widget-template">
+        <div class="widget-container mb-8" data-widget="friend_activity">
+            <div class="bg-white rounded-lg shadow-md">
+                <div class="border-b border-gray-200 p-6">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-bold text-gray-800">Friend Activity</h2>
+                        <a href="{{ url_for('social.feed') }}" class="text-green-800 hover:text-green-900 font-medium">View Feed</a>
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    {% if friend_activity %}
+                        <div class="space-y-6">
+                            {% for activity in friend_activity %}
+                            <div class="flex">
+                                <img src="{{ url_for('static', filename='images/profiles/' + activity.user.profile_image) }}" alt="{{ activity.user.name }}" class="h-12 w-12 rounded-full object-cover mr-4">
+                                <div class="flex-1">
+                                    <div class="bg-gray-50 rounded-lg p-4">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <h3 class="font-semibold text-gray-800">{{ activity.user.name }}</h3>
+                                            <span class="text-sm text-gray-500">{{ activity.purchase_date.strftime('%b %d, %Y') }}</span>
+                                        </div>
+                                        <p class="text-gray-600 mb-4">{{ activity.share_comment or 'Shared a purchase' }}</p>
+                                        <div class="flex bg-white border border-gray-200 rounded-lg overflow-hidden">
+                                            <div class="w-24 h-24">
+                                                <img src="{{ activity.product.image_url }}" alt="{{ activity.product.title }}" class="w-full h-full object-cover">
+                                            </div>
+                                            <div class="p-3 flex-1">
+                                                <h4 class="font-medium text-gray-800 line-clamp-1">{{ activity.product.title }}</h4>
+                                                <p class="text-sm text-gray-600 mb-1">{{ activity.store_name }}</p>
+                                                <p class="font-bold text-gray-800">${{ activity.product.price }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3 flex items-center space-x-4">
+                                            <button class="text-sm text-gray-500 hover:text-green-800 flex items-center">
+                                                <i class="far fa-heart mr-1"></i> Like
+                                            </button>
+                                            <button class="text-sm text-gray-500 hover:text-green-800 flex items-center">
+                                                <i class="far fa-comment mr-1"></i> Comment
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="p-3 flex-1">
-                                    <h4 class="font-medium text-gray-800 line-clamp-1">{{ activity.product.title }}</h4>
-                                    <p class="text-sm text-gray-600 mb-1">{{ activity.store_name }}</p>
-                                    <p class="font-bold text-gray-800">${{ activity.product.price }}</p>
-                                </div>
                             </div>
-                            <div class="mt-3 flex items-center space-x-4">
-                                <button class="text-sm text-gray-500 hover:text-green-800 flex items-center">
-                                    <i class="far fa-heart mr-1"></i> Like
-                                </button>
-                                <button class="text-sm text-gray-500 hover:text-green-800 flex items-center">
-                                    <i class="far fa-comment mr-1"></i> Comment
-                                </button>
-                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-8">
+                            <p class="text-gray-500 mb-4">No friend activity yet. Connect with friends to see their shared purchases.</p>
+                            <a href="{{ url_for('social.search_friends') }}" class="bg-gradient-to-r from-green-900 to-green-800 hover:from-green-800 hover:to-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                Find Friends
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Spending Chart Widget Template -->
+    <div id="spending-chart-template" class="widget-template">
+        <div class="widget-container mb-8" data-widget="spending_chart">
+            <div class="bg-white rounded-lg shadow-md">
+                <div class="border-b border-gray-200 p-6">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-bold text-gray-800">Spending Overview</h2>
+                        <a href="{{ url_for('user.analytics') }}" class="text-green-800 hover:text-green-900 font-medium">View Analytics</a>
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <div class="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
+                        <div class="text-center">
+                            <i class="fas fa-chart-line text-4xl text-gray-400 mb-4"></i>
+                            <p class="text-gray-500">Spending chart will be displayed here</p>
+                            <p class="text-sm text-gray-400 mt-2">Connect your stores to see spending analytics</p>
                         </div>
                     </div>
                 </div>
-                {% endfor %}
             </div>
-        {% else %}
-            <div class="text-center py-8">
-                <p class="text-gray-500 mb-4">No friend activity yet. Connect with friends to see their shared purchases.</p>
-                <a href="{{ url_for('social.search_friends') }}" class="bg-gradient-to-r from-green-900 to-green-800 hover:from-green-800 hover:to-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Find Friends
-                </a>
-            </div>
-        {% endif %}
+        </div>
     </div>
 </div>
-{% endblock %}
+
 
 {% block scripts %}
 <script>
-    // Sample data for demonstration
-    document.addEventListener('DOMContentLoaded', function() {
-        // This would be replaced with actual data from the backend
-        const purchases = {{ purchases|length }};
-        const shared_count = Math.floor(purchases * 0.7);
-        const friends_count = 12;
-        const monthly_spending = 325.50;
-        
-        // Update the dashboard with sample data if needed
+let dashboardCurrentView = 'grid';
+let dashboardSettings = {
+    widgets: {
+        show_quick_stats: true,
+        show_recent_purchases: true,
+        show_friend_activity: true,
+        show_spending_chart: false,
+        order: ["quick_stats", "recent_purchases", "friend_activity"]
+    },
+    layout: {
+        compact_mode: false
+    },
+    default_view: 'grid',
+    items_per_page: 12,
+    default_sort: 'date-desc'
+};
+
+// Load dashboard settings from server
+function loadDashboardSettings() {
+    // This would normally be passed from the server
+    // For now, we'll use localStorage as fallback
+    const saved = localStorage.getItem('dashboardSettings');
+    if (saved) {
+        try {
+            const parsed = JSON.parse(saved);
+            dashboardSettings = { ...dashboardSettings, ...parsed };
+        } catch (e) {
+            console.error('Error parsing dashboard settings:', e);
+        }
+    }
+}
+
+// Initialize dashboard widgets based on settings
+function initializeDashboard() {
+    const container = document.getElementById('dashboard-widgets');
+    const templates = document.getElementById('widget-templates');
+    
+    // Clear existing widgets
+    container.innerHTML = '';
+    
+    // Get widget order
+    let widgetOrder = dashboardSettings.widgets.order;
+    if (typeof widgetOrder === 'string') {
+        try {
+            widgetOrder = JSON.parse(widgetOrder);
+        } catch (e) {
+            widgetOrder = ["quick_stats", "recent_purchases", "friend_activity"];
+        }
+    }
+    
+    // Add widgets in order
+    widgetOrder.forEach(widgetId => {
+        const settingKey = `show_${widgetId}`;
+        if (dashboardSettings.widgets[settingKey]) {
+            const template = templates.querySelector(`#${widgetId.replace('_', '-')}-template`);
+            if (template) {
+                const clone = template.cloneNode(true);
+                clone.style.display = 'block';
+                clone.id = `${widgetId.replace('_', '-')}-widget`;
+                container.appendChild(clone);
+            }
+        }
     });
+    
+    // Apply layout settings
+    if (dashboardSettings.layout.compact_mode) {
+        container.classList.add('compact-mode');
+    }
+    
+    // Set default view
+    dashboardCurrentView = dashboardSettings.default_view || 'grid';
+    
+    // Initialize filters and view
+    setTimeout(() => {
+        initializeDashboardControls();
+        toggleDashboardView(dashboardCurrentView);
+        loadFilterPreferences();
+    }, 100);
+}
+
+// Initialize dashboard controls
+function initializeDashboardControls() {
+    // Populate store filter
+    const stores = [...new Set(Array.from(document.querySelectorAll('.dashboard-purchase-item')).map(item => item.dataset.store))];
+    const storeSelect = document.getElementById('dashboard-filter-store');
+    if (storeSelect) {
+        storeSelect.innerHTML = '<option value="">All Stores</option>';
+        stores.forEach(store => {
+            if (store) {
+                const option = document.createElement('option');
+                option.value = store;
+                option.textContent = store;
+                storeSelect.appendChild(option);
+            }
+        });
+    }
+    
+    // Add event listeners for filters
+    const filterStore = document.getElementById('dashboard-filter-store');
+    const filterSharing = document.getElementById('dashboard-filter-sharing');
+    const sortBy = document.getElementById('dashboard-sort-by');
+    
+    if (filterStore) filterStore.addEventListener('change', applyDashboardFilters);
+    if (filterSharing) filterSharing.addEventListener('change', applyDashboardFilters);
+    if (sortBy) sortBy.addEventListener('change', applyDashboardFilters);
+    
+    // Add event listeners to save preferences
+    if (filterStore) filterStore.addEventListener('change', saveFilterPreferences);
+    if (filterSharing) filterSharing.addEventListener('change', saveFilterPreferences);
+    if (sortBy) sortBy.addEventListener('change', saveFilterPreferences);
+}
+
+// Toggle sharing with optional comment
+function toggleShare(purchaseId, isCurrentlyShared) {
+    if (!isCurrentlyShared) {
+        // For dashboard, do a simple share without comment modal
+        fetch(`/user/purchases/${purchaseId}/toggle_share`, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'share_comment='
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message);
+            }
+        });
+    } else {
+        // Direct unshare
+        fetch(`/user/purchases/${purchaseId}/toggle_share`, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'share_comment='
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.message);
+            }
+        });
+    }
+}
+
+// Dashboard view toggle
+function toggleDashboardView(view) {
+    dashboardCurrentView = view;
+    const container = document.getElementById('dashboard-purchases-container');
+    const gridBtn = document.getElementById('dashboard-grid-view');
+    const listBtn = document.getElementById('dashboard-list-view');
+    
+    if (!container || !gridBtn || !listBtn) return;
+    
+    if (view === 'grid') {
+        container.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+        gridBtn.classList.add('bg-gray-200');
+        listBtn.classList.remove('bg-gray-200');
+        
+        // Update item styles for grid view
+        const items = container.querySelectorAll('.dashboard-purchase-item');
+        items.forEach(item => {
+            item.className = item.className.replace(/\bflex\b|\bflex-row\b|\bspace-x-4\b/g, '');
+            if (!item.className.includes('dashboard-purchase-item')) {
+                item.className = 'dashboard-purchase-item bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow relative ' + item.className;
+            }
+        });
+    } else {
+        container.className = 'space-y-4';
+        listBtn.classList.add('bg-gray-200');
+        gridBtn.classList.remove('bg-gray-200');
+        
+        // Update item styles for list view
+        const items = container.querySelectorAll('.dashboard-purchase-item');
+        items.forEach(item => {
+            item.className = 'dashboard-purchase-item bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow relative flex flex-row space-x-4';
+            
+            // Restructure content for list view
+            const img = item.querySelector('.h-48');
+            const content = item.querySelector('.p-4');
+            if (img && content) {
+                img.className = 'w-32 h-32 flex-shrink-0 overflow-hidden';
+                content.className = 'p-4 flex-1 flex flex-col justify-between';
+            }
+        });
+    }
+    
+    // Save preference
+    dashboardSettings.default_view = view;
+    saveDashboardSettings();
+}
+
+// Dashboard filtering and sorting
+function applyDashboardFilters() {
+    const storeFilter = document.getElementById('dashboard-filter-store');
+    const sharingFilter = document.getElementById('dashboard-filter-sharing');
+    const sortBy = document.getElementById('dashboard-sort-by');
+    
+    if (!storeFilter || !sharingFilter || !sortBy) return;
+    
+    const storeValue = storeFilter.value;
+    const sharingValue = sharingFilter.value;
+    const sortValue = sortBy.value;
+    
+    let items = Array.from(document.querySelectorAll('.dashboard-purchase-item'));
+    
+    // Filter items
+    items.forEach(item => {
+        let show = true;
+        
+        if (storeValue && item.dataset.store !== storeValue) {
+            show = false;
+        }
+        
+        if (sharingValue && item.dataset.sharing !== sharingValue) {
+            show = false;
+        }
+        
+        item.style.display = show ? 'block' : 'none';
+    });
+    
+    // Sort visible items
+    const visibleItems = items.filter(item => item.style.display !== 'none');
+    const container = document.getElementById('dashboard-purchases-container');
+    
+    if (container) {
+        visibleItems.sort((a, b) => {
+            switch (sortValue) {
+                case 'date-desc':
+                    return new Date(b.dataset.date) - new Date(a.dataset.date);
+                case 'date-asc':
+                    return new Date(a.dataset.date) - new Date(b.dataset.date);
+                case 'price-desc':
+                    return parseFloat(b.dataset.price) - parseFloat(a.dataset.price);
+                case 'price-asc':
+                    return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+                case 'store':
+                    return a.dataset.store.localeCompare(b.dataset.store);
+                default:
+                    return 0;
+            }
+        });
+        
+        // Re-append sorted items
+        visibleItems.forEach(item => container.appendChild(item));
+    }
+    
+    // Update view after filtering/sorting
+    toggleDashboardView(dashboardCurrentView);
+}
+
+// Save dashboard settings
+function saveDashboardSettings() {
+    localStorage.setItem('dashboardSettings', JSON.stringify(dashboardSettings));
+}
+
+// Save filter preferences
+function saveFilterPreferences() {
+    const filterStore = document.getElementById('dashboard-filter-store');
+    const filterSharing = document.getElementById('dashboard-filter-sharing');
+    const sortBy = document.getElementById('dashboard-sort-by');
+    
+    const preferences = {
+        store: filterStore ? filterStore.value : '',
+        sharing: filterSharing ? filterSharing.value : '',
+        sort: sortBy ? sortBy.value : 'date-desc'
+    };
+    localStorage.setItem('dashboardFilters', JSON.stringify(preferences));
+}
+
+// Load saved filter preferences
+function loadFilterPreferences() {
+    const saved = localStorage.getItem('dashboardFilters');
+    if (saved) {
+        try {
+            const preferences = JSON.parse(saved);
+            const filterStore = document.getElementById('dashboard-filter-store');
+            const filterSharing = document.getElementById('dashboard-filter-sharing');
+            const sortBy = document.getElementById('dashboard-sort-by');
+            
+            if (filterStore) filterStore.value = preferences.store || '';
+            if (filterSharing) filterSharing.value = preferences.sharing || '';
+            if (sortBy) sortBy.value = preferences.sort || 'date-desc';
+            
+            applyDashboardFilters();
+        } catch (e) {
+            console.error('Error loading filter preferences:', e);
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadDashboardSettings();
+    initializeDashboard();
+});
 </script>
+
+<style>
+.compact-mode .widget-container {
+    margin-bottom: 1rem;
+}
+
+.compact-mode .bg-white {
+    padding: 1rem;
+}
+
+.compact-mode .p-6 {
+    padding: 1rem;
+}
+
+.compact-mode .mb-8 {
+    margin-bottom: 1rem;
+}
+
+.compact-mode .gap-6 {
+    gap: 1rem;
+}
+
+.line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+</style>
 {% endblock %}

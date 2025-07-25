@@ -1,0 +1,294 @@
+{
+  "monthly_spending": {
+    "monthly_spending": [
+      {
+        "year": 2025,
+        "month": 7,
+        "month_name": "July",
+        "total_spending": 2499.99,
+        "purchase_count": 1,
+        "period": "July 2025"
+      },
+      {
+        "year": 2025,
+        "month": 6,
+        "month_name": "June",
+        "total_spending": 1849.97,
+        "purchase_count": 3,
+        "period": "June 2025"
+      },
+      {
+        "year": 2025,
+        "month": 5,
+        "month_name": "May",
+        "total_spending": 189.99,
+        "purchase_count": 1,
+        "period": "May 2025"
+      },
+      {
+        "year": 2025,
+        "month": 4,
+        "month_name": "April",
+        "total_spending": 289.98,
+        "purchase_count": 2,
+        "period": "April 2025"
+      },
+      {
+        "year": 2025,
+        "month": 3,
+        "month_name": "March",
+        "total_spending": 949.97,
+        "purchase_count": 3,
+        "period": "March 2025"
+      },
+      {
+        "year": 2025,
+        "month": 2,
+        "month_name": "February",
+        "total_spending": 149.99,
+        "purchase_count": 1,
+        "period": "February 2025"
+      },
+      {
+        "year": 2025,
+        "month": 1,
+        "month_name": "January",
+        "total_spending": 349.98,
+        "purchase_count": 2,
+        "period": "January 2025"
+      },
+      {
+        "year": 2024,
+        "month": 12,
+        "month_name": "December",
+        "total_spending": 159.97,
+        "purchase_count": 3,
+        "period": "December 2024"
+      },
+      {
+        "year": 2024,
+        "month": 11,
+        "month_name": "November",
+        "total_spending": 34.99,
+        "purchase_count": 1,
+        "period": "November 2024"
+      },
+      {
+        "year": 2024,
+        "month": 10,
+        "month_name": "October",
+        "total_spending": 199.99,
+        "purchase_count": 1,
+        "period": "October 2024"
+      }
+    ],
+    "total_months": 10
+  },
+  "category_analysis": {
+    "category_analysis": [
+      {
+        "category": "Electronics",
+        "total_spending": 4349.96,
+        "purchase_count": 4,
+        "avg_price": 1087.49,
+        "percentage": 65.17
+      },
+      {
+        "category": "Home",
+        "total_spending": 1099.96,
+        "purchase_count": 4,
+        "avg_price": 274.99,
+        "percentage": 16.48
+      },
+      {
+        "category": "Clothing",
+        "total_spending": 779.96,
+        "purchase_count": 4,
+        "avg_price": 194.99,
+        "percentage": 11.69
+      },
+      {
+        "category": "Health",
+        "total_spending": 234.98,
+        "purchase_count": 2,
+        "avg_price": 117.49000000000001,
+        "percentage": 3.52
+      },
+      {
+        "category": "Books",
+        "total_spending": 119.97,
+        "purchase_count": 3,
+        "avg_price": 39.99,
+        "percentage": 1.8
+      },
+      {
+        "category": "Beauty",
+        "total_spending": 89.99,
+        "purchase_count": 1,
+        "avg_price": 89.99,
+        "percentage": 1.35
+      }
+    ],
+    "total_spending": 6674.82,
+    "total_categories": 6
+  },
+  "store_analysis": {
+    "store_analysis": [
+      {
+        "store_name": "Apple Store",
+        "total_spending": 2839.97,
+        "purchase_count": 3,
+        "avg_price": 946.6566666666666,
+        "percentage": 42.55,
+        "last_purchase": "2025-07-24T12:59:00.066613"
+      },
+      {
+        "store_name": "Amazon",
+        "total_spending": 1489.97,
+        "purchase_count": 3,
+        "avg_price": 496.6566666666667,
+        "percentage": 22.32,
+        "last_purchase": "2025-06-29T12:59:00.066613"
+      },
+      {
+        "store_name": "Target",
+        "total_spending": 949.97,
+        "purchase_count": 3,
+        "avg_price": 316.6566666666667,
+        "percentage": 14.23,
+        "last_purchase": "2025-06-09T12:59:00.066613"
+      },
+      {
+        "store_name": "Best Buy",
+        "total_spending": 534.97,
+        "purchase_count": 3,
+        "avg_price": 178.32333333333335,
+        "percentage": 8.01,
+        "last_purchase": "2025-06-04T12:59:00.066613"
+      },
+      {
+        "store_name": "Walmart",
+        "total_spending": 489.98,
+        "purchase_count": 2,
+        "avg_price": 244.99,
+        "percentage": 7.34,
+        "last_purchase": "2025-05-15T12:59:00.066613"
+      },
+      {
+        "store_name": "Home Depot",
+        "total_spending": 189.98,
+        "purchase_count": 2,
+        "avg_price": 94.99000000000001,
+        "percentage": 2.85,
+        "last_purchase": "2025-04-25T12:59:00.066613"
+      },
+      {
+        "store_name": "Fashion Boutique",
+        "total_spending": 179.98,
+        "purchase_count": 2,
+        "avg_price": 89.99000000000001,
+        "percentage": 2.7,
+        "last_purchase": "2025-04-20T12:59:00.066613"
+      }
+    ],
+    "total_spending": 6674.82,
+    "total_stores": 7
+  },
+  "spending_trends": {
+    "trends_data": [
+      {
+        "year": 2024,
+        "month": 10,
+        "month_name": "October",
+        "period": "Oct 2024",
+        "total_spending": 199.99,
+        "purchase_count": 1
+      },
+      {
+        "year": 2024,
+        "month": 11,
+        "month_name": "November",
+        "period": "Nov 2024",
+        "total_spending": 34.99,
+        "purchase_count": 1
+      },
+      {
+        "year": 2024,
+        "month": 12,
+        "month_name": "December",
+        "period": "Dec 2024",
+        "total_spending": 159.97,
+        "purchase_count": 3
+      },
+      {
+        "year": 2025,
+        "month": 1,
+        "month_name": "January",
+        "period": "Jan 2025",
+        "total_spending": 349.98,
+        "purchase_count": 2
+      },
+      {
+        "year": 2025,
+        "month": 2,
+        "month_name": "February",
+        "period": "Feb 2025",
+        "total_spending": 149.99,
+        "purchase_count": 1
+      },
+      {
+        "year": 2025,
+        "month": 3,
+        "month_name": "March",
+        "period": "Mar 2025",
+        "total_spending": 949.97,
+        "purchase_count": 3
+      },
+      {
+        "year": 2025,
+        "month": 4,
+        "month_name": "April",
+        "period": "Apr 2025",
+        "total_spending": 289.98,
+        "purchase_count": 2
+      },
+      {
+        "year": 2025,
+        "month": 5,
+        "month_name": "May",
+        "period": "May 2025",
+        "total_spending": 189.99,
+        "purchase_count": 1
+      },
+      {
+        "year": 2025,
+        "month": 6,
+        "month_name": "June",
+        "period": "Jun 2025",
+        "total_spending": 1849.97,
+        "purchase_count": 3
+      },
+      {
+        "year": 2025,
+        "month": 7,
+        "month_name": "July",
+        "period": "Jul 2025",
+        "total_spending": 2499.99,
+        "purchase_count": 1
+      }
+    ],
+    "period_months": 12,
+    "statistics": {
+      "avg_monthly_spending": 667.48,
+      "max_monthly_spending": 2499.99,
+      "min_monthly_spending": 34.99,
+      "total_spending": 6674.82,
+      "trend_direction": "increasing"
+    }
+  },
+  "period": {
+    "start_date": "2024-07-29T12:59:00.315585",
+    "end_date": "2025-07-24T12:59:00.315585",
+    "months": 12
+  }
+}

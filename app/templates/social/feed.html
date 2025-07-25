@@ -1,0 +1,147 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">Friend Feed</h1>
+            <p class="text-gray-600">See what your friends are sharing</p>
+        </div>
+
+        <!-- Feed Content -->
+        {% if shared_purchases %}
+        <div class="space-y-6">
+            {% for purchase in shared_purchases %}
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <!-- User Info -->
+                <div class="flex items-center mb-4">
+                    <img src="{{ url_for('static', filename='images/profile/' + (purchase.user.profile_image or 'default.jpg')) }}" 
+                         alt="{{ purchase.user.name }}" 
+                         class="w-10 h-10 rounded-full mr-3">
+                    <div>
+                        <h3 class="font-semibold text-gray-800">{{ purchase.user.name }}</h3>
+                        <p class="text-gray-500 text-sm">{{ purchase.purchase_date.strftime('%B %d, %Y') }}</p>
+                    </div>
+                </div>
+
+                <!-- Purchase Content -->
+                <div class="flex flex-col md:flex-row">
+                    <!-- Product Image -->
+                    {% if purchase.product.image_url %}
+                    <div class="md:w-1/3 mb-4 md:mb-0 md:mr-6">
+                        <img src="{{ purchase.product.image_url }}" 
+                             alt="{{ purchase.product.title }}" 
+                             class="w-full h-48 object-cover rounded-lg">
+                    </div>
+                    {% endif %}
+
+                    <!-- Product Details -->
+                    <div class="flex-1">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-2">{{ purchase.product.title }}</h4>
+                        {% if purchase.product.description %}
+                        <p class="text-gray-600 mb-3">{{ purchase.product.description[:200] }}{% if purchase.product.description|length > 200 %}...{% endif %}</p>
+                        {% endif %}
+                        
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-2xl font-bold text-green-800">${{ "%.2f"|format(purchase.product.price) }}</span>
+                            <span class="text-sm text-gray-500">from {{ purchase.store_name }}</span>
+                        </div>
+
+                        {% if purchase.share_comment %}
+                        <div class="bg-gray-50 rounded-lg p-3 mb-4">
+                            <p class="text-gray-700 italic">"{{ purchase.share_comment }}"</p>
+                        </div>
+                        {% endif %}
+
+                        <!-- Interaction Buttons -->
+                        <div class="flex items-center space-x-4">
+                            <form method="POST" action="{{ url_for('social.like_purchase', purchase_id=purchase.id) }}" class="inline">
+                                <button type="submit" 
+                                        class="flex items-center text-gray-600 hover:text-red-600 transition-colors">
+                                    <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    Like
+                                </button>
+                            </form>
+
+                            <button onclick="toggleCommentForm({{ purchase.id }})" 
+                                    class="flex items-center text-gray-600 hover:text-blue-600 transition-colors">
+                                <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.955 8.955 0 01-2.126-.275c-1.15-.29-2.204-.803-3.1-1.493L3 21l2.395-4.726c-.69-.896-1.203-1.95-1.493-3.1A8.955 8.955 0 013 12c0-4.418 3.582-8 8-8s8 3.582 8 8z"></path>
+                                </svg>
+                                Comment
+                            </button>
+                        </div>
+
+                        <!-- Comment Form (Hidden by default) -->
+                        <div id="comment-form-{{ purchase.id }}" class="hidden mt-4">
+                            <form method="POST" action="{{ url_for('social.comment_purchase', purchase_id=purchase.id) }}">
+                                <div class="flex">
+                                    <input type="text" 
+                                           name="content" 
+                                           placeholder="Write a comment..." 
+                                           class="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                           required>
+                                    <button type="submit" 
+                                            class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-r-lg focus:outline-none focus:shadow-outline">
+                                        Post
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Display Comments -->
+                        {% set comments = purchase.interactions.filter_by(type='comment').all() %}
+                        {% if comments %}
+                        <div class="mt-4 space-y-2">
+                            {% for comment in comments %}
+                            <div class="bg-gray-50 rounded-lg p-3">
+                                <div class="flex items-center mb-1">
+                                    <img src="{{ url_for('static', filename='images/profile/' + (comment.user.profile_image or 'default.jpg')) }}" 
+                                         alt="{{ comment.user.name }}" 
+                                         class="w-6 h-6 rounded-full mr-2">
+                                    <span class="font-semibold text-sm text-gray-800">{{ comment.user.name }}</span>
+                                    <span class="text-xs text-gray-500 ml-2">{{ comment.created_at.strftime('%b %d') }}</span>
+                                </div>
+                                <p class="text-gray-700 text-sm">{{ comment.content }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="text-center py-8">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.196-2.196M17 20v-2a3 3 0 00-3-3H8a3 3 0 00-3 3v2m14 0H3m14 0v-2a3 3 0 00-3-3H8a3 3 0 00-3 3v2m14 0H3M9 7a4 4 0 108 0 4 4 0 00-8 0z" />
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">No friend activity yet</h3>
+                <p class="mt-1 text-sm text-gray-500">Connect with friends to see their shared purchases here.</p>
+                <div class="mt-6">
+                    <a href="{{ url_for('social.search_friends') }}" 
+                       class="bg-gradient-to-r from-green-900 to-green-800 hover:from-green-800 hover:to-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Find Friends
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function toggleCommentForm(purchaseId) {
+    const form = document.getElementById('comment-form-' + purchaseId);
+    form.classList.toggle('hidden');
+    if (!form.classList.contains('hidden')) {
+        form.querySelector('input[name="content"]').focus();
+    }
+}
+</script>
+{% endblock %}

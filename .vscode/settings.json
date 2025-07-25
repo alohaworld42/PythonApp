@@ -1,2 +1,9 @@
 {
+    "kiroAgent.trustedCommands": [
+        "python *",
+        "python -c \"from app import create_app; app = create_app(); print('App created successfully')\"",
+        "mkdir *",
+        "git *"
+    ],
+    "html.autoClosingTags": false
 }

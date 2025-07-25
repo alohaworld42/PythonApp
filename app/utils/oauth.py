@@ -18,7 +18,7 @@ class OAuthSignIn:
         self.client_secret = credentials['secret']
         self.client = WebApplicationClient(self.client_id)
     
-    def authorize(self):
+    def authorize(self, state=None):
         """Get the authorization URL for the provider."""
         pass
     
@@ -47,13 +47,14 @@ class GoogleSignIn(OAuthSignIn):
         self.token_url = 'https://accounts.google.com/o/oauth2/token'
         self.user_info_url = 'https://www.googleapis.com/oauth2/v1/userinfo'
     
-    def authorize(self):
+    def authorize(self, state=None):
         """Get the authorization URL for Google."""
         redirect_uri = url_for('auth.oauth_callback', provider=self.provider_name, _external=True)
         return self.client.prepare_request_uri(
             self.auth_url,
             redirect_uri=redirect_uri,
-            scope=['openid', 'email', 'profile']
+            scope=['openid', 'email', 'profile'],
+            state=state
         )
     
     def callback(self):
@@ -106,13 +107,14 @@ class FacebookSignIn(OAuthSignIn):
         self.token_url = 'https://graph.facebook.com/v12.0/oauth/access_token'
         self.user_info_url = 'https://graph.facebook.com/v12.0/me'
     
-    def authorize(self):
+    def authorize(self, state=None):
         """Get the authorization URL for Facebook."""
         redirect_uri = url_for('auth.oauth_callback', provider=self.provider_name, _external=True)
         return self.client.prepare_request_uri(
             self.auth_url,
             redirect_uri=redirect_uri,
-            scope=['email', 'public_profile']
+            scope=['email', 'public_profile'],
+            state=state
         )
     
     def callback(self):
@@ -167,13 +169,14 @@ class AmazonSignIn(OAuthSignIn):
         self.token_url = 'https://api.amazon.com/auth/o2/token'
         self.user_info_url = 'https://api.amazon.com/user/profile'
     
-    def authorize(self):
+    def authorize(self, state=None):
         """Get the authorization URL for Amazon."""
         redirect_uri = url_for('auth.oauth_callback', provider=self.provider_name, _external=True)
         return self.client.prepare_request_uri(
             self.auth_url,
             redirect_uri=redirect_uri,
-            scope=['profile', 'profile:user_id', 'profile:email_address', 'profile:name']
+            scope=['profile', 'profile:user_id', 'profile:email_address', 'profile:name'],
+            state=state
         )
     
     def callback(self):

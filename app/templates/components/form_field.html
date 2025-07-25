@@ -1,0 +1,199 @@
+<!-- Enhanced Form Field Component -->
+<!-- Usage: {% include 'components/form_field.html' with field=form.email, label='Email Address', help_text='We will never share your email' %} -->
+
+{% set field_id = field.id or field.name %}
+{% set field_name = field.name %}
+{% set field_type = field.type %}
+{% set is_required = field.flags.required %}
+{% set has_errors = field.errors %}
+
+<div class="form-field relative mb-4 {% if has_errors %}error{% endif %}">
+    <!-- Input Field -->
+    {% if field_type == 'TextAreaField' %}
+        {{ field(
+            class="form-input w-full px-3 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200" + 
+            (" border-red-500" if has_errors else ""),
+            placeholder=" ",
+            **kwargs
+        ) }}
+    {% elif field_type == 'SelectField' %}
+        {{ field(
+            class="form-select w-full px-3 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200" + 
+            (" border-red-500" if has_errors else ""),
+            **kwargs
+        ) }}
+    {% elif field_type == 'FileField' %}
+        <div class="form-file-container">
+            {{ field(
+                class="form-file w-full px-3 py-3 border-2 dashed border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200" + 
+                (" border-red-500" if has_errors else ""),
+                **kwargs
+            ) }}
+            <div class="form-file-label text-center py-4">
+                <i class="fas fa-cloud-upload-alt text-2xl text-gray-400 mb-2"></i>
+                <p class="text-gray-600">{{ label or field.label.text or 'Choose file' }}</p>
+                <p class="text-xs text-gray-500 mt-1">{{ help_text or 'Drag and drop or click to select' }}</p>
+            </div>
+        </div>
+    {% elif field_type == 'BooleanField' %}
+        <div class="flex items-center">
+            {{ field(class="form-checkbox mr-3") }}
+            <label for="{{ field_id }}" class="text-sm text-gray-700 cursor-pointer">
+                {{ label or field.label.text }}
+                {% if is_required %}<span class="text-red-500 ml-1">*</span>{% endif %}
+            </label>
+        </div>
+    {% else %}
+        {{ field(
+            class="form-input w-full px-3 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200" + 
+            (" border-red-500" if has_errors else ""),
+            placeholder=" ",
+            **kwargs
+        ) }}
+    {% endif %}
+    
+    <!-- Floating Label (for non-checkbox fields) -->
+    {% if field_type != 'BooleanField' and field_type != 'FileField' %}
+        <label for="{{ field_id }}" class="floating-label absolute left-3 top-3 text-gray-500 transition-all duration-200 pointer-events-none">
+            {{ label or field.label.text }}
+            {% if is_required %}<span class="text-red-500 ml-1">*</span>{% endif %}
+        </label>
+    {% endif %}
+    
+    <!-- Validation Icon -->
+    <div class="validation-icon absolute right-3 top-3 transition-all duration-200"></div>
+    
+    <!-- Validation Message -->
+    <div class="validation-message mt-1 text-sm transition-all duration-200">
+        {% if has_errors %}
+            {% for error in field.errors %}
+                <span class="text-red-500">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <!-- Help Text -->
+    {% if help_text and not has_errors %}
+        <div class="form-help text-xs text-gray-500 mt-1">{{ help_text }}</div>
+    {% endif %}
+    
+    <!-- Character Counter (for text fields with maxlength) -->
+    {% if field.render_kw and field.render_kw.maxlength and field_type in ['StringField', 'TextAreaField'] %}
+        <div class="character-counter text-xs text-gray-500 mt-1 text-right">
+            <span class="current-count">0</span>/<span class="max-count">{{ field.render_kw.maxlength }}</span>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+// Initialize field enhancements for this specific field
+document.addEventListener('DOMContentLoaded', function() {
+    const field = document.getElementById('{{ field_id }}');
+    const container = field.closest('.form-field');
+    const label = container.querySelector('.floating-label');
+    
+    // Update floating label position
+    function updateLabelPosition() {
+        if (field.value.length > 0 || field === document.activeElement) {
+            label.classList.add('active');
+        } else {
+            label.classList.remove('active');
+        }
+    }
+    
+    // Character counter update
+    {% if field.render_kw and field.render_kw.maxlength %}
+    const counter = container.querySelector('.character-counter .current-count');
+    if (counter) {
+        function updateCounter() {
+            const current = field.value.length;
+            const max = {{ field.render_kw.maxlength }};
+            counter.textContent = current;
+            
+            const counterContainer = container.querySelector('.character-counter');
+            if (current > max * 0.9) {
+                counterContainer.classList.add('text-yellow-600');
+                counterContainer.classList.remove('text-gray-500', 'text-red-600');
+            } else if (current === max) {
+                counterContainer.classList.add('text-red-600');
+                counterContainer.classList.remove('text-gray-500', 'text-yellow-600');
+            } else {
+                counterContainer.classList.add('text-gray-500');
+                counterContainer.classList.remove('text-yellow-600', 'text-red-600');
+            }
+        }
+        
+        field.addEventListener('input', updateCounter);
+        updateCounter();
+    }
+    {% endif %}
+    
+    // Event listeners
+    if (label) {
+        field.addEventListener('focus', updateLabelPosition);
+        field.addEventListener('blur', updateLabelPosition);
+        field.addEventListener('input', updateLabelPosition);
+        updateLabelPosition();
+    }
+    
+    // File input enhancements
+    {% if field_type == 'FileField' %}
+    const fileContainer = container.querySelector('.form-file-container');
+    const fileLabel = container.querySelector('.form-file-label');
+    
+    field.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            const fileName = this.files[0].name;
+            fileLabel.innerHTML = `
+                <i class="fas fa-file text-2xl text-green-500 mb-2"></i>
+                <p class="text-green-600 font-medium">${fileName}</p>
+                <p class="text-xs text-gray-500 mt-1">Click to change file</p>
+            `;
+        }
+    });
+    
+    // Drag and drop functionality
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        fileContainer.addEventListener(eventName, preventDefaults, false);
+    });
+    
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    ['dragenter', 'dragover'].forEach(eventName => {
+        fileContainer.addEventListener(eventName, highlight, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+        fileContainer.addEventListener(eventName, unhighlight, false);
+    });
+    
+    function highlight(e) {
+        fileContainer.classList.add('border-green-500', 'bg-green-50');
+    }
+    
+    function unhighlight(e) {
+        fileContainer.classList.remove('border-green-500', 'bg-green-50');
+    }
+    
+    fileContainer.addEventListener('drop', handleDrop, false);
+    
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        field.files = files;
+        
+        if (files.length > 0) {
+            const fileName = files[0].name;
+            fileLabel.innerHTML = `
+                <i class="fas fa-file text-2xl text-green-500 mb-2"></i>
+                <p class="text-green-600 font-medium">${fileName}</p>
+                <p class="text-xs text-gray-500 mt-1">Click to change file</p>
+            `;
+        }
+    }
+    {% endif %}
+});
+</script>

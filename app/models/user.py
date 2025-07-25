@@ -3,6 +3,7 @@ from flask import current_app
 from flask_login import UserMixin
 from itsdangerous import URLSafeTimedSerializer
 from app import db, login_manager, bcrypt
+import uuid
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -19,6 +20,9 @@ class User(db.Model, UserMixin):
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     last_login = db.Column(db.DateTime, nullable=True)
     settings = db.Column(db.JSON, nullable=True)
+    is_active = db.Column(db.Boolean, default=True, nullable=False)
+    is_email_verified = db.Column(db.Boolean, default=False, nullable=False)
+    email_verification_token = db.Column(db.String(100), nullable=True)
     
     # Relationships
     purchases = db.relationship('Purchase', backref='user', lazy=True)
@@ -48,6 +52,19 @@ class User(db.Model, UserMixin):
             return None
         return User.query.get(user_id)
     
+    def generate_email_verification_token(self):
+        """Generate a token for email verification."""
+        self.email_verification_token = str(uuid.uuid4())
+        return self.email_verification_token
+    
+    def verify_email(self, token):
+        """Verify user's email with token."""
+        if self.email_verification_token and self.email_verification_token == token:
+            self.is_email_verified = True
+            self.email_verification_token = None
+            return True
+        return False
+    
     @staticmethod
     def hash_password(password):
         """Hash a password."""
@@ -56,6 +73,10 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         """Check if password matches hash."""
         return bcrypt.check_password_hash(self.password_hash, password)
+    
+    def get_id(self):
+        """Override get_id method for Flask-Login."""
+        return str(self.id)
     
     def __repr__(self):
         return f"User('{self.name}', '{self.email}')"

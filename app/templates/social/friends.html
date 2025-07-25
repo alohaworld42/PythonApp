@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Friends</h1>
+            <a href="{{ url_for('social.search_friends') }}" 
+               class="bg-gradient-to-r from-green-900 to-green-800 hover:from-green-800 hover:to-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Find Friends
+            </a>
+        </div>
+
+        <!-- Pending Friend Requests -->
+        {% if pending_requests %}
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Pending Friend Requests</h2>
+            <div class="space-y-4">
+                {% for request in pending_requests %}
+                <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                    <div class="flex items-center">
+                        <img src="{{ url_for('static', filename='images/profile/' + (request.user.profile_image or 'default.jpg')) }}" 
+                             alt="{{ request.user.name }}" 
+                             class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h3 class="font-semibold text-gray-800">{{ request.user.name }}</h3>
+                            <p class="text-gray-600 text-sm">{{ request.user.email }}</p>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <form method="POST" action="{{ url_for('social.accept_friend_request', connection_id=request.id) }}" class="inline">
+                            <button type="submit" 
+                                    class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm">
+                                Accept
+                            </button>
+                        </form>
+                        <form method="POST" action="{{ url_for('social.reject_friend_request', connection_id=request.id) }}" class="inline">
+                            <button type="submit" 
+                                    class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm">
+                                Reject
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Friends List -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">My Friends</h2>
+            {% if friends %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for connection in friends %}
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <div class="flex items-center mb-4">
+                        <img src="{{ url_for('static', filename='images/profile/' + (connection.friend.profile_image or 'default.jpg')) }}" 
+                             alt="{{ connection.friend.name }}" 
+                             class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h3 class="font-semibold text-gray-800">{{ connection.friend.name }}</h3>
+                            <p class="text-gray-600 text-sm">{{ connection.friend.email }}</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-500">
+                            Friends since {{ connection.created_at.strftime('%B %Y') }}
+                        </span>
+                        <form method="POST" action="{{ url_for('social.remove_friend', user_id=connection.friend.id) }}" class="inline">
+                            <button type="submit" 
+                                    onclick="return confirm('Are you sure you want to remove this friend?')"
+                                    class="text-red-600 hover:text-red-800 text-sm">
+                                Remove
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-8">
+                <p class="text-gray-500 mb-4">You haven't connected with any friends yet.</p>
+                <a href="{{ url_for('social.search_friends') }}" 
+                   class="bg-gradient-to-r from-green-900 to-green-800 hover:from-green-800 hover:to-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Find Friends
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

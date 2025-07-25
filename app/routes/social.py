@@ -5,6 +5,7 @@ from app.models.user import User
 from app.models.connection import Connection
 from app.models.purchase import Purchase
 from app.models.interaction import Interaction
+from app.services.notification_service import NotificationService
 
 social_bp = Blueprint('social', __name__)
 
@@ -83,6 +84,9 @@ def send_friend_request(user_id):
     db.session.add(connection)
     db.session.commit()
     
+    # Create friend request notification
+    NotificationService.create_friend_request_notification(user_id, current_user.id)
+    
     flash('Friend request sent!', 'success')
     return redirect(url_for('social.friends'))
 
@@ -145,7 +149,10 @@ def remove_friend(user_id):
 @social_bp.route('/feed')
 @login_required
 def feed():
-    """Social feed route."""
+    """Social feed route with pagination support."""
+    page = request.args.get('page', 1, type=int)
+    per_page = 10  # Number of items per page
+    
     # Get friend IDs
     friend_connections = Connection.query.filter_by(
         user_id=current_user.id, 
@@ -154,16 +161,121 @@ def feed():
     
     friend_ids = [conn.friend_id for conn in friend_connections]
     
-    # Get shared purchases from friends
-    shared_purchases = Purchase.query.filter(
+    if not friend_ids:
+        # No friends, return empty feed
+        return render_template(
+            'social/feed.html', 
+            title='Friend Feed', 
+            shared_purchases=[],
+            has_more=False,
+            next_page=None
+        )
+    
+    # Get shared purchases from friends with pagination
+    # Order by updated_at to show recently shared/updated items first, then by purchase_date
+    shared_purchases_query = Purchase.query.filter(
         Purchase.user_id.in_(friend_ids),
         Purchase.is_shared == True
-    ).order_by(Purchase.purchase_date.desc()).all()
+    ).order_by(Purchase.updated_at.desc(), Purchase.purchase_date.desc())
+    
+    # Paginate results
+    pagination = shared_purchases_query.paginate(
+        page=page, 
+        per_page=per_page, 
+        error_out=False
+    )
+    
+    shared_purchases = pagination.items
+    has_more = pagination.has_next
+    next_page = pagination.next_num if has_more else None
+    
+    # For AJAX requests, return JSON
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        from flask import jsonify
+        
+        # Render individual feed items
+        feed_items_html = []
+        for purchase in shared_purchases:
+            # Get interaction counts
+            likes_count = Interaction.query.filter_by(
+                purchase_id=purchase.id, 
+                type='like'
+            ).count()
+            
+            comments_count = Interaction.query.filter_by(
+                purchase_id=purchase.id, 
+                type='comment'
+            ).count()
+            
+            # Check if current user has liked or saved this item
+            user_liked = Interaction.query.filter_by(
+                user_id=current_user.id,
+                purchase_id=purchase.id,
+                type='like'
+            ).first() is not None
+            
+            user_saved = Interaction.query.filter_by(
+                user_id=current_user.id,
+                purchase_id=purchase.id,
+                type='save'
+            ).first() is not None
+            
+            # Render the feed item template
+            item_html = render_template(
+                'social/feed_item.html',
+                purchase=purchase,
+                likes_count=likes_count,
+                comments_count=comments_count,
+                user_liked=user_liked,
+                user_saved=user_saved
+            )
+            feed_items_html.append(item_html)
+        
+        return jsonify({
+            'items': feed_items_html,
+            'has_more': has_more,
+            'next_page': next_page
+        })
+    
+    # For regular requests, get interaction data for initial load
+    feed_data = []
+    for purchase in shared_purchases:
+        likes_count = Interaction.query.filter_by(
+            purchase_id=purchase.id, 
+            type='like'
+        ).count()
+        
+        comments_count = Interaction.query.filter_by(
+            purchase_id=purchase.id, 
+            type='comment'
+        ).count()
+        
+        user_liked = Interaction.query.filter_by(
+            user_id=current_user.id,
+            purchase_id=purchase.id,
+            type='like'
+        ).first() is not None
+        
+        user_saved = Interaction.query.filter_by(
+            user_id=current_user.id,
+            purchase_id=purchase.id,
+            type='save'
+        ).first() is not None
+        
+        feed_data.append({
+            'purchase': purchase,
+            'likes_count': likes_count,
+            'comments_count': comments_count,
+            'user_liked': user_liked,
+            'user_saved': user_saved
+        })
     
     return render_template(
         'social/feed.html', 
         title='Friend Feed', 
-        shared_purchases=shared_purchases
+        feed_data=feed_data,
+        has_more=has_more,
+        next_page=next_page
     )
 
 @social_bp.route('/feed/like/<int:purchase_id>', methods=['POST'])
@@ -183,6 +295,8 @@ def like_purchase(purchase_id):
         # Unlike
         db.session.delete(existing_like)
         action = 'unliked'
+        # Delete like notification
+        NotificationService.delete_like_notification(purchase_id, current_user.id)
     else:
         # Like
         like = Interaction(
@@ -194,6 +308,10 @@ def like_purchase(purchase_id):
         action = 'liked'
     
     db.session.commit()
+    
+    # Create like notification if liked
+    if action == 'liked':
+        NotificationService.create_like_notification(purchase_id, current_user.id)
     
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return jsonify({'success': True, 'action': action})
@@ -221,5 +339,104 @@ def comment_purchase(purchase_id):
     db.session.add(comment)
     db.session.commit()
     
+    # Create comment notification
+    NotificationService.create_comment_notification(purchase_id, current_user.id, content)
+    
     flash('Comment added!', 'success')
     return redirect(url_for('social.feed'))
+
+@social_bp.route('/feed/save/<int:purchase_id>', methods=['POST'])
+@login_required
+def save_purchase(purchase_id):
+    """Save/unsave a purchase in the feed."""
+    purchase = Purchase.query.get_or_404(purchase_id)
+    
+    # Check if already saved
+    existing_save = Interaction.query.filter_by(
+        user_id=current_user.id,
+        purchase_id=purchase_id,
+        type='save'
+    ).first()
+    
+    if existing_save:
+        # Unsave
+        db.session.delete(existing_save)
+        action = 'unsaved'
+        flash('Item removed from saved items.', 'info')
+    else:
+        # Save
+        save = Interaction(
+            user_id=current_user.id,
+            purchase_id=purchase_id,
+            type='save'
+        )
+        db.session.add(save)
+        action = 'saved'
+        flash('Item saved!', 'success')
+    
+    db.session.commit()
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify({'success': True, 'action': action})
+    
+    return redirect(url_for('social.feed'))
+
+@social_bp.route('/saved')
+@login_required
+def saved_items():
+    """View saved items route."""
+    saved_interactions = Interaction.query.filter_by(
+        user_id=current_user.id,
+        type='save'
+    ).order_by(Interaction.created_at.desc()).all()
+    
+    saved_purchases = []
+    for interaction in saved_interactions:
+        purchase = Purchase.query.get(interaction.purchase_id)
+        if purchase and purchase.is_shared:  # Only show shared purchases
+            saved_purchases.append({
+                'purchase': purchase,
+                'saved_at': interaction.created_at
+            })
+    
+    return render_template(
+        'social/saved.html', 
+        title='Saved Items', 
+        saved_purchases=saved_purchases
+    )
+
+@social_bp.route('/notifications')
+@login_required
+def notifications():
+    """View notifications route."""
+    notifications = NotificationService.get_user_notifications(current_user.id, limit=50)
+    unread_count = NotificationService.get_unread_count(current_user.id)
+    
+    return render_template(
+        'social/notifications.html', 
+        title='Notifications', 
+        notifications=notifications,
+        unread_count=unread_count
+    )
+
+@social_bp.route('/notifications/<int:notification_id>/read', methods=['POST'])
+@login_required
+def mark_notification_read_route(notification_id):
+    """Mark notification as read route."""
+    success = NotificationService.mark_as_read(notification_id, current_user.id)
+    
+    if success:
+        flash('Notification marked as read.', 'success')
+    else:
+        flash('Notification not found.', 'error')
+    
+    return redirect(url_for('social.notifications'))
+
+@social_bp.route('/notifications/read-all', methods=['POST'])
+@login_required
+def mark_all_notifications_read_route():
+    """Mark all notifications as read route."""
+    count = NotificationService.mark_all_as_read(current_user.id)
+    
+    flash(f'{count} notifications marked as read.', 'success')
+    return redirect(url_for('social.notifications'))

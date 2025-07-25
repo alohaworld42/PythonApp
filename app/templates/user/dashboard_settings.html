@@ -1,0 +1,314 @@
+{% extends "layout.html" %}
+
+{% block title %}Dashboard Settings{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Dashboard Settings</h1>
+        <p class="text-gray-600">Customize your dashboard layout and preferences.</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md">
+        <div class="border-b border-gray-200 p-6">
+            <h2 class="text-xl font-bold text-gray-800">Customize Your Dashboard</h2>
+            <p class="text-gray-600 mt-2">Configure how your dashboard looks and behaves.</p>
+        </div>
+        
+        <form method="POST" class="p-6">
+            {{ form.hidden_tag() }}
+            
+            <!-- View and Display Settings -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">View & Display</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        {{ form.default_view.label(class="block text-sm font-medium text-gray-700 mb-2") }}
+                        {{ form.default_view(class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent") }}
+                    </div>
+                    
+                    <div>
+                        {{ form.items_per_page.label(class="block text-sm font-medium text-gray-700 mb-2") }}
+                        {{ form.items_per_page(class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent") }}
+                    </div>
+                    
+                    <div>
+                        {{ form.default_sort.label(class="block text-sm font-medium text-gray-700 mb-2") }}
+                        {{ form.default_sort(class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent") }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Widget Visibility -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Dashboard Widgets</h3>
+                <p class="text-gray-600 mb-4">Choose which widgets to display on your dashboard.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex items-center">
+                        {{ form.show_quick_stats(class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded") }}
+                        {{ form.show_quick_stats.label(class="ml-2 block text-sm text-gray-700") }}
+                    </div>
+                    
+                    <div class="flex items-center">
+                        {{ form.show_recent_purchases(class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded") }}
+                        {{ form.show_recent_purchases.label(class="ml-2 block text-sm text-gray-700") }}
+                    </div>
+                    
+                    <div class="flex items-center">
+                        {{ form.show_friend_activity(class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded") }}
+                        {{ form.show_friend_activity.label(class="ml-2 block text-sm text-gray-700") }}
+                    </div>
+                    
+                    <div class="flex items-center">
+                        {{ form.show_spending_chart(class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded") }}
+                        {{ form.show_spending_chart.label(class="ml-2 block text-sm text-gray-700") }}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Widget Order -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Widget Order</h3>
+                <p class="text-gray-600 mb-4">Drag and drop to reorder your dashboard widgets.</p>
+                
+                <div id="widget-order-container" class="space-y-2 mb-4">
+                    <div class="widget-item bg-gray-50 border border-gray-200 rounded-lg p-4 cursor-move" data-widget="quick_stats">
+                        <div class="flex items-center">
+                            <i class="fas fa-grip-vertical text-gray-400 mr-3"></i>
+                            <i class="fas fa-chart-bar text-green-600 mr-3"></i>
+                            <span class="font-medium">Quick Stats</span>
+                        </div>
+                    </div>
+                    
+                    <div class="widget-item bg-gray-50 border border-gray-200 rounded-lg p-4 cursor-move" data-widget="recent_purchases">
+                        <div class="flex items-center">
+                            <i class="fas fa-grip-vertical text-gray-400 mr-3"></i>
+                            <i class="fas fa-shopping-bag text-green-600 mr-3"></i>
+                            <span class="font-medium">Recent Purchases</span>
+                        </div>
+                    </div>
+                    
+                    <div class="widget-item bg-gray-50 border border-gray-200 rounded-lg p-4 cursor-move" data-widget="friend_activity">
+                        <div class="flex items-center">
+                            <i class="fas fa-grip-vertical text-gray-400 mr-3"></i>
+                            <i class="fas fa-users text-green-600 mr-3"></i>
+                            <span class="font-medium">Friend Activity</span>
+                        </div>
+                    </div>
+                    
+                    <div class="widget-item bg-gray-50 border border-gray-200 rounded-lg p-4 cursor-move" data-widget="spending_chart">
+                        <div class="flex items-center">
+                            <i class="fas fa-grip-vertical text-gray-400 mr-3"></i>
+                            <i class="fas fa-chart-line text-green-600 mr-3"></i>
+                            <span class="font-medium">Spending Chart</span>
+                        </div>
+                    </div>
+                </div>
+                
+                {{ form.widget_order(class="hidden") }}
+            </div>
+            
+            <!-- Layout Settings -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Layout Options</h3>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center">
+                        {{ form.sidebar_collapsed(class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded") }}
+                        {{ form.sidebar_collapsed.label(class="ml-2 block text-sm text-gray-700") }}
+                        <p class="ml-2 text-sm text-gray-500">(Navigation sidebar starts collapsed)</p>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        {{ form.compact_mode(class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded") }}
+                        {{ form.compact_mode.label(class="ml-2 block text-sm text-gray-700") }}
+                        <p class="ml-2 text-sm text-gray-500">(Reduces spacing and padding for more content)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="flex justify-between items-center pt-6 border-t border-gray-200">
+                <button type="button" onclick="resetDashboardSettings()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                    Reset to Defaults
+                </button>
+                
+                <div class="space-x-4">
+                    <a href="{{ url_for('main.dashboard') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Cancel
+                    </a>
+                    {{ form.submit(class="bg-gradient-to-r from-green-900 to-green-800 hover:from-green-800 hover:to-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline") }}
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Preview Section -->
+    <div class="mt-8 bg-white rounded-lg shadow-md">
+        <div class="border-b border-gray-200 p-6">
+            <h2 class="text-xl font-bold text-gray-800">Dashboard Preview</h2>
+            <p class="text-gray-600 mt-2">See how your dashboard will look with current settings.</p>
+        </div>
+        
+        <div class="p-6">
+            <div id="dashboard-preview" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                <p class="text-gray-500">Preview will update as you change settings above</p>
+                <button type="button" onclick="updatePreview()" class="mt-4 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                    Update Preview
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+<script>
+let sortable;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize sortable widget order
+    const container = document.getElementById('widget-order-container');
+    sortable = Sortable.create(container, {
+        animation: 150,
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        dragClass: 'sortable-drag',
+        onEnd: function(evt) {
+            updateWidgetOrder();
+        }
+    });
+    
+    // Load current widget order
+    loadWidgetOrder();
+    
+    // Add event listeners for preview updates
+    const formElements = document.querySelectorAll('select, input[type="checkbox"]');
+    formElements.forEach(element => {
+        element.addEventListener('change', updatePreview);
+    });
+    
+    // Initial preview update
+    updatePreview();
+});
+
+function loadWidgetOrder() {
+    const widgetOrderInput = document.getElementById('widget_order');
+    if (widgetOrderInput.value) {
+        try {
+            const order = JSON.parse(widgetOrderInput.value);
+            const container = document.getElementById('widget-order-container');
+            const widgets = Array.from(container.children);
+            
+            // Reorder widgets based on saved order
+            order.forEach((widgetId, index) => {
+                const widget = widgets.find(w => w.dataset.widget === widgetId);
+                if (widget) {
+                    container.appendChild(widget);
+                }
+            });
+        } catch (e) {
+            console.error('Error loading widget order:', e);
+        }
+    }
+}
+
+function updateWidgetOrder() {
+    const container = document.getElementById('widget-order-container');
+    const widgets = Array.from(container.children);
+    const order = widgets.map(widget => widget.dataset.widget);
+    
+    document.getElementById('widget_order').value = JSON.stringify(order);
+    updatePreview();
+}
+
+function updatePreview() {
+    const preview = document.getElementById('dashboard-preview');
+    const defaultView = document.getElementById('default_view').value;
+    const itemsPerPage = document.getElementById('items_per_page').value;
+    const compactMode = document.getElementById('compact_mode').checked;
+    
+    // Get visible widgets
+    const visibleWidgets = [];
+    if (document.getElementById('show_quick_stats').checked) visibleWidgets.push('Quick Stats');
+    if (document.getElementById('show_recent_purchases').checked) visibleWidgets.push('Recent Purchases');
+    if (document.getElementById('show_friend_activity').checked) visibleWidgets.push('Friend Activity');
+    if (document.getElementById('show_spending_chart').checked) visibleWidgets.push('Spending Chart');
+    
+    const previewHTML = `
+        <div class="text-left">
+            <h3 class="text-lg font-semibold mb-4">Dashboard Preview</h3>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-600">Default View:</span>
+                    <span class="font-medium">${defaultView.charAt(0).toUpperCase() + defaultView.slice(1)} View</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-600">Items Per Page:</span>
+                    <span class="font-medium">${itemsPerPage} items</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-sm text-gray-600">Layout:</span>
+                    <span class="font-medium">${compactMode ? 'Compact' : 'Standard'}</span>
+                </div>
+                <div>
+                    <span class="text-sm text-gray-600 block mb-2">Visible Widgets:</span>
+                    <div class="flex flex-wrap gap-2">
+                        ${visibleWidgets.map(widget => `
+                            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">${widget}</span>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    preview.innerHTML = previewHTML;
+}
+
+function resetDashboardSettings() {
+    if (confirm('Are you sure you want to reset all dashboard settings to defaults? This cannot be undone.')) {
+        fetch('{{ url_for("user.reset_dashboard_settings") }}', {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Failed to reset settings. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        });
+    }
+}
+</script>
+
+<style>
+.sortable-ghost {
+    opacity: 0.4;
+}
+
+.sortable-chosen {
+    background-color: #f3f4f6;
+}
+
+.sortable-drag {
+    background-color: #ffffff;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.widget-item:hover {
+    background-color: #f9fafb;
+}
+</style>
+{% endblock %}
