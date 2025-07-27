@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two-Factor Authentication - BuyRoll</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-container single-column">
+            <div class="auth-form-panel">
+                <div class="two-factor-section">
+                    <div class="two-factor-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    
+                    <h1 class="two-factor-title">Two-Factor Authentication</h1>
+                    <p class="two-factor-subtitle">
+                        We've sent a 6-digit verification code to your registered email address. 
+                        Please enter it below to complete your sign in.
+                    </p>
+
+                    <form class="auth-form" data-form-type="two-factor">
+                        <div class="verification-code-inputs">
+                            <input type="text" class="verification-code-input" maxlength="1" autocomplete="one-time-code">
+                            <input type="text" class="verification-code-input" maxlength="1" autocomplete="one-time-code">
+                            <input type="text" class="verification-code-input" maxlength="1" autocomplete="one-time-code">
+                            <input type="text" class="verification-code-input" maxlength="1" autocomplete="one-time-code">
+                            <input type="text" class="verification-code-input" maxlength="1" autocomplete="one-time-code">
+                            <input type="text" class="verification-code-input" maxlength="1" autocomplete="one-time-code">
+                        </div>
+
+                        <button type="submit" class="auth-submit-button">
+                            Verify Code
+                        </button>
+                    </form>
+
+                    <div class="auth-footer">
+                        <p class="auth-footer-text">
+                            Didn't receive the code? 
+                            <a href="#" class="auth-footer-link" id="resendCode">Resend code</a>
+                        </p>
+                        <p class="auth-footer-text">
+                            <a href="{{ url_for('auth.login') }}" class="auth-footer-link">Back to sign in</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/design-system.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/auth-pages.js') }}"></script>
+    
+    <script>
+        // Auto-focus first input
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstInput = document.querySelector('.verification-code-input');
+            if (firstInput) {
+                firstInput.focus();
+            }
+
+            // Resend code functionality
+            const resendLink = document.getElementById('resendCode');
+            if (resendLink) {
+                resendLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Disable link temporarily
+                    this.style.pointerEvents = 'none';
+                    this.textContent = 'Sending...';
+                    
+                    setTimeout(() => {
+                        this.textContent = 'Code sent!';
+                        
+                        setTimeout(() => {
+                            this.textContent = 'Resend code';
+                            this.style.pointerEvents = 'auto';
+                        }, 2000);
+                    }, 1500);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
