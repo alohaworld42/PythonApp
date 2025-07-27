@@ -368,7 +368,7 @@ class BuyRollDesignSystem {
       });
     });
 
-    // Intersection Observer for animations
+    // Intersection Observer for scroll animations
     const observerOptions = {
       threshold: 0.1,
       rootMargin: '0px 0px -50px 0px'
@@ -377,14 +377,67 @@ class BuyRollDesignSystem {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('animate-fade-in');
+          // Add fade-in animation
+          if (entry.target.classList.contains('scroll-fade-in')) {
+            entry.target.classList.add('in-view');
+          }
+          // Add slide animations
+          if (entry.target.classList.contains('scroll-slide-left')) {
+            entry.target.classList.add('in-view');
+          }
+          if (entry.target.classList.contains('scroll-slide-right')) {
+            entry.target.classList.add('in-view');
+          }
+          // Add scale animation
+          if (entry.target.classList.contains('scroll-scale-up')) {
+            entry.target.classList.add('in-view');
+          }
+          // Generic animate-on-scroll
+          if (entry.target.classList.contains('animate-on-scroll')) {
+            entry.target.classList.add('animate-fade-in');
+          }
         }
       });
     }, observerOptions);
 
-    // Observe elements with animation classes
-    document.querySelectorAll('.animate-on-scroll').forEach(el => {
-      observer.observe(el);
+    // Observe elements with scroll animation classes
+    const scrollElements = document.querySelectorAll(
+      '.animate-on-scroll, .scroll-fade-in, .scroll-slide-left, .scroll-slide-right, .scroll-scale-up'
+    );
+    scrollElements.forEach(el => observer.observe(el));
+
+    // Parallax effect
+    this.setupParallax();
+    
+    // Stagger animations
+    this.setupStaggerAnimations();
+  }
+
+  setupParallax() {
+    const parallaxElements = document.querySelectorAll('.parallax');
+    
+    if (parallaxElements.length) {
+      window.addEventListener('scroll', this.throttle(() => {
+        const scrolled = window.pageYOffset;
+        
+        parallaxElements.forEach(element => {
+          const rate = scrolled * -0.5;
+          element.style.transform = `translateY(${rate}px)`;
+        });
+      }, 16));
+    }
+  }
+
+  setupStaggerAnimations() {
+    const staggerGroups = document.querySelectorAll('[data-stagger]');
+    
+    staggerGroups.forEach(group => {
+      const children = group.children;
+      const delay = parseInt(group.dataset.stagger) || 100;
+      
+      Array.from(children).forEach((child, index) => {
+        child.style.animationDelay = `${index * delay}ms`;
+      });
     });
   }
 
@@ -499,6 +552,209 @@ class BuyRollDesignSystem {
 // Initialize the design system when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
   window.buyrollDS = new BuyRollDesignSystem();
+});
+
+// Export for module usage
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = BuyRollDesignSystem;
+}  // Adva
+nced Layout Management
+  setupAdvancedLayouts() {
+    this.setupMasonryLayout();
+    this.setupStickyElements();
+    this.setupResponsiveGrids();
+  }
+
+  setupMasonryLayout() {
+    const masonryContainers = document.querySelectorAll('.masonry');
+    
+    masonryContainers.forEach(container => {
+      // Simple masonry implementation
+      const resizeObserver = new ResizeObserver(() => {
+        this.layoutMasonry(container);
+      });
+      
+      resizeObserver.observe(container);
+      
+      // Initial layout
+      setTimeout(() => this.layoutMasonry(container), 100);
+    });
+  }
+
+  layoutMasonry(container) {
+    const items = container.querySelectorAll('.masonry-item');
+    const columnCount = parseInt(getComputedStyle(container).columnCount);
+    
+    if (columnCount === 1) return;
+    
+    const columnHeights = new Array(columnCount).fill(0);
+    
+    items.forEach(item => {
+      const shortestColumn = columnHeights.indexOf(Math.min(...columnHeights));
+      item.style.order = shortestColumn;
+      columnHeights[shortestColumn] += item.offsetHeight;
+    });
+  }
+
+  setupStickyElements() {
+    const stickyElements = document.querySelectorAll('.sticky-header, .sticky-sidebar, .sticky-footer');
+    
+    stickyElements.forEach(element => {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          element.classList.toggle('is-stuck', !entry.isIntersecting);
+        },
+        { threshold: 1 }
+      );
+      
+      observer.observe(element);
+    });
+  }
+
+  setupResponsiveGrids() {
+    const responsiveGrids = document.querySelectorAll('[data-responsive-grid]');
+    
+    responsiveGrids.forEach(grid => {
+      const config = JSON.parse(grid.dataset.responsiveGrid);
+      
+      const updateGrid = () => {
+        const width = window.innerWidth;
+        let columns = config.default || 1;
+        
+        Object.keys(config).forEach(breakpoint => {
+          if (breakpoint !== 'default' && width >= parseInt(breakpoint)) {
+            columns = config[breakpoint];
+          }
+        });
+        
+        grid.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+      };
+      
+      updateGrid();
+      window.addEventListener('resize', this.debounce(updateGrid, 250));
+    });
+  }
+
+  // Theme Management
+  setupThemeToggle() {
+    const themeToggle = document.querySelector('[data-theme-toggle]');
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => {
+        const newTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        
+        // Dispatch theme change event
+        window.dispatchEvent(new CustomEvent('themechange', { detail: { theme: newTheme } }));
+      });
+    }
+  }
+
+  // Advanced Form Features
+  setupAdvancedForms() {
+    this.setupAutoSave();
+    this.setupFormProgress();
+    this.setupConditionalFields();
+  }
+
+  setupAutoSave() {
+    const autoSaveForms = document.querySelectorAll('[data-auto-save]');
+    
+    autoSaveForms.forEach(form => {
+      const inputs = form.querySelectorAll('input, textarea, select');
+      const saveKey = form.dataset.autoSave;
+      
+      // Load saved data
+      const savedData = localStorage.getItem(`autosave_${saveKey}`);
+      if (savedData) {
+        const data = JSON.parse(savedData);
+        Object.keys(data).forEach(name => {
+          const input = form.querySelector(`[name="${name}"]`);
+          if (input) input.value = data[name];
+        });
+      }
+      
+      // Save on input
+      inputs.forEach(input => {
+        input.addEventListener('input', this.debounce(() => {
+          const formData = new FormData(form);
+          const data = Object.fromEntries(formData.entries());
+          localStorage.setItem(`autosave_${saveKey}`, JSON.stringify(data));
+        }, 1000));
+      });
+      
+      // Clear on submit
+      form.addEventListener('submit', () => {
+        localStorage.removeItem(`autosave_${saveKey}`);
+      });
+    });
+  }
+
+  setupFormProgress() {
+    const progressForms = document.querySelectorAll('[data-form-progress]');
+    
+    progressForms.forEach(form => {
+      const progressBar = form.querySelector('.form-progress-bar');
+      const inputs = form.querySelectorAll('input[required], textarea[required], select[required]');
+      
+      if (!progressBar) return;
+      
+      const updateProgress = () => {
+        const filledInputs = Array.from(inputs).filter(input => input.value.trim() !== '');
+        const progress = (filledInputs.length / inputs.length) * 100;
+        progressBar.style.width = `${progress}%`;
+      };
+      
+      inputs.forEach(input => {
+        input.addEventListener('input', updateProgress);
+      });
+      
+      updateProgress();
+    });
+  }
+
+  setupConditionalFields() {
+    const conditionalFields = document.querySelectorAll('[data-show-if]');
+    
+    conditionalFields.forEach(field => {
+      const condition = field.dataset.showIf;
+      const [targetName, expectedValue] = condition.split('=');
+      const targetInput = document.querySelector(`[name="${targetName}"]`);
+      
+      if (!targetInput) return;
+      
+      const toggleField = () => {
+        const shouldShow = targetInput.value === expectedValue;
+        field.style.display = shouldShow ? 'block' : 'none';
+        
+        // Toggle required attribute
+        const requiredInputs = field.querySelectorAll('[data-required-if]');
+        requiredInputs.forEach(input => {
+          input.required = shouldShow;
+        });
+      };
+      
+      targetInput.addEventListener('change', toggleField);
+      toggleField(); // Initial check
+    });
+  }
+
+  // Initialize all advanced features
+  initAdvancedFeatures() {
+    this.setupAdvancedLayouts();
+    this.setupThemeToggle();
+    this.setupAdvancedForms();
+  }
+}
+
+// Update initialization to include advanced features
+document.addEventListener('DOMContentLoaded', () => {
+  window.buyrollDS = new BuyRollDesignSystem();
+  window.buyrollDS.initAdvancedFeatures();
 });
 
 // Export for module usage
