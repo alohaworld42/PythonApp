@@ -3,6 +3,8 @@ from app.models.purchase import Purchase
 from app.models.user import User
 from app.models.connection import Connection
 from app.services.notification_service import NotificationService
+from app.utils.cache import cached, invalidate_social_cache
+from app.utils.performance_monitor import monitor_database_query
 from datetime import datetime
 
 class PurchaseSharingService:
@@ -27,6 +29,9 @@ class PurchaseSharingService:
             purchase.share_comment = None
         
         db.session.commit()
+        
+        # Invalidate cache for this user and their friends
+        invalidate_social_cache(user_id)
         
         # Create notifications for friends if sharing
         if purchase.is_shared:
@@ -55,6 +60,8 @@ class PurchaseSharingService:
         return {'success': True, 'message': 'Share comment updated'}
     
     @staticmethod
+    @cached(ttl=300, key_prefix='social_user_shared_')
+    @monitor_database_query('SELECT', 'purchase')
     def get_user_shared_purchases(user_id, limit=None):
         """Get all shared purchases for a user."""
         query = Purchase.query.filter_by(user_id=user_id, is_shared=True).order_by(Purchase.purchase_date.desc())
@@ -65,6 +72,8 @@ class PurchaseSharingService:
         return query.all()
     
     @staticmethod
+    @cached(ttl=180, key_prefix='social_friends_feed_')
+    @monitor_database_query('SELECT', 'purchase')
     def get_friends_shared_purchases(user_id, limit=None):
         """Get shared purchases from user's friends."""
         # Get friend IDs
@@ -90,6 +99,8 @@ class PurchaseSharingService:
         return query.all()
     
     @staticmethod
+    @cached(ttl=600, key_prefix='social_sharing_stats_')
+    @monitor_database_query('SELECT', 'purchase')
     def get_sharing_stats(user_id):
         """Get sharing statistics for a user."""
         total_purchases = Purchase.query.filter_by(user_id=user_id).count()

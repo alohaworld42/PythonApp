@@ -1,0 +1,223 @@
+{% extends "layout.html" %}
+
+{% block title %}Responsive Layout Demo{% endblock %}
+
+{% block content %}
+<div class="container mx-auto">
+    <!-- Page Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">Responsive Layout System</h1>
+        <p class="text-lg md:text-xl text-gray-600">Demonstration of the responsive grid system, container components, and typography scaling.</p>
+    </div>
+
+    <!-- Container Examples -->
+    <section class="mb-12">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Container Components</h2>
+        
+        <!-- Standard Container -->
+        <div class="mb-8">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">Standard Container (.container)</h3>
+            <div class="container bg-green-100 p-4 rounded-lg">
+                <p class="text-gray-700">This container has responsive max-widths and padding that adapts to screen size.</p>
+                <p class="text-sm text-gray-600 mt-2">Breakpoints: 640px, 768px, 1024px, 1280px, 1536px</p>
+            </div>
+        </div>
+
+        <!-- Fluid Container -->
+        <div class="mb-8">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">Fluid Container (.container-fluid)</h3>
+            <div class="container-fluid bg-blue-100 p-4 rounded-lg">
+                <p class="text-gray-700">This container spans the full width with consistent padding.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Grid System Examples -->
+    <section class="mb-12">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Responsive Grid System</h2>
+        
+        <!-- Basic Grid -->
+        <div class="mb-8">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">Basic Grid (1 col to 2 cols to 4 cols)</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-green-200 p-4 rounded-lg text-center">
+                    <h4 class="font-semibold">Item 1</h4>
+                    <p class="text-sm text-gray-600">Responsive grid item</p>
+                </div>
+                <div class="bg-green-200 p-4 rounded-lg text-center">
+                    <h4 class="font-semibold">Item 2</h4>
+                    <p class="text-sm text-gray-600">Responsive grid item</p>
+                </div>
+                <div class="bg-green-200 p-4 rounded-lg text-center">
+                    <h4 class="font-semibold">Item 3</h4>
+                    <p class="text-sm text-gray-600">Responsive grid item</p>
+                </div>
+                <div class="bg-green-200 p-4 rounded-lg text-center">
+                    <h4 class="font-semibold">Item 4</h4>
+                    <p class="text-sm text-gray-600">Responsive grid item</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Card Grid -->
+        <div class="mb-8">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">Product Card Grid (1 to 2 to 3 columns)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="product-card grid-card">
+                    <div class="h-48 bg-gray-200 rounded-t-lg flex items-center justify-center">
+                        <i class="fas fa-image text-4xl text-gray-400"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <h4 class="text-lg font-semibold line-clamp-2">Sample Product Title</h4>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-gray-600 text-sm">Sample Store</p>
+                            <p class="text-xl font-bold text-gray-800">$99.99</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card grid-card">
+                    <div class="h-48 bg-gray-200 rounded-t-lg flex items-center justify-center">
+                        <i class="fas fa-image text-4xl text-gray-400"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <h4 class="text-lg font-semibold line-clamp-2">Another Product</h4>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-gray-600 text-sm">Another Store</p>
+                            <p class="text-xl font-bold text-gray-800">$149.99</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card grid-card">
+                    <div class="h-48 bg-gray-200 rounded-t-lg flex items-center justify-center">
+                        <i class="fas fa-image text-4xl text-gray-400"></i>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <h4 class="text-lg font-semibold line-clamp-2">Third Product Example</h4>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-gray-600 text-sm">Third Store</p>
+                            <p class="text-xl font-bold text-gray-800">$79.99</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Typography Examples -->
+    <section class="mb-12">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Responsive Typography</h2>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h1 class="mb-4">Heading 1 - Responsive scaling</h1>
+            <h2 class="mb-4">Heading 2 - Adapts to screen size</h2>
+            <h3 class="mb-4">Heading 3 - Mobile-first approach</h3>
+            <h4 class="mb-4">Heading 4 - Consistent hierarchy</h4>
+            <h5 class="mb-4">Heading 5 - Optimized readability</h5>
+            <h6 class="mb-4">Heading 6 - All breakpoints covered</h6>
+            
+            <p class="text-base mb-4">
+                This is base text that maintains readability across all screen sizes. 
+                The typography system uses a mobile-first approach with responsive scaling 
+                at each breakpoint to ensure optimal reading experience.
+            </p>
+        </div>
+    </section>
+
+    <!-- Flexbox Layout Examples -->
+    <section class="mb-12">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Responsive Flexbox Layouts</h2>
+        
+        <!-- Responsive Direction -->
+        <div class="mb-8">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">Responsive Flex Direction (Column to Row)</h3>
+            <div class="flex flex-col md:flex-row gap-4 bg-gray-50 p-6 rounded-lg">
+                <div class="flex-1 bg-blue-200 p-4 rounded">
+                    <h4 class="font-semibold">Content Block 1</h4>
+                    <p class="text-sm">Stacks vertically on mobile, horizontally on desktop</p>
+                </div>
+                <div class="flex-1 bg-blue-200 p-4 rounded">
+                    <h4 class="font-semibold">Content Block 2</h4>
+                    <p class="text-sm">Responsive flex direction</p>
+                </div>
+                <div class="flex-1 bg-blue-200 p-4 rounded">
+                    <h4 class="font-semibold">Content Block 3</h4>
+                    <p class="text-sm">Adapts to screen size</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Breakpoint Information -->
+    <section class="mb-12">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Breakpoint Reference</h2>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="border-b">
+                            <th class="pb-3 font-semibold text-gray-700">Breakpoint</th>
+                            <th class="pb-3 font-semibold text-gray-700">Min Width</th>
+                            <th class="pb-3 font-semibold text-gray-700">Container Max Width</th>
+                            <th class="pb-3 font-semibold text-gray-700">Typical Device</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        <tr class="border-b">
+                            <td class="py-3 font-mono">xs</td>
+                            <td class="py-3">0px</td>
+                            <td class="py-3">100%</td>
+                            <td class="py-3">Mobile phones</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-3 font-mono">sm</td>
+                            <td class="py-3">640px</td>
+                            <td class="py-3">640px</td>
+                            <td class="py-3">Large phones, small tablets</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-3 font-mono">md</td>
+                            <td class="py-3">768px</td>
+                            <td class="py-3">768px</td>
+                            <td class="py-3">Tablets</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-3 font-mono">lg</td>
+                            <td class="py-3">1024px</td>
+                            <td class="py-3">1024px</td>
+                            <td class="py-3">Laptops, small desktops</td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-3 font-mono">xl</td>
+                            <td class="py-3">1280px</td>
+                            <td class="py-3">1280px</td>
+                            <td class="py-3">Large desktops</td>
+                        </tr>
+                        <tr>
+                            <td class="py-3 font-mono">2xl</td>
+                            <td class="py-3">1536px</td>
+                            <td class="py-3">1536px</td>
+                            <td class="py-3">Extra large screens</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Current Breakpoint Indicator -->
+<div class="fixed bottom-4 right-4 bg-black bg-opacity-75 text-white px-3 py-2 rounded-lg text-sm font-mono">
+    <span class="block sm:hidden">XS</span>
+    <span class="hidden sm:block md:hidden">SM</span>
+    <span class="hidden md:block lg:hidden">MD</span>
+    <span class="hidden lg:block xl:hidden">LG</span>
+    <span class="hidden xl:block">XL</span>
+</div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "layout.html" %}
+
+{% block title %}Service Unavailable - BuyRoll{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 text-center">
+        <div>
+            <div class="mx-auto h-24 w-24 text-blue-500">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+            </div>
+            <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
+                Service Unavailable
+            </h2>
+            <p class="mt-2 text-sm text-gray-600">
+                BuyRoll is temporarily unavailable for maintenance.
+            </p>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Scheduled Maintenance</h3>
+            <p class="text-gray-600 mb-4">
+                We're performing scheduled maintenance to improve your experience. We'll be back shortly.
+            </p>
+            
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h4 class="text-sm font-medium text-blue-800 mb-2">What we're doing:</h4>
+                <ul class="text-sm text-blue-700 space-y-1">
+                    <li>• Updating our systems</li>
+                    <li>• Improving performance</li>
+                    <li>• Adding new features</li>
+                    <li>• Enhancing security</li>
+                </ul>
+            </div>
+            
+            <div class="mt-4 p-3 bg-gray-100 rounded-lg">
+                <p class="text-sm text-gray-600">
+                    <strong>Estimated completion:</strong> Usually within 30 minutes
+                </p>
+            </div>
+        </div>
+        
+        <div class="space-y-4">
+            <div class="bg-gray-100 rounded-lg p-4">
+                <div class="flex items-center justify-center space-x-2 text-gray-600">
+                    <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span class="text-sm">Maintenance in progress...</span>
+                </div>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button onclick="location.reload()" 
+                        class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                    Check Again
+                </button>
+            </div>
+            
+            <div class="border-t border-gray-200 pt-4">
+                <p class="text-sm text-gray-500 mb-2">
+                    Stay updated:
+                </p>
+                <div class="flex flex-col sm:flex-row gap-2 justify-center text-sm">
+                    <a href="https://status.buyroll.com" 
+                       class="text-green-600 hover:text-green-700">
+                        Status Page
+                    </a>
+                    <span class="hidden sm:inline text-gray-400">•</span>
+                    <a href="https://twitter.com/buyroll" 
+                       class="text-green-600 hover:text-green-700">
+                        @BuyRoll
+                    </a>
+                    <span class="hidden sm:inline text-gray-400">•</span>
+                    <a href="mailto:support@buyroll.com" 
+                       class="text-green-600 hover:text-green-700">
+                        Support
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-refresh every 2 minutes during maintenance
+setTimeout(function() {
+    location.reload();
+}, 120000);
+</script>
+{% endblock %}

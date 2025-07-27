@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, send_from_directory, current_app
 from flask_login import current_user
 from app.models.purchase import Purchase
 from app.models.connection import Connection
@@ -75,3 +75,17 @@ def dashboard():
 def about():
     """About page route."""
     return render_template('about.html')
+
+@main_bp.route('/favicon.ico')
+def favicon():
+    """Serve favicon."""
+    return send_from_directory(current_app.static_folder, 'images/logo.svg', mimetype='image/svg+xml')
+@main
+_bp.route('/css-showcase')
+def css_showcase():
+    """CSS Architecture showcase page."""
+    return render_template('css-showcase.html')@main_bp.r
+oute('/components-showcase')
+def components_showcase():
+    """Component library showcase page."""
+    return render_template('components-showcase.html')

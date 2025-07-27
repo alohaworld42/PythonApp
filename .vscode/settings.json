@@ -3,7 +3,11 @@
         "python *",
         "python -c \"from app import create_app; app = create_app(); print('App created successfully')\"",
         "mkdir *",
-        "git *"
+        "git *",
+        "python -c \"from tests.performance.test_performance_optimizations import TestDatabaseOptimization; print('Import successful')\"",
+        "python -c \"from app.utils.asset_optimization import AssetOptimizer; print('Asset optimization import successful')\"",
+        "pip *",
+        "pytest *"
     ],
     "html.autoClosingTags": false
 }

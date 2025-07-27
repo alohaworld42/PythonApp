@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block title %}Method Not Allowed - BuyRoll{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 text-center">
+        <div>
+            <div class="mx-auto h-24 w-24 text-orange-500">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-12.728 12.728m0-12.728l12.728 12.728"></path>
+                </svg>
+            </div>
+            <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
+                Method Not Allowed
+            </h2>
+            <p class="mt-2 text-sm text-gray-600">
+                The request method is not supported for this resource.
+            </p>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">What happened?</h3>
+            <p class="text-gray-600 mb-4">
+                The HTTP method used in your request is not allowed for this endpoint. This is typically a technical issue.
+            </p>
+            
+            <div class="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                <p class="text-sm text-orange-800">
+                    <strong>Technical note:</strong> This usually happens when a form is submitted with the wrong method or when accessing an API endpoint incorrectly.
+                </p>
+            </div>
+        </div>
+        
+        <div class="space-y-4">
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button onclick="history.back()" 
+                        class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                    Go Back
+                </button>
+                <a href="{{ url_for('main.index') }}" 
+                   class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                    Home Page
+                </a>
+            </div>
+            
+            <p class="text-sm text-gray-500">
+                If this problem persists, please 
+                <a href="mailto:support@buyroll.com" class="text-green-600 hover:text-green-700">contact support</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

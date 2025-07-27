@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block title %}Bad Request - BuyRoll{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 text-center">
+        <div>
+            <div class="mx-auto h-24 w-24 text-red-500">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                </svg>
+            </div>
+            <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
+                Bad Request
+            </h2>
+            <p class="mt-2 text-sm text-gray-600">
+                The request you sent was invalid or malformed.
+            </p>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">What happened?</h3>
+            <p class="text-gray-600 mb-4">
+                Your browser sent a request that our server couldn't understand. This might be due to:
+            </p>
+            <ul class="text-left text-sm text-gray-600 space-y-2">
+                <li class="flex items-start">
+                    <span class="text-red-500 mr-2">•</span>
+                    Invalid form data or parameters
+                </li>
+                <li class="flex items-start">
+                    <span class="text-red-500 mr-2">•</span>
+                    Missing required information
+                </li>
+                <li class="flex items-start">
+                    <span class="text-red-500 mr-2">•</span>
+                    Corrupted request data
+                </li>
+            </ul>
+        </div>
+        
+        <div class="space-y-4">
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button onclick="history.back()" 
+                        class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                    Go Back
+                </button>
+                <a href="{{ url_for('main.index') }}" 
+                   class="bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                    Home Page
+                </a>
+            </div>
+            
+            <p class="text-sm text-gray-500">
+                If this problem persists, please 
+                <a href="mailto:support@buyroll.com" class="text-green-600 hover:text-green-700">contact support</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

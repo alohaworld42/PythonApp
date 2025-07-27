@@ -1,0 +1,333 @@
+{% extends "layout.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- Modern Dashboard Layout -->
+<div style="background: var(--color-gray-50); min-height: 100vh; padding: var(--space-6) 0;">
+    <div class="container">
+        <!-- Dashboard Header -->
+        <div style="margin-bottom: var(--space-8);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--space-4);">
+                <div>
+                    <h1 style="font-size: var(--text-4xl); font-weight: var(--font-bold); color: var(--color-gray-900); margin-bottom: var(--space-2);">
+                        Welcome back, {{ current_user.name }}! 👋
+                    </h1>
+                    <p style="color: var(--color-gray-600); font-size: var(--text-lg);">
+                        Here's what's happening with your shopping journey
+                    </p>
+                </div>
+                <div style="display: flex; gap: var(--space-3);">
+                    <a href="{{ url_for('user.dashboard_settings') }}" class="btn btn-secondary">
+                        <i class="fas fa-cog mr-2"></i>
+                        Settings
+                    </a>
+                    <a href="{{ url_for('user.purchases') }}" class="btn btn-primary">
+                        <i class="fas fa-plus mr-2"></i>
+                        Add Purchase
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-8);">
+            <!-- Total Purchases -->
+            <div class="card" style="padding: var(--space-6); position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; right: 0; width: 60px; height: 60px; background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-600)); border-radius: 0 0 0 60px; opacity: 0.1;"></div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
+                    <div style="width: 48px; height: 48px; background: var(--color-primary-100); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-shopping-bag text-xl" style="color: var(--color-primary-600);"></i>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: var(--text-3xl); font-weight: var(--font-bold); color: var(--color-gray-900);">
+                            {{ purchases|length }}
+                        </div>
+                        <div style="font-size: var(--text-sm); color: var(--color-gray-500);">
+                            Total Purchases
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--space-2);">
+                    <div style="width: 8px; height: 8px; background: var(--color-success); border-radius: var(--radius-full);"></div>
+                    <span style="font-size: var(--text-sm); color: var(--color-gray-600);">From all connected stores</span>
+                </div>
+            </div>
+
+            <!-- Shared Items -->
+            <div class="card" style="padding: var(--space-6); position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; right: 0; width: 60px; height: 60px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 0 0 0 60px; opacity: 0.1;"></div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
+                    <div style="width: 48px; height: 48px; background: #dbeafe; border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-share-alt text-xl" style="color: #1d4ed8;"></i>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: var(--text-3xl); font-weight: var(--font-bold); color: var(--color-gray-900);">
+                            {{ shared_count }}
+                        </div>
+                        <div style="font-size: var(--text-sm); color: var(--color-gray-500);">
+                            Shared Items
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--space-2);">
+                    <div style="width: 8px; height: 8px; background: #3b82f6; border-radius: var(--radius-full);"></div>
+                    <span style="font-size: var(--text-sm); color: var(--color-gray-600);">Visible to friends</span>
+                </div>
+            </div>
+
+            <!-- Friends Count -->
+            <div class="card" style="padding: var(--space-6); position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; right: 0; width: 60px; height: 60px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); border-radius: 0 0 0 60px; opacity: 0.1;"></div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
+                    <div style="width: 48px; height: 48px; background: #ede9fe; border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-users text-xl" style="color: #7c3aed;"></i>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: var(--text-3xl); font-weight: var(--font-bold); color: var(--color-gray-900);">
+                            {{ friends_count }}
+                        </div>
+                        <div style="font-size: var(--text-sm); color: var(--color-gray-500);">
+                            Friends
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--space-2);">
+                    <div style="width: 8px; height: 8px; background: #8b5cf6; border-radius: var(--radius-full);"></div>
+                    <span style="font-size: var(--text-sm); color: var(--color-gray-600);">Connected on BuyRoll</span>
+                </div>
+            </div>
+
+            <!-- Monthly Spending -->
+            <div class="card" style="padding: var(--space-6); position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; right: 0; width: 60px; height: 60px; background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 0 0 0 60px; opacity: 0.1;"></div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
+                    <div style="width: 48px; height: 48px; background: #fef3c7; border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-calendar-alt text-xl" style="color: #d97706;"></i>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: var(--text-3xl); font-weight: var(--font-bold); color: var(--color-gray-900);">
+                            ${{ monthly_spending }}
+                        </div>
+                        <div style="font-size: var(--text-sm); color: var(--color-gray-500);">
+                            This Month
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--space-2);">
+                    <div style="width: 8px; height: 8px; background: #f59e0b; border-radius: var(--radius-full);"></div>
+                    <span style="font-size: var(--text-sm); color: var(--color-gray-600);">Total spending</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-8);">
+            <!-- Recent Purchases -->
+            <div class="card" style="padding: 0; overflow: hidden;">
+                <!-- Header -->
+                <div style="padding: var(--space-6); border-bottom: 1px solid var(--color-gray-200); background: var(--color-white);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+                        <h2 style="font-size: var(--text-2xl); font-weight: var(--font-bold); color: var(--color-gray-900); margin: 0;">
+                            Recent Purchases
+                        </h2>
+                        <a href="{{ url_for('user.purchases') }}" class="btn btn-sm btn-outline">
+                            View All
+                        </a>
+                    </div>
+                    
+                    <!-- Quick Filters -->
+                    <div style="display: flex; gap: var(--space-3); flex-wrap: wrap;">
+                        <select class="form-input" style="width: auto; min-width: 120px; font-size: var(--text-sm);">
+                            <option>All Stores</option>
+                            <option>Amazon</option>
+                            <option>Shopify</option>
+                        </select>
+                        <select class="form-input" style="width: auto; min-width: 120px; font-size: var(--text-sm);">
+                            <option>All Items</option>
+                            <option>Shared Only</option>
+                            <option>Private Only</option>
+                        </select>
+                        <div style="display: flex; gap: var(--space-1); margin-left: auto;">
+                            <button class="btn btn-sm btn-ghost" style="padding: var(--space-2);">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                            <button class="btn btn-sm btn-ghost" style="padding: var(--space-2);">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Content -->
+                <div style="padding: var(--space-6);">
+                    {% if purchases %}
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--space-4);">
+                            {% for purchase in purchases[:6] %}
+                                {% include 'components/modern_product_card.html' %}
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div style="text-align: center; padding: var(--space-12);">
+                            <div style="width: 80px; height: 80px; background: var(--color-gray-100); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4);">
+                                <i class="fas fa-shopping-bag text-3xl" style="color: var(--color-gray-400);"></i>
+                            </div>
+                            <h3 style="font-size: var(--text-xl); font-weight: var(--font-semibold); color: var(--color-gray-900); margin-bottom: var(--space-2);">
+                                No purchases yet
+                            </h3>
+                            <p style="color: var(--color-gray-600); margin-bottom: var(--space-6);">
+                                Connect your stores to import your purchase history
+                            </p>
+                            <a href="#" class="btn btn-primary">
+                                <i class="fas fa-store mr-2"></i>
+                                Connect Store
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div style="display: flex; flex-direction: column; gap: var(--space-6);">
+                <!-- Friend Activity -->
+                <div class="card" style="padding: 0; overflow: hidden;">
+                    <div style="padding: var(--space-6); border-bottom: 1px solid var(--color-gray-200);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="font-size: var(--text-lg); font-weight: var(--font-semibold); color: var(--color-gray-900); margin: 0;">
+                                Friend Activity
+                            </h3>
+                            <a href="{{ url_for('social.feed') }}" style="font-size: var(--text-sm); color: var(--color-primary-600); text-decoration: none;">
+                                View Feed
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div style="padding: var(--space-4);">
+                        {% if friend_activity %}
+                            <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+                                {% for activity in friend_activity[:3] %}
+                                <div style="display: flex; gap: var(--space-3);">
+                                    <img src="{{ url_for('static', filename='images/profiles/' + (activity.user.profile_image or 'default.jpg')) }}" 
+                                         alt="{{ activity.user.name }}" 
+                                         style="width: 40px; height: 40px; border-radius: var(--radius-full); object-fit: cover; flex-shrink: 0;">
+                                    <div style="flex: 1; min-width: 0;">
+                                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-1);">
+                                            <span style="font-size: var(--text-sm); font-weight: var(--font-medium); color: var(--color-gray-900);">
+                                                {{ activity.user.name }}
+                                            </span>
+                                            <span style="font-size: var(--text-xs); color: var(--color-gray-500);">
+                                                {{ activity.purchase_date.strftime('%b %d') }}
+                                            </span>
+                                        </div>
+                                        <p style="font-size: var(--text-sm); color: var(--color-gray-600); margin-bottom: var(--space-2); line-height: var(--leading-relaxed);">
+                                            {{ activity.share_comment or 'Shared a purchase' }}
+                                        </p>
+                                        <div style="display: flex; gap: var(--space-2); align-items: center;">
+                                            <img src="{{ activity.product.image_url or url_for('static', filename='images/placeholder-product.svg') }}" 
+                                                 alt="{{ activity.product.title }}" 
+                                                 style="width: 32px; height: 32px; border-radius: var(--radius-lg); object-fit: cover;">
+                                            <div style="flex: 1; min-width: 0;">
+                                                <div style="font-size: var(--text-sm); font-weight: var(--font-medium); color: var(--color-gray-900); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                                    {{ activity.product.title }}
+                                                </div>
+                                                <div style="font-size: var(--text-xs); color: var(--color-gray-500);">
+                                                    ${{ activity.product.price }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div style="text-align: center; padding: var(--space-8);">
+                                <div style="width: 48px; height: 48px; background: var(--color-gray-100); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-3);">
+                                    <i class="fas fa-users" style="color: var(--color-gray-400);"></i>
+                                </div>
+                                <p style="font-size: var(--text-sm); color: var(--color-gray-600); margin-bottom: var(--space-4);">
+                                    No friend activity yet
+                                </p>
+                                <a href="{{ url_for('social.friends') }}" class="btn btn-sm btn-primary">
+                                    Find Friends
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card" style="padding: var(--space-6);">
+                    <h3 style="font-size: var(--text-lg); font-weight: var(--font-semibold); color: var(--color-gray-900); margin-bottom: var(--space-4);">
+                        Quick Actions
+                    </h3>
+                    <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+                        <a href="{{ url_for('user.purchases') }}" class="btn btn-outline" style="justify-content: flex-start;">
+                            <i class="fas fa-plus mr-3"></i>
+                            Add Purchase
+                        </a>
+                        <a href="{{ url_for('social.friends') }}" class="btn btn-outline" style="justify-content: flex-start;">
+                            <i class="fas fa-user-plus mr-3"></i>
+                            Find Friends
+                        </a>
+                        <a href="{{ url_for('user.analytics') }}" class="btn btn-outline" style="justify-content: flex-start;">
+                            <i class="fas fa-chart-line mr-3"></i>
+                            View Analytics
+                        </a>
+                        <a href="{{ url_for('social.feed') }}" class="btn btn-outline" style="justify-content: flex-start;">
+                            <i class="fas fa-stream mr-3"></i>
+                            Social Feed
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Dashboard specific animations */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: slideUp 0.5s ease-out;
+}
+
+.card:nth-child(1) { animation-delay: 0.1s; }
+.card:nth-child(2) { animation-delay: 0.2s; }
+.card:nth-child(3) { animation-delay: 0.3s; }
+.card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .container > div:last-child {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .container > div:first-child > div:first-child {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .container > div:first-child > div:first-child > div:last-child {
+        width: 100%;
+        justify-content: stretch;
+    }
+    
+    .container > div:first-child > div:first-child > div:last-child > a {
+        flex: 1;
+        justify-content: center;
+    }
+}
+</style>
+{% endblock %}

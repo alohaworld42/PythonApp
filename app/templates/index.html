@@ -4,50 +4,147 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="relative bg-gray-900 text-white py-20 rounded-lg overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-r from-green-900 to-green-800 opacity-90"></div>
-    <div class="relative container mx-auto px-4 sm:px-8 z-10">
-        <div class="flex flex-col md:flex-row items-center">
-            <div class="md:w-1/2 mb-10 md:mb-0">
-                <h1 class="text-4xl md:text-5xl font-bold mb-6">Share Your Shopping Journey</h1>
-                <p class="text-xl mb-8">Connect with friends, share your purchases, and discover new products with BuyRoll - the social e-commerce platform.</p>
-                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                    <a href="{{ url_for('auth.register') }}" class="bg-white text-green-900 font-bold py-3 px-8 rounded-full hover:bg-gray-100 text-center">Get Started</a>
-                    <a href="#how-it-works" class="border-2 border-white text-white font-bold py-3 px-8 rounded-full hover:bg-white hover:bg-opacity-10 text-center">Learn More</a>
+<section class="relative overflow-hidden" style="background: linear-gradient(135deg, var(--color-primary-900) 0%, var(--color-primary-800) 50%, var(--color-primary-700) 100%); min-height: 100vh; display: flex; align-items: center;">
+    <!-- Animated Background Elements -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-40 -right-40 w-80 h-80 rounded-full opacity-10" style="background: var(--color-white);"></div>
+        <div class="absolute top-1/2 -left-20 w-60 h-60 rounded-full opacity-5" style="background: var(--color-white);"></div>
+        <div class="absolute bottom-20 right-1/4 w-40 h-40 rounded-full opacity-10" style="background: var(--color-white);"></div>
+    </div>
+    
+    <div class="container relative z-10">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <!-- Hero Content -->
+            <div class="text-center lg:text-left animate-fade-in">
+                <div class="inline-flex items-center px-4 py-2 rounded-full mb-6" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);">
+                    <span class="text-sm font-medium" style="color: var(--color-primary-100);">🎉 Now in Beta - Join Early!</span>
+                </div>
+                
+                <h1 class="font-bold mb-6" style="font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; color: var(--color-white);">
+                    Share Your 
+                    <span style="background: linear-gradient(135deg, var(--color-primary-300), var(--color-primary-100)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Shopping</span> 
+                    Journey
+                </h1>
+                
+                <p class="text-xl mb-8" style="color: var(--color-primary-100); line-height: 1.6; max-width: 600px;">
+                    Connect with friends, share your purchases, and discover amazing products with BuyRoll - the social e-commerce platform that makes shopping social.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-lg" style="background: var(--color-white); color: var(--color-primary-900); font-weight: var(--font-bold);">
+                        <span>Get Started Free</span>
+                        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                        </svg>
+                    </a>
+                    <a href="#features" class="btn btn-lg btn-outline" style="border-color: var(--color-white); color: var(--color-white);">
+                        <span>Learn More</span>
+                    </a>
+                </div>
+                
+                <!-- Social Proof -->
+                <div class="mt-12 flex items-center justify-center lg:justify-start gap-8">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold" style="color: var(--color-white);">1,000+</div>
+                        <div class="text-sm" style="color: var(--color-primary-200);">Early Users</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold" style="color: var(--color-white);">50+</div>
+                        <div class="text-sm" style="color: var(--color-primary-200);">Stores Connected</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold" style="color: var(--color-white);">10k+</div>
+                        <div class="text-sm" style="color: var(--color-primary-200);">Products Shared</div>
+                    </div>
                 </div>
             </div>
-            <div class="md:w-1/2">
-                <img src="{{ url_for('static', filename='images/hero-image.png') }}" alt="BuyRoll App" class="rounded-lg shadow-xl">
+            
+            <!-- Hero Image -->
+            <div class="flex justify-center lg:justify-end">
+                <div class="relative">
+                    <!-- Glow Effect -->
+                    <div class="absolute -inset-8 rounded-3xl opacity-30 blur-2xl" style="background: linear-gradient(135deg, var(--color-primary-400), var(--color-primary-600));"></div>
+                    
+                    <!-- Main Image Container -->
+                    <div class="relative card" style="padding: var(--space-8); background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.2);">
+                        <img src="{{ url_for('static', filename='images/hero-image.svg') }}" 
+                             alt="BuyRoll Platform Preview" 
+                             class="w-full max-w-md mx-auto"
+                             style="filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));">
+                    </div>
+                    
+                    <!-- Floating Elements -->
+                    <div class="absolute -top-4 -left-4 card" style="padding: var(--space-3); background: var(--color-white); animation: float 3s ease-in-out infinite;">
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full" style="background: var(--color-success);"></div>
+                            <span class="text-sm font-medium">Live Updates</span>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute -bottom-4 -right-4 card" style="padding: var(--space-3); background: var(--color-white); animation: float 3s ease-in-out infinite reverse;">
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-medium">Social Shopping</span>
+                            <div class="w-3 h-3 rounded-full" style="background: var(--color-primary-500);"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
+<style>
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+</style>
+
 <!-- Features Section -->
-<section class="py-16" id="how-it-works">
+<section class="py-20 bg-gray-50" id="how-it-works">
     <div class="container mx-auto px-4 sm:px-8">
-        <h2 class="text-3xl font-bold text-center mb-12">How It Works</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-shopping-bag text-2xl text-green-800"></i>
+        <div class="text-center mb-16">
+            <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">How It Works</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Get started with BuyRoll in three simple steps and transform your shopping experience
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+            <div class="group">
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 text-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-green-600"></div>
+                    <div class="bg-gradient-to-br from-green-100 to-green-200 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-shopping-bag text-3xl text-green-800"></i>
+                    </div>
+                    <div class="absolute top-4 right-4 bg-green-600 text-white text-sm font-bold w-8 h-8 rounded-full flex items-center justify-center">1</div>
+                    <h3 class="text-2xl font-bold mb-4 text-gray-900">Connect Your Stores</h3>
+                    <p class="text-gray-600 leading-relaxed">Link your Shopify and WooCommerce accounts to automatically import your purchase history and keep everything in sync.</p>
                 </div>
-                <h3 class="text-xl font-bold mb-2">Connect Your Stores</h3>
-                <p class="text-gray-600">Link your Shopify and WooCommerce accounts to automatically import your purchase history.</p>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-users text-2xl text-green-800"></i>
+            
+            <div class="group">
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 text-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-blue-600"></div>
+                    <div class="bg-gradient-to-br from-blue-100 to-blue-200 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-users text-3xl text-blue-800"></i>
+                    </div>
+                    <div class="absolute top-4 right-4 bg-blue-600 text-white text-sm font-bold w-8 h-8 rounded-full flex items-center justify-center">2</div>
+                    <h3 class="text-2xl font-bold mb-4 text-gray-900">Connect with Friends</h3>
+                    <p class="text-gray-600 leading-relaxed">Find and connect with friends to see what they're buying, get recommendations, and discover new products together.</p>
                 </div>
-                <h3 class="text-xl font-bold mb-2">Connect with Friends</h3>
-                <p class="text-gray-600">Find and connect with friends to see what they're buying and sharing.</p>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-share-alt text-2xl text-green-800"></i>
+            
+            <div class="group">
+                <div class="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 text-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-purple-600"></div>
+                    <div class="bg-gradient-to-br from-purple-100 to-purple-200 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-share-alt text-3xl text-purple-800"></i>
+                    </div>
+                    <div class="absolute top-4 right-4 bg-purple-600 text-white text-sm font-bold w-8 h-8 rounded-full flex items-center justify-center">3</div>
+                    <h3 class="text-2xl font-bold mb-4 text-gray-900">Share Your Purchases</h3>
+                    <p class="text-gray-600 leading-relaxed">Choose which purchases to share with your friends, add comments, and discover amazing products from your network.</p>
                 </div>
-                <h3 class="text-xl font-bold mb-2">Share Your Purchases</h3>
-                <p class="text-gray-600">Choose which purchases to share with your friends and discover new products.</p>
             </div>
         </div>
     </div>

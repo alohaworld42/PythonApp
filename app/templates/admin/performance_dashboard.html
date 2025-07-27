@@ -1,0 +1,388 @@
+{% extends "layout.html" %}
+
+{% block title %}Performance Dashboard{% endblock %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+.performance-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.metric-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #55970f;
+}
+
+.metric-label {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.status-good { color: #10b981; }
+.status-warning { color: #f59e0b; }
+.status-error { color: #ef4444; }
+
+.chart-container {
+    position: relative;
+    height: 300px;
+    margin: 1rem 0;
+}
+
+.recommendations {
+    background: #f8fafc;
+    border-left: 4px solid #55970f;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.recommendation-item {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.recommendation-high { background: #fef2f2; border-left: 3px solid #ef4444; }
+.recommendation-medium { background: #fffbeb; border-left: 3px solid #f59e0b; }
+.recommendation-low { background: #f0fdf4; border-left: 3px solid #10b981; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Performance Dashboard</h1>
+        <div class="flex space-x-4">
+            <button onclick="refreshData()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                Refresh Data
+            </button>
+            <select id="timeRange" onchange="updateTimeRange()" class="border rounded px-3 py-2">
+                <option value="60">Last Hour</option>
+                <option value="1440">Last 24 Hours</option>
+                <option value="10080">Last Week</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Key Metrics -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="performance-card">
+            <div class="metric-value" id="avgResponseTime">--</div>
+            <div class="metric-label">Avg Response Time (ms)</div>
+        </div>
+        <div class="performance-card">
+            <div class="metric-value" id="requestsPerMinute">--</div>
+            <div class="metric-label">Requests/Minute</div>
+        </div>
+        <div class="performance-card">
+            <div class="metric-value" id="cacheHitRate">--</div>
+            <div class="metric-label">Cache Hit Rate (%)</div>
+        </div>
+        <div class="performance-card">
+            <div class="metric-value" id="errorRate">--</div>
+            <div class="metric-label">Error Rate (%)</div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div class="performance-card">
+            <h3 class="text-lg font-semibold mb-4">Response Time Trend</h3>
+            <div class="chart-container">
+                <canvas id="responseTimeChart"></canvas>
+            </div>
+        </div>
+        <div class="performance-card">
+            <h3 class="text-lg font-semibold mb-4">Request Volume</h3>
+            <div class="chart-container">
+                <canvas id="requestVolumeChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slow Endpoints -->
+    <div class="performance-card mb-8">
+        <h3 class="text-lg font-semibold mb-4">Slow Endpoints</h3>
+        <div class="overflow-x-auto">
+            <table class="min-w-full">
+                <thead>
+                    <tr class="border-b">
+                        <th class="text-left py-2">Endpoint</th>
+                        <th class="text-left py-2">Count</th>
+                        <th class="text-left py-2">Avg Time</th>
+                        <th class="text-left py-2">Max Time</th>
+                        <th class="text-left py-2">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="slowEndpointsTable">
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-gray-500">Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- System Metrics -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="performance-card">
+            <h3 class="text-lg font-semibold mb-4">CPU Usage</h3>
+            <div class="metric-value" id="cpuUsage">--</div>
+            <div class="metric-label">Percentage</div>
+        </div>
+        <div class="performance-card">
+            <h3 class="text-lg font-semibold mb-4">Memory Usage</h3>
+            <div class="metric-value" id="memoryUsage">--</div>
+            <div class="metric-label">Percentage</div>
+        </div>
+        <div class="performance-card">
+            <h3 class="text-lg font-semibold mb-4">Disk Usage</h3>
+            <div class="metric-value" id="diskUsage">--</div>
+            <div class="metric-label">Percentage</div>
+        </div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="performance-card">
+        <h3 class="text-lg font-semibold mb-4">Performance Recommendations</h3>
+        <div id="recommendationsContainer">
+            <div class="text-center py-4 text-gray-500">Loading recommendations...</div>
+        </div>
+    </div>
+</div>
+
+<script>
+let responseTimeChart, requestVolumeChart;
+
+// Initialize charts
+function initCharts() {
+    const ctx1 = document.getElementById('responseTimeChart').getContext('2d');
+    responseTimeChart = new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Response Time (ms)',
+                data: [],
+                borderColor: '#55970f',
+                backgroundColor: 'rgba(85, 151, 15, 0.1)',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Response Time (ms)'
+                    }
+                }
+            }
+        }
+    });
+
+    const ctx2 = document.getElementById('requestVolumeChart').getContext('2d');
+    requestVolumeChart = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Requests',
+                data: [],
+                backgroundColor: '#55970f',
+                borderColor: '#55970f',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Number of Requests'
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Load performance data
+async function loadPerformanceData(minutes = 60) {
+    try {
+        const response = await fetch(`/api/performance/summary?minutes=${minutes}`);
+        const data = await response.json();
+        
+        updateMetrics(data);
+        updateCharts(data);
+        updateSlowEndpoints(data.slow_endpoints || []);
+        updateSystemMetrics(data.system_stats);
+        updateRecommendations(data.recommendations || []);
+        
+    } catch (error) {
+        console.error('Error loading performance data:', error);
+    }
+}
+
+// Update key metrics
+function updateMetrics(data) {
+    const stats = data.request_stats || {};
+    
+    document.getElementById('avgResponseTime').textContent = 
+        Math.round((stats.avg_response_time || 0) * 1000);
+    
+    document.getElementById('requestsPerMinute').textContent = 
+        Math.round(stats.requests_per_minute || 0);
+    
+    const cacheStats = data.cache_stats || {};
+    document.getElementById('cacheHitRate').textContent = 
+        Math.round(cacheStats.cache_hit_rate || 0);
+    
+    // Calculate error rate from status codes
+    const statusCodes = stats.status_codes || {};
+    const totalRequests = Object.values(statusCodes).reduce((a, b) => a + b, 0);
+    const errorRequests = Object.entries(statusCodes)
+        .filter(([code]) => parseInt(code) >= 400)
+        .reduce((sum, [, count]) => sum + count, 0);
+    
+    const errorRate = totalRequests > 0 ? (errorRequests / totalRequests) * 100 : 0;
+    document.getElementById('errorRate').textContent = Math.round(errorRate);
+}
+
+// Update charts with mock data (in real implementation, this would use actual time series data)
+function updateCharts(data) {
+    // Mock time series data for demonstration
+    const now = new Date();
+    const labels = [];
+    const responseTimeData = [];
+    const requestVolumeData = [];
+    
+    for (let i = 11; i >= 0; i--) {
+        const time = new Date(now.getTime() - i * 5 * 60 * 1000); // 5-minute intervals
+        labels.push(time.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+        
+        // Mock data - in real implementation, get from time series
+        responseTimeData.push(Math.random() * 1000 + 200);
+        requestVolumeData.push(Math.floor(Math.random() * 50) + 10);
+    }
+    
+    responseTimeChart.data.labels = labels;
+    responseTimeChart.data.datasets[0].data = responseTimeData;
+    responseTimeChart.update();
+    
+    requestVolumeChart.data.labels = labels;
+    requestVolumeChart.data.datasets[0].data = requestVolumeData;
+    requestVolumeChart.update();
+}
+
+// Update slow endpoints table
+function updateSlowEndpoints(slowEndpoints) {
+    const tbody = document.getElementById('slowEndpointsTable');
+    
+    if (!slowEndpoints || slowEndpoints.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-gray-500">No slow endpoints detected</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = slowEndpoints.map(([endpoint, stats]) => {
+        const statusClass = stats.avg_time > 2 ? 'status-error' : 
+                           stats.avg_time > 1 ? 'status-warning' : 'status-good';
+        
+        return `
+            <tr class="border-b">
+                <td class="py-2">${endpoint}</td>
+                <td class="py-2">${stats.count}</td>
+                <td class="py-2 ${statusClass}">${stats.avg_time.toFixed(3)}s</td>
+                <td class="py-2">${stats.max_time.toFixed(3)}s</td>
+                <td class="py-2">
+                    <span class="px-2 py-1 rounded text-xs ${statusClass}">
+                        ${stats.avg_time > 2 ? 'Critical' : stats.avg_time > 1 ? 'Warning' : 'Good'}
+                    </span>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+// Update system metrics
+function updateSystemMetrics(systemStats) {
+    if (!systemStats) {
+        document.getElementById('cpuUsage').textContent = '--';
+        document.getElementById('memoryUsage').textContent = '--';
+        document.getElementById('diskUsage').textContent = '--';
+        return;
+    }
+    
+    document.getElementById('cpuUsage').textContent = Math.round(systemStats.cpu_percent || 0);
+    document.getElementById('memoryUsage').textContent = Math.round(systemStats.memory_percent || 0);
+    document.getElementById('diskUsage').textContent = Math.round(systemStats.disk_percent || 0);
+    
+    // Update colors based on thresholds
+    updateMetricColor('cpuUsage', systemStats.cpu_percent, 70, 90);
+    updateMetricColor('memoryUsage', systemStats.memory_percent, 80, 90);
+    updateMetricColor('diskUsage', systemStats.disk_percent, 80, 90);
+}
+
+// Update metric color based on thresholds
+function updateMetricColor(elementId, value, warningThreshold, errorThreshold) {
+    const element = document.getElementById(elementId);
+    element.className = 'metric-value';
+    
+    if (value >= errorThreshold) {
+        element.classList.add('status-error');
+    } else if (value >= warningThreshold) {
+        element.classList.add('status-warning');
+    } else {
+        element.classList.add('status-good');
+    }
+}
+
+// Update recommendations
+function updateRecommendations(recommendations) {
+    const container = document.getElementById('recommendationsContainer');
+    
+    if (!recommendations || recommendations.length === 0) {
+        container.innerHTML = '<div class="text-center py-4 text-green-600">✅ No performance issues detected</div>';
+        return;
+    }
+    
+    container.innerHTML = recommendations.map(rec => `
+        <div class="recommendation-item recommendation-${rec.severity}">
+            <div class="font-semibold">${rec.type.toUpperCase()}: ${rec.message}</div>
+            <div class="text-sm mt-1">💡 ${rec.suggestion}</div>
+        </div>
+    `).join('');
+}
+
+// Refresh data
+function refreshData() {
+    const timeRange = document.getElementById('timeRange').value;
+    loadPerformanceData(parseInt(timeRange));
+}
+
+// Update time range
+function updateTimeRange() {
+    refreshData();
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    initCharts();
+    loadPerformanceData();
+    
+    // Auto-refresh every 30 seconds
+    setInterval(refreshData, 30000);
+});
+</script>
+{% endblock %}

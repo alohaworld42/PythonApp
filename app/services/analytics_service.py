@@ -1,6 +1,8 @@
 from app import db
 from app.models.purchase import Purchase
 from app.models.product import Product
+from app.utils.cache import cached
+from app.utils.performance_monitor import monitor_database_query
 from sqlalchemy import func, extract, and_
 from datetime import datetime, timedelta
 from collections import defaultdict
@@ -10,6 +12,8 @@ class AnalyticsService:
     """Service for generating spending analytics and insights."""
     
     @staticmethod
+    @cached(ttl=600, key_prefix='analytics_monthly_')
+    @monitor_database_query('SELECT', 'purchase')
     def get_monthly_spending(user_id, year=None, month=None):
         """
         Calculate monthly spending for a user.
@@ -62,6 +66,8 @@ class AnalyticsService:
         }
     
     @staticmethod
+    @cached(ttl=900, key_prefix='analytics_category_')
+    @monitor_database_query('SELECT', 'purchase')
     def get_category_spending_analysis(user_id, start_date=None, end_date=None):
         """
         Analyze spending by product category.
@@ -115,6 +121,8 @@ class AnalyticsService:
         }
     
     @staticmethod
+    @cached(ttl=900, key_prefix='analytics_store_')
+    @monitor_database_query('SELECT', 'purchase')
     def get_store_spending_analysis(user_id, start_date=None, end_date=None):
         """
         Analyze spending by store.
@@ -170,6 +178,8 @@ class AnalyticsService:
         }
     
     @staticmethod
+    @cached(ttl=1800, key_prefix='analytics_trends_')
+    @monitor_database_query('SELECT', 'purchase')
     def get_spending_trends(user_id, period_months=12):
         """
         Generate time-series spending trends.
