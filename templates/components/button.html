@@ -1,0 +1,66 @@
+<!-- Button Component Template -->
+<!-- Usage: {% include 'components/button.html' with context %} -->
+
+{% macro button(text, type='primary', size='base', href=None, onclick=None, disabled=False, icon=None, loading=False, class='') %}
+  {% set tag = 'a' if href else 'button' %}
+  {% set button_classes = [
+    'btn',
+    'btn-' + type,
+    'btn-' + size if size != 'base' else '',
+    'btn-loading' if loading else '',
+    'button-press' if not disabled else '',
+    class
+  ] | select | join(' ') %}
+  
+  <{{ tag }}
+    {% if href %}href="{{ href }}"{% endif %}
+    {% if onclick %}onclick="{{ onclick }}"{% endif %}
+    {% if disabled %}disabled{% endif %}
+    class="{{ button_classes }}"
+    {% if loading %}aria-busy="true"{% endif %}
+  >
+    {% if icon and not loading %}
+      <i class="{{ icon }} mr-2"></i>
+    {% endif %}
+    {{ text }}
+  </{{ tag }}>
+{% endmacro %}
+
+<!-- Button Examples -->
+<div class="space-y-4">
+  <!-- Primary Buttons -->
+  <div class="flex gap-4 items-center">
+    {{ button('Primary Button', 'primary') }}
+    {{ button('Secondary Button', 'secondary') }}
+    {{ button('Outline Button', 'outline') }}
+    {{ button('Ghost Button', 'ghost') }}
+  </div>
+  
+  <!-- Button Sizes -->
+  <div class="flex gap-4 items-center">
+    {{ button('Small', 'primary', 'sm') }}
+    {{ button('Base', 'primary', 'base') }}
+    {{ button('Large', 'primary', 'lg') }}
+    {{ button('Extra Large', 'primary', 'xl') }}
+  </div>
+  
+  <!-- Button States -->
+  <div class="flex gap-4 items-center">
+    {{ button('With Icon', 'primary', 'base', icon='fas fa-star') }}
+    {{ button('Loading', 'primary', 'base', loading=True) }}
+    {{ button('Disabled', 'primary', 'base', disabled=True) }}
+  </div>
+  
+  <!-- Icon Buttons -->
+  <div class="flex gap-4 items-center">
+    <button class="btn-icon btn-primary">
+      <i class="fas fa-heart"></i>
+    </button>
+    <button class="btn-icon btn-secondary">
+      <i class="fas fa-share"></i>
+    </button>
+    <button class="btn-icon btn-outline">
+      <i class="fas fa-bookmark"></i>
+    </button>
+  </div>
+</div>

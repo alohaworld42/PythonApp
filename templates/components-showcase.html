@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuyRoll Component Library Showcase</title>
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Design System CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    
+    <!-- Alpine.js -->
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Skip Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-bold text-primary-900">BuyRoll Components</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="btn btn-outline btn-sm" data-theme-toggle>
+                    <i class="fas fa-moon"></i>
+                    Toggle Theme
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main id="main-content" class="main-content">
+        <div class="container py-12">
+            <!-- Hero Section -->
+            <section class="hero-centered mb-16">
+                <h1 class="hero-title">Component Library</h1>
+                <p class="hero-subtitle">A comprehensive collection of reusable UI components for the BuyRoll platform</p>
+            </section>
+            
+            <!-- Buttons Section -->
+            <section class="section-sm scroll-fade-in">
+                <div class="section-header">
+                    <h2 class="section-title">Buttons</h2>
+                    <p class="section-subtitle">Various button styles and states for different use cases</p>
+                </div>
+                
+                {% include 'components/button.html' %}
+            </section>
+            
+            <!-- Cards Section -->
+            <section class="section-sm scroll-fade-in">
+                <div class="section-header">
+                    <h2 class="section-title">Cards</h2>
+                    <p class="section-subtitle">Flexible card components for displaying content</p>
+                </div>
+                
+                {% include 'components/card.html' %}
+            </section>
+            
+            <!-- Forms Section -->
+            <section class="section-sm scroll-fade-in">
+                <div class="section-header">
+                    <h2 class="section-title">Form Components</h2>
+                    <p class="section-subtitle">Input fields, selects, and form controls</p>
+                </div>
+                
+                {% include 'components/form_input.html' %}
+            </section>
+            
+            <!-- Modals & Overlays Section -->
+            <section class="section-sm scroll-fade-in">
+                <div class="section-header">
+                    <h2 class="section-title">Modals & Overlays</h2>
+                    <p class="section-subtitle">Modal dialogs, alerts, and interactive overlays</p>
+                </div>
+                
+                {% include 'components/modal.html' %}
+            </section>
+            
+            <!-- Layout Examples -->
+            <section class="section-sm scroll-fade-in">
+                <div class="section-header">
+                    <h2 class="section-title">Layout Examples</h2>
+                    <p class="section-subtitle">Common layout patterns and grid systems</p>
+                </div>
+                
+                <!-- Grid Layout Example -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold mb-4">Responsive Grid</h3>
+                    <div class="card-grid-responsive">
+                        {% for i in range(6) %}
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="font-semibold mb-2">Grid Item {{ i + 1 }}</h4>
+                                    <p class="text-gray-500">This is a responsive grid item that adapts to different screen sizes.</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Feature Grid Example -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold mb-4">Feature Grid</h3>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <h3 class="feature-title">Fast Performance</h3>
+                            <p class="feature-description">Lightning-fast loading times and optimized performance.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3 class="feature-title">Secure</h3>
+                            <p class="feature-description">Enterprise-grade security to protect your data.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3 class="feature-title">Social</h3>
+                            <p class="feature-description">Connect with friends and share your favorite products.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Dashboard Layout Example -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-semibold mb-4">Dashboard Layout</h3>
+                    <div class="dashboard" style="height: 400px;">
+                        <div class="dashboard-sidebar">
+                            <div class="p-4">
+                                <h4 class="font-semibold mb-4">Navigation</h4>
+                                <ul class="space-y-2">
+                                    <li><a href="#" class="block py-2 px-3 rounded hover:bg-gray-700">Dashboard</a></li>
+                                    <li><a href="#" class="block py-2 px-3 rounded hover:bg-gray-700">Products</a></li>
+                                    <li><a href="#" class="block py-2 px-3 rounded hover:bg-gray-700">Orders</a></li>
+                                    <li><a href="#" class="block py-2 px-3 rounded hover:bg-gray-700">Settings</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="dashboard-header">
+                            <div class="flex items-center justify-between px-6">
+                                <h2 class="font-semibold">Dashboard Header</h2>
+                                <button class="btn btn-primary btn-sm">Action</button>
+                            </div>
+                        </div>
+                        <div class="dashboard-main">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="font-semibold mb-2">Metric 1</h4>
+                                        <p class="text-2xl font-bold text-primary-900">1,234</p>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="font-semibold mb-2">Metric 2</h4>
+                                        <p class="text-2xl font-bold text-primary-900">5,678</p>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="font-semibold mb-2">Metric 3</h4>
+                                        <p class="text-2xl font-bold text-primary-900">9,012</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Animation Examples -->
+            <section class="section-sm scroll-fade-in">
+                <div class="section-header">
+                    <h2 class="section-title">Animations</h2>
+                    <p class="section-subtitle">Interactive animations and micro-interactions</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="card hover-lift">
+                        <div class="card-body text-center">
+                            <h4 class="font-semibold mb-2">Hover Lift</h4>
+                            <p class="text-sm text-gray-500">Hover to see effect</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card hover-grow">
+                        <div class="card-body text-center">
+                            <h4 class="font-semibold mb-2">Hover Grow</h4>
+                            <p class="text-sm text-gray-500">Hover to see effect</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card hover-shadow">
+                        <div class="card-body text-center">
+                            <h4 class="font-semibold mb-2">Hover Shadow</h4>
+                            <p class="text-sm text-gray-500">Hover to see effect</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card hover-glow">
+                        <div class="card-body text-center">
+                            <h4 class="font-semibold mb-2">Hover Glow</h4>
+                            <p class="text-sm text-gray-500">Hover to see effect</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Animation Triggers -->
+                <div class="mt-8 flex gap-4 justify-center">
+                    <button class="btn btn-primary" onclick="triggerAnimation('bounce')">
+                        <i class="fas fa-play mr-2"></i>
+                        Bounce Animation
+                    </button>
+                    <button class="btn btn-secondary" onclick="triggerAnimation('shake')">
+                        <i class="fas fa-play mr-2"></i>
+                        Shake Animation
+                    </button>
+                    <button class="btn btn-outline" onclick="triggerAnimation('pulse')">
+                        <i class="fas fa-play mr-2"></i>
+                        Pulse Animation
+                    </button>
+                </div>
+                
+                <div id="animation-target" class="card mx-auto mt-6 max-w-sm">
+                    <div class="card-body text-center">
+                        <h4 class="font-semibold mb-2">Animation Target</h4>
+                        <p class="text-sm text-gray-500">Click buttons above to animate</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2024 BuyRoll. All rights reserved.</p>
+                <p>Component Library v1.0</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Design System JavaScript -->
+    <script src="{{ url_for('static', filename='js/design-system.js') }}"></script>
+    
+    <!-- Animation Demo Script -->
+    <script>
+        function triggerAnimation(type) {
+            const target = document.getElementById('animation-target');
+            
+            // Remove existing animation classes
+            target.classList.remove('animate-bounce', 'animate-shake-x', 'animate-pulse');
+            
+            // Add new animation class
+            switch(type) {
+                case 'bounce':
+                    target.classList.add('animate-bounce');
+                    break;
+                case 'shake':
+                    target.classList.add('animate-shake-x');
+                    break;
+                case 'pulse':
+                    target.classList.add('animate-pulse');
+                    break;
+            }
+            
+            // Remove animation class after animation completes
+            setTimeout(() => {
+                target.classList.remove('animate-bounce', 'animate-shake-x', 'animate-pulse');
+            }, 2000);
+        }
+        
+        // Initialize tooltips
+        document.querySelectorAll('[data-tooltip]').forEach(element => {
+            const tooltip = element.querySelector('.tooltip');
+            
+            element.addEventListener('mouseenter', () => {
+                tooltip.classList.remove('opacity-0', 'invisible');
+                tooltip.classList.add('opacity-100', 'visible');
+            });
+            
+            element.addEventListener('mouseleave', () => {
+                tooltip.classList.add('opacity-0', 'invisible');
+                tooltip.classList.remove('opacity-100', 'visible');
+            });
+        });
+    </script>
+</body>
+</html>

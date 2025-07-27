@@ -1,0 +1,159 @@
+<!-- Form Input Component Template -->
+<!-- Usage: {% include 'components/form_input.html' with context %} -->
+
+{% macro form_input(name, type='text', label=None, placeholder=None, value='', required=False, disabled=False, error=None, help=None, class='', floating=False) %}
+  <div class="form-group {{ 'form-floating' if floating else '' }}">
+    {% if type == 'textarea' %}
+      <textarea
+        name="{{ name }}"
+        id="{{ name }}"
+        class="form-input {{ class }}"
+        {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+        {% if required %}required{% endif %}
+        {% if disabled %}disabled{% endif %}
+        rows="4"
+      >{{ value }}</textarea>
+    {% elif type == 'select' %}
+      <select
+        name="{{ name }}"
+        id="{{ name }}"
+        class="form-input {{ class }}"
+        {% if required %}required{% endif %}
+        {% if disabled %}disabled{% endif %}
+      >
+        {% if placeholder %}
+          <option value="">{{ placeholder }}</option>
+        {% endif %}
+        {{ caller() if caller }}
+      </select>
+    {% else %}
+      <input
+        type="{{ type }}"
+        name="{{ name }}"
+        id="{{ name }}"
+        class="form-input {{ class }}"
+        {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+        {% if value %}value="{{ value }}"{% endif %}
+        {% if required %}required{% endif %}
+        {% if disabled %}disabled{% endif %}
+      >
+    {% endif %}
+    
+    {% if label %}
+      <label for="{{ name }}" class="form-label">
+        {{ label }}
+        {% if required %}<span class="text-error">*</span>{% endif %}
+      </label>
+    {% endif %}
+    
+    {% if error %}
+      <span class="form-error">{{ error }}</span>
+    {% endif %}
+    
+    {% if help %}
+      <span class="text-sm text-gray-500 mt-1 block">{{ help }}</span>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro form_checkbox(name, label, checked=False, disabled=False, class='') %}
+  <div class="flex items-center gap-3 {{ class }}">
+    <input
+      type="checkbox"
+      name="{{ name }}"
+      id="{{ name }}"
+      class="w-4 h-4 text-primary-800 bg-gray-100 border-gray-300 rounded focus:ring-primary-800 focus:ring-2"
+      {% if checked %}checked{% endif %}
+      {% if disabled %}disabled{% endif %}
+    >
+    <label for="{{ name }}" class="text-sm font-medium text-black">
+      {{ label }}
+    </label>
+  </div>
+{% endmacro %}
+
+{% macro form_radio_group(name, options, selected=None, class='') %}
+  <div class="space-y-3 {{ class }}">
+    {% for option in options %}
+      <div class="flex items-center gap-3">
+        <input
+          type="radio"
+          name="{{ name }}"
+          id="{{ name }}_{{ option.value }}"
+          value="{{ option.value }}"
+          class="w-4 h-4 text-primary-800 bg-gray-100 border-gray-300 focus:ring-primary-800 focus:ring-2"
+          {% if option.value == selected %}checked{% endif %}
+        >
+        <label for="{{ name }}_{{ option.value }}" class="text-sm font-medium text-black">
+          {{ option.label }}
+        </label>
+      </div>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{% macro form_file_upload(name, label=None, accept=None, multiple=False, class='') %}
+  <div class="form-group {{ class }}">
+    {% if label %}
+      <label for="{{ name }}" class="form-label">{{ label }}</label>
+    {% endif %}
+    
+    <div class="relative">
+      <input
+        type="file"
+        name="{{ name }}"
+        id="{{ name }}"
+        class="sr-only"
+        {% if accept %}accept="{{ accept }}"{% endif %}
+        {% if multiple %}multiple{% endif %}
+      >
+      <label
+        for="{{ name }}"
+        class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition"
+      >
+        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+          <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-3"></i>
+          <p class="mb-2 text-sm text-gray-500">
+            <span class="font-semibold">Click to upload</span> or drag and drop
+          </p>
+          <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+        </div>
+      </label>
+    </div>
+  </div>
+{% endmacro %}
+
+<!-- Form Examples -->
+<div class="max-w-md mx-auto space-y-6">
+  <!-- Regular Inputs -->
+  {{ form_input('email', 'email', 'Email Address', 'Enter your email', required=True) }}
+  {{ form_input('password', 'password', 'Password', 'Enter your password', required=True) }}
+  
+  <!-- Floating Label Inputs -->
+  {{ form_input('name', 'text', 'Full Name', 'Full Name', floating=True) }}
+  {{ form_input('phone', 'tel', 'Phone Number', 'Phone Number', floating=True) }}
+  
+  <!-- Textarea -->
+  {{ form_input('message', 'textarea', 'Message', 'Enter your message...') }}
+  
+  <!-- Select -->
+  {% call form_input('country', 'select', 'Country', 'Select your country') %}
+    <option value="us">United States</option>
+    <option value="uk">United Kingdom</option>
+    <option value="de">Germany</option>
+    <option value="fr">France</option>
+  {% endcall %}
+  
+  <!-- Checkbox -->
+  {{ form_checkbox('newsletter', 'Subscribe to newsletter') }}
+  
+  <!-- Radio Group -->
+  {{ form_radio_group('plan', [
+    {'value': 'basic', 'label': 'Basic Plan'},
+    {'value': 'premium', 'label': 'Premium Plan'},
+    {'value': 'enterprise', 'label': 'Enterprise Plan'}
+  ], 'basic') }}
+  
+  <!-- File Upload -->
+  {{ form_file_upload('avatar', 'Profile Picture', 'image/*') }}
+</div>

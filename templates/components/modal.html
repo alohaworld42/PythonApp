@@ -1,0 +1,183 @@
+<!-- Modal Component Template -->
+<!-- Usage: {% include 'components/modal.html' with context %} -->
+
+{% macro modal(id, title=None, size='md', class='') %}
+  <div id="{{ id }}" class="modal {{ class }}" role="dialog" aria-labelledby="{{ id }}-title" aria-hidden="true">
+    <div class="modal-backdrop" data-modal-close></div>
+    <div class="modal-dialog modal-{{ size }}">
+      <div class="modal-content">
+        {% if title %}
+          <div class="modal-header">
+            <h2 id="{{ id }}-title" class="modal-title">{{ title }}</h2>
+            <button type="button" class="modal-close" data-modal-close aria-label="Close">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        {% endif %}
+        
+        <div class="modal-body">
+          {{ caller() if caller }}
+        </div>
+        
+        {% if caller and caller.footer %}
+          <div class="modal-footer">
+            {{ caller.footer() }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro alert(type='info', title=None, dismissible=True, class='') %}
+  {% set alert_classes = {
+    'success': 'bg-success text-white',
+    'error': 'bg-error text-white',
+    'warning': 'bg-warning text-white',
+    'info': 'bg-info text-white'
+  } %}
+  
+  <div class="alert alert-{{ type }} {{ alert_classes[type] }} {{ class }} p-4 rounded-lg flex items-start gap-3" role="alert">
+    <div class="flex-shrink-0">
+      {% if type == 'success' %}
+        <i class="fas fa-check-circle text-xl"></i>
+      {% elif type == 'error' %}
+        <i class="fas fa-exclamation-circle text-xl"></i>
+      {% elif type == 'warning' %}
+        <i class="fas fa-exclamation-triangle text-xl"></i>
+      {% else %}
+        <i class="fas fa-info-circle text-xl"></i>
+      {% endif %}
+    </div>
+    
+    <div class="flex-1">
+      {% if title %}
+        <h4 class="font-semibold mb-1">{{ title }}</h4>
+      {% endif %}
+      {{ caller() if caller }}
+    </div>
+    
+    {% if dismissible %}
+      <button type="button" class="flex-shrink-0 ml-auto text-white hover:opacity-75 transition" onclick="this.parentElement.remove()">
+        <i class="fas fa-times"></i>
+      </button>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro tooltip(content, position='top', class='') %}
+  <div class="relative inline-block {{ class }}" data-tooltip="{{ content }}" data-position="{{ position }}">
+    {{ caller() if caller }}
+    <div class="tooltip absolute z-10 px-3 py-2 text-sm font-medium text-white bg-black rounded-lg shadow-sm opacity-0 invisible transition-opacity duration-300 pointer-events-none">
+      {{ content }}
+      <div class="tooltip-arrow absolute w-2 h-2 bg-black transform rotate-45"></div>
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro dropdown(trigger_text, items, class='') %}
+  <div class="relative inline-block {{ class }}" x-data="{ open: false }">
+    <button
+      @click="open = !open"
+      @click.away="open = false"
+      class="btn btn-secondary flex items-center gap-2"
+      aria-haspopup="true"
+      :aria-expanded="open"
+    >
+      {{ trigger_text }}
+      <i class="fas fa-chevron-down transition-transform" :class="{ 'rotate-180': open }"></i>
+    </button>
+    
+    <div
+      x-show="open"
+      x-transition:enter="transition ease-out duration-100"
+      x-transition:enter-start="transform opacity-0 scale-95"
+      x-transition:enter-end="transform opacity-100 scale-100"
+      x-transition:leave="transition ease-in duration-75"
+      x-transition:leave-start="transform opacity-100 scale-100"
+      x-transition:leave-end="transform opacity-0 scale-95"
+      class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+      role="menu"
+    >
+      <div class="py-1" role="none">
+        {% for item in items %}
+          {% if item.divider %}
+            <div class="border-t border-gray-100 my-1"></div>
+          {% else %}
+            <a
+              href="{{ item.href or '#' }}"
+              class="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100 transition"
+              role="menuitem"
+              {% if item.onclick %}onclick="{{ item.onclick }}"{% endif %}
+            >
+              {% if item.icon %}
+                <i class="{{ item.icon }} mr-2"></i>
+              {% endif %}
+              {{ item.text }}
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endmacro %}
+
+<!-- Modal Examples -->
+<div class="space-y-4">
+  <!-- Trigger Buttons -->
+  <div class="flex gap-4">
+    <button class="btn btn-primary" data-modal-target="#example-modal">
+      Open Modal
+    </button>
+    <button class="btn btn-secondary" data-modal-target="#confirm-modal">
+      Confirm Action
+    </button>
+  </div>
+  
+  <!-- Example Modal -->
+  {% call modal('example-modal', 'Example Modal') %}
+    <p class="mb-4">This is an example modal with some content. You can put any HTML content here.</p>
+    <p>Modals are great for displaying additional information, forms, or confirmations without leaving the current page.</p>
+  {% endcall %}
+  
+  <!-- Confirmation Modal -->
+  {% call modal('confirm-modal', 'Confirm Action', 'sm') %}
+    <p class="mb-6">Are you sure you want to perform this action? This cannot be undone.</p>
+    <div class="flex gap-3 justify-end">
+      <button class="btn btn-secondary" data-modal-close>Cancel</button>
+      <button class="btn btn-error">Confirm</button>
+    </div>
+  {% endcall %}
+  
+  <!-- Alert Examples -->
+  <div class="space-y-4">
+    {% call alert('success', 'Success!') %}
+      Your changes have been saved successfully.
+    {% endcall %}
+    
+    {% call alert('error', 'Error!') %}
+      There was an error processing your request. Please try again.
+    {% endcall %}
+    
+    {% call alert('warning', 'Warning!') %}
+      This action will permanently delete your data.
+    {% endcall %}
+    
+    {% call alert('info', 'Information') %}
+      This is some helpful information for you to know.
+    {% endcall %}
+  </div>
+  
+  <!-- Dropdown Example -->
+  {{ dropdown('Actions', [
+    {'text': 'Edit', 'icon': 'fas fa-edit', 'href': '#'},
+    {'text': 'Share', 'icon': 'fas fa-share', 'href': '#'},
+    {'divider': True},
+    {'text': 'Delete', 'icon': 'fas fa-trash', 'href': '#', 'onclick': 'confirm("Are you sure?")'}
+  ]) }}
+  
+  <!-- Tooltip Example -->
+  {% call tooltip('This is a helpful tooltip') %}
+    <button class="btn btn-outline">Hover me</button>
+  {% endcall %}
+</div>
