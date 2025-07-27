@@ -12,6 +12,11 @@ class BuyRollDesignSystem {
     this.setupFormValidation();
     this.setupScrollEffects();
     this.setupAccessibility();
+    this.setupResponsiveLayouts();
+    this.setupAdvancedAnimations();
+    this.setupPerformanceMonitoring();
+    this.setupParallax();
+    this.setupScrollProgress();
   }
 
   // Navigation System
@@ -760,4 +765,226 @@ document.addEventListener('DOMContentLoaded', () => {
 // Export for module usage
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = BuyRollDesignSystem;
+}
+ 
+ // Enhanced Scroll Effects
+  setupParallax() {
+    const parallaxElements = document.querySelectorAll('.parallax');
+    
+    if (parallaxElements.length === 0) return;
+    
+    const handleScroll = this.throttle(() => {
+      const scrollTop = window.pageYOffset;
+      
+      parallaxElements.forEach(element => {
+        const speed = element.dataset.speed || 0.5;
+        const yPos = -(scrollTop * speed);
+        element.style.transform = `translateY(${yPos}px)`;
+      });
+    }, 16); // 60fps
+    
+    window.addEventListener('scroll', handleScroll);
+  }
+
+  setupScrollProgress() {
+    const progressBar = document.querySelector('.scroll-progress');
+    if (!progressBar) return;
+    
+    const handleScroll = this.throttle(() => {
+      const scrollTop = window.pageYOffset;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = (scrollTop / docHeight) * 100;
+      
+      progressBar.style.width = `${scrollPercent}%`;
+    }, 16);
+    
+    window.addEventListener('scroll', handleScroll);
+  }
+
+  // Advanced Layout Management
+  setupResponsiveLayouts() {
+    // Handle responsive navigation
+    this.handleResponsiveNav();
+    
+    // Setup masonry layout
+    this.setupMasonryLayout();
+    
+    // Handle responsive tables
+    this.setupResponsiveTables();
+  }
+
+  handleResponsiveNav() {
+    const nav = document.querySelector('.nav');
+    const navItems = document.querySelectorAll('.nav-item');
+    
+    if (!nav || !navItems.length) return;
+    
+    const checkNavOverflow = () => {
+      const navWidth = nav.offsetWidth;
+      const itemsWidth = Array.from(navItems).reduce((total, item) => total + item.offsetWidth, 0);
+      
+      if (itemsWidth > navWidth) {
+        nav.classList.add('nav-overflow');
+      } else {
+        nav.classList.remove('nav-overflow');
+      }
+    };
+    
+    window.addEventListener('resize', this.debounce(checkNavOverflow, 250));
+    checkNavOverflow();
+  }
+
+  setupMasonryLayout() {
+    const masonryContainers = document.querySelectorAll('.masonry');
+    
+    masonryContainers.forEach(container => {
+      const resizeObserver = new ResizeObserver(() => {
+        this.layoutMasonry(container);
+      });
+      
+      resizeObserver.observe(container);
+      this.layoutMasonry(container);
+    });
+  }
+
+  layoutMasonry(container) {
+    const items = container.querySelectorAll('.masonry-item');
+    const columnCount = parseInt(getComputedStyle(container).columnCount);
+    
+    if (columnCount === 1) return;
+    
+    const columnHeights = new Array(columnCount).fill(0);
+    
+    items.forEach(item => {
+      const shortestColumn = columnHeights.indexOf(Math.min(...columnHeights));
+      item.style.order = shortestColumn;
+      columnHeights[shortestColumn] += item.offsetHeight;
+    });
+  }
+
+  setupResponsiveTables() {
+    const tables = document.querySelectorAll('.responsive-table');
+    
+    tables.forEach(table => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'table-wrapper';
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+      
+      // Add scroll indicators
+      const scrollIndicator = document.createElement('div');
+      scrollIndicator.className = 'table-scroll-indicator';
+      scrollIndicator.innerHTML = '← Scroll to see more →';
+      wrapper.appendChild(scrollIndicator);
+      
+      wrapper.addEventListener('scroll', () => {
+        const isScrollable = wrapper.scrollWidth > wrapper.clientWidth;
+        const isAtStart = wrapper.scrollLeft === 0;
+        const isAtEnd = wrapper.scrollLeft >= wrapper.scrollWidth - wrapper.clientWidth;
+        
+        scrollIndicator.style.display = isScrollable && !isAtEnd ? 'block' : 'none';
+      });
+    });
+  }
+
+  // Advanced Animation Controls
+  setupAdvancedAnimations() {
+    // Stagger animations
+    this.setupStaggerAnimations();
+    
+    // Scroll-triggered animations
+    this.setupScrollAnimations();
+    
+    // Hover effect management
+    this.setupHoverEffects();
+  }
+
+  setupStaggerAnimations() {
+    const staggerGroups = document.querySelectorAll('[data-stagger-group]');
+    
+    staggerGroups.forEach(group => {
+      const items = group.querySelectorAll('[data-stagger-item]');
+      const delay = parseFloat(group.dataset.staggerDelay) || 0.1;
+      
+      items.forEach((item, index) => {
+        item.style.animationDelay = `${index * delay}s`;
+      });
+    });
+  }
+
+  setupScrollAnimations() {
+    const animatedElements = document.querySelectorAll('[data-scroll-animation]');
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const animation = entry.target.dataset.scrollAnimation;
+          const delay = entry.target.dataset.animationDelay || 0;
+          
+          setTimeout(() => {
+            entry.target.classList.add(`animate-${animation}`);
+          }, delay * 1000);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+    
+    animatedElements.forEach(el => observer.observe(el));
+  }
+
+  setupHoverEffects() {
+    // Enhanced hover effects with performance optimization
+    const hoverElements = document.querySelectorAll('[data-hover-effect]');
+    
+    hoverElements.forEach(element => {
+      const effect = element.dataset.hoverEffect;
+      
+      element.addEventListener('mouseenter', () => {
+        element.classList.add(`hover-${effect}`);
+      });
+      
+      element.addEventListener('mouseleave', () => {
+        element.classList.remove(`hover-${effect}`);
+      });
+    });
+  }
+
+  // Performance Monitoring
+  setupPerformanceMonitoring() {
+    // Monitor animation performance
+    this.monitorAnimationPerformance();
+    
+    // Monitor layout shifts
+    this.monitorLayoutShifts();
+  }
+
+  monitorAnimationPerformance() {
+    if (!window.PerformanceObserver) return;
+    
+    const observer = new PerformanceObserver((list) => {
+      list.getEntries().forEach(entry => {
+        if (entry.duration > 16) { // More than one frame
+          console.warn(`Slow animation detected: ${entry.name} took ${entry.duration}ms`);
+        }
+      });
+    });
+    
+    observer.observe({ entryTypes: ['measure'] });
+  }
+
+  monitorLayoutShifts() {
+    if (!window.PerformanceObserver) return;
+    
+    const observer = new PerformanceObserver((list) => {
+      list.getEntries().forEach(entry => {
+        if (entry.value > 0.1) { // CLS threshold
+          console.warn(`Layout shift detected: ${entry.value}`);
+        }
+      });
+    });
+    
+    observer.observe({ entryTypes: ['layout-shift'] });
+  }
 }

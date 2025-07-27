@@ -6,6 +6,8 @@
 @import url('./utilities.css');
 @import url('./animations.css');
 @import url('./layouts.css');
+@import url('./animations.css');
+@import url('./layouts.css');
 
 /* Global Styles */
 html {
