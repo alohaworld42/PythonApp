@@ -1,0 +1,573 @@
+<!-- Form Validation & Feedback Components -->
+
+<!-- Basic Form with Validation -->
+<form id="contact-form" data-validate="true" data-auto-save="true" class="form-container">
+  <h2>Contact Us</h2>
+  
+  <!-- Name Field -->
+  <div class="form-field">
+    <div class="form-floating">
+      <input 
+        type="text" 
+        id="name" 
+        name="name" 
+        class="form-input" 
+        placeholder=" " 
+        required 
+        minlength="2" 
+        maxlength="50"
+        data-rules="required|minLength:2|maxLength:50"
+      >
+      <label for="name" class="form-label">Full Name</label>
+      <div class="form-field-icon success" style="display: none;">
+        <i class="fas fa-check"></i>
+      </div>
+      <div class="form-field-icon error" style="display: none;">
+        <i class="fas fa-times"></i>
+      </div>
+    </div>
+    <div class="form-tooltip">
+      <i class="fas fa-info-circle form-tooltip-trigger"></i>
+      <div class="form-tooltip-content">Enter your first and last name</div>
+    </div>
+  </div>
+
+  <!-- Email Field -->
+  <div class="form-field">
+    <div class="form-floating">
+      <input 
+        type="email" 
+        id="email" 
+        name="email" 
+        class="form-input" 
+        placeholder=" " 
+        required
+        data-rules="required|email"
+      >
+      <label for="email" class="form-label">Email Address</label>
+      <div class="form-field-icon success" style="display: none;">
+        <i class="fas fa-check"></i>
+      </div>
+      <div class="form-field-icon error" style="display: none;">
+        <i class="fas fa-times"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phone Field -->
+  <div class="form-field">
+    <div class="form-floating">
+      <input 
+        type="tel" 
+        id="phone" 
+        name="phone" 
+        class="form-input" 
+        placeholder=" " 
+        pattern="[\+]?[0-9\s\-\(\)]+"
+        data-pattern-message="Please enter a valid phone number"
+      >
+      <label for="phone" class="form-label">Phone Number (Optional)</label>
+      <div class="form-field-icon success" style="display: none;">
+        <i class="fas fa-check"></i>
+      </div>
+      <div class="form-field-icon error" style="display: none;">
+        <i class="fas fa-times"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message Field -->
+  <div class="form-field">
+    <label for="message" class="form-label">Message</label>
+    <textarea 
+      id="message" 
+      name="message" 
+      class="form-input" 
+      rows="5" 
+      required 
+      minlength="10" 
+      maxlength="500"
+      placeholder="Tell us how we can help you..."
+      data-rules="required|minLength:10|maxLength:500"
+    ></textarea>
+    <div class="form-field-icon success" style="display: none;">
+      <i class="fas fa-check"></i>
+    </div>
+    <div class="form-field-icon error" style="display: none;">
+      <i class="fas fa-times"></i>
+    </div>
+    <small class="form-help">Minimum 10 characters, maximum 500 characters</small>
+  </div>
+
+  <!-- Submit Button -->
+  <button type="submit" class="btn btn-primary btn-lg">
+    <i class="fas fa-paper-plane"></i>
+    Send Message
+  </button>
+</form>
+
+<!-- Registration Form with Password Strength -->
+<form id="register-form" data-validate="true" class="form-container" style="margin-top: 3rem;">
+  <h2>Create Account</h2>
+  
+  <!-- Username Field -->
+  <div class="form-field">
+    <div class="form-floating">
+      <input 
+        type="text" 
+        id="username" 
+        name="username" 
+        class="form-input" 
+        placeholder=" " 
+        required 
+        minlength="3" 
+        maxlength="20"
+        pattern="^[a-zA-Z0-9_]+$"
+        data-pattern-message="Username can only contain letters, numbers, and underscores"
+        data-custom="uniqueUsername"
+      >
+      <label for="username" class="form-label">Username</label>
+      <div class="form-field-icon success" style="display: none;">
+        <i class="fas fa-check"></i>
+      </div>
+      <div class="form-field-icon error" style="display: none;">
+        <i class="fas fa-times"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Email Field -->
+  <div class="form-field">
+    <div class="form-floating">
+      <input 
+        type="email" 
+        id="register-email" 
+        name="email" 
+        class="form-input" 
+        placeholder=" " 
+        required
+      >
+      <label for="register-email" class="form-label">Email Address</label>
+      <div class="form-field-icon success" style="display: none;">
+        <i class="fas fa-check"></i>
+      </div>
+      <div class="form-field-icon error" style="display: none;">
+        <i class="fas fa-times"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Password Field with Strength Indicator -->
+  <div class="form-field">
+    <div class="form-floating">
+      <input 
+        type="password" 
+        id="password" 
+        name="password" 
+        class="form-input" 
+        placeholder=" " 
+        required 
+        minlength="8"
+        data-strength="true"
+        data-custom="strongPassword"
+      >
+      <label for="password" class="form-label">Password</label>
+      <div class="form-field-icon success" style="display: none;">
+        <i class="fas fa-check"></i>
+      </div>
+      <div class="form-field-icon error" style="display: none;">
+        <i class="fas fa-times"></i>
+      </div>
+    </div>
+    <!-- Password strength indicator will be inserted here by JavaScript -->
+  </div>
+
+  <!-- Confirm Password Field -->
+  <div class="form-field">
+    <div class="form-floating">
+      <input 
+        type="password" 
+        id="confirm-password" 
+        name="confirm_password" 
+        class="form-input" 
+        placeholder=" " 
+        required
+        data-confirm-password="password"
+      >
+      <label for="confirm-password" class="form-label">Confirm Password</label>
+      <div class="form-field-icon success" style="display: none;">
+        <i class="fas fa-check"></i>
+      </div>
+      <div class="form-field-icon error" style="display: none;">
+        <i class="fas fa-times"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- Terms Checkbox -->
+  <div class="form-field">
+    <label class="form-checkbox">
+      <input type="checkbox" name="terms" required>
+      <span class="checkmark"></span>
+      I agree to the <a href="/terms" target="_blank">Terms of Service</a> and <a href="/privacy" target="_blank">Privacy Policy</a>
+    </label>
+  </div>
+
+  <!-- Submit Button -->
+  <button type="submit" class="btn btn-primary btn-lg">
+    <i class="fas fa-user-plus"></i>
+    Create Account
+  </button>
+</form>
+
+<!-- Multi-step Form -->
+<form id="multi-step-form" data-validate="true" class="form-container" style="margin-top: 3rem;">
+  <h2>Multi-Step Registration</h2>
+  
+  <!-- Progress Indicator -->
+  <div class="form-progress">
+    <div class="form-step active">
+      <div class="form-step-number">1</div>
+      <span>Personal Info</span>
+    </div>
+    <div class="form-step-connector"></div>
+    <div class="form-step">
+      <div class="form-step-number">2</div>
+      <span>Account Details</span>
+    </div>
+    <div class="form-step-connector"></div>
+    <div class="form-step">
+      <div class="form-step-number">3</div>
+      <span>Preferences</span>
+    </div>
+  </div>
+
+  <!-- Step 1: Personal Information -->
+  <div class="form-step-content" style="display: block;">
+    <h3>Personal Information</h3>
+    
+    <div class="form-field">
+      <div class="form-floating">
+        <input type="text" id="first-name" name="first_name" class="form-input" placeholder=" " required>
+        <label for="first-name" class="form-label">First Name</label>
+      </div>
+    </div>
+
+    <div class="form-field">
+      <div class="form-floating">
+        <input type="text" id="last-name" name="last_name" class="form-input" placeholder=" " required>
+        <label for="last-name" class="form-label">Last Name</label>
+      </div>
+    </div>
+
+    <div class="form-field">
+      <div class="form-floating">
+        <input type="date" id="birth-date" name="birth_date" class="form-input" required>
+        <label for="birth-date" class="form-label">Date of Birth</label>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-primary btn-next-step">
+      Next Step
+      <i class="fas fa-arrow-right"></i>
+    </button>
+  </div>
+
+  <!-- Step 2: Account Details -->
+  <div class="form-step-content" style="display: none;">
+    <h3>Account Details</h3>
+    
+    <div class="form-field">
+      <div class="form-floating">
+        <input type="email" id="step2-email" name="email" class="form-input" placeholder=" " required>
+        <label for="step2-email" class="form-label">Email Address</label>
+      </div>
+    </div>
+
+    <div class="form-field">
+      <div class="form-floating">
+        <input type="password" id="step2-password" name="password" class="form-input" placeholder=" " required data-strength="true">
+        <label for="step2-password" class="form-label">Password</label>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary btn-prev-step">
+        <i class="fas fa-arrow-left"></i>
+        Previous
+      </button>
+      <button type="button" class="btn btn-primary btn-next-step">
+        Next Step
+        <i class="fas fa-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Step 3: Preferences -->
+  <div class="form-step-content" style="display: none;">
+    <h3>Preferences</h3>
+    
+    <div class="form-field">
+      <label class="form-label">Notification Preferences</label>
+      <div class="form-checkbox-group">
+        <label class="form-checkbox">
+          <input type="checkbox" name="notifications[]" value="email">
+          <span class="checkmark"></span>
+          Email notifications
+        </label>
+        <label class="form-checkbox">
+          <input type="checkbox" name="notifications[]" value="sms">
+          <span class="checkmark"></span>
+          SMS notifications
+        </label>
+        <label class="form-checkbox">
+          <input type="checkbox" name="notifications[]" value="push">
+          <span class="checkmark"></span>
+          Push notifications
+        </label>
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label for="interests" class="form-label">Interests</label>
+      <select id="interests" name="interests[]" class="form-input" multiple>
+        <option value="technology">Technology</option>
+        <option value="fashion">Fashion</option>
+        <option value="sports">Sports</option>
+        <option value="travel">Travel</option>
+        <option value="food">Food & Dining</option>
+      </select>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary btn-prev-step">
+        <i class="fas fa-arrow-left"></i>
+        Previous
+      </button>
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-check"></i>
+        Complete Registration
+      </button>
+    </div>
+  </div>
+</form>
+
+<!-- File Upload Form -->
+<form id="file-upload-form" data-validate="true" class="form-container" style="margin-top: 3rem;">
+  <h2>File Upload</h2>
+  
+  <div class="form-field">
+    <label for="profile-image" class="form-label">Profile Image</label>
+    <input 
+      type="file" 
+      id="profile-image" 
+      name="profile_image" 
+      class="form-input" 
+      accept="image/*"
+      data-max-size="5242880"
+      data-allowed-types="image/jpeg,image/png,image/gif"
+      data-validate="true"
+    >
+    <small class="form-help">Maximum file size: 5MB. Allowed formats: JPEG, PNG, GIF</small>
+  </div>
+
+  <div class="form-field">
+    <label for="documents" class="form-label">Documents</label>
+    <input 
+      type="file" 
+      id="documents" 
+      name="documents[]" 
+      class="form-input" 
+      multiple
+      accept=".pdf,.doc,.docx"
+      data-max-size="10485760"
+      data-allowed-types="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      data-validate="true"
+    >
+    <small class="form-help">Maximum file size per file: 10MB. Allowed formats: PDF, DOC, DOCX</small>
+  </div>
+
+  <button type="submit" class="btn btn-primary">
+    <i class="fas fa-upload"></i>
+    Upload Files
+  </button>
+</form>
+
+<!-- Form with Auto-save -->
+<form id="auto-save-form" data-validate="true" data-auto-save="true" data-auto-save-url="/api/auto-save" class="form-container" style="margin-top: 3rem;">
+  <h2>Auto-save Form</h2>
+  <p class="form-description">This form automatically saves your progress as you type.</p>
+  
+  <div class="form-field">
+    <div class="form-floating">
+      <input type="text" id="title" name="title" class="form-input" placeholder=" " required>
+      <label for="title" class="form-label">Title</label>
+    </div>
+  </div>
+
+  <div class="form-field">
+    <label for="content" class="form-label">Content</label>
+    <textarea 
+      id="content" 
+      name="content" 
+      class="form-input" 
+      rows="8" 
+      placeholder="Start typing your content here..."
+      required
+    ></textarea>
+  </div>
+
+  <div class="form-field">
+    <label for="category" class="form-label">Category</label>
+    <select id="category" name="category" class="form-input" required>
+      <option value="">Select a category</option>
+      <option value="technology">Technology</option>
+      <option value="business">Business</option>
+      <option value="lifestyle">Lifestyle</option>
+      <option value="education">Education</option>
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-primary">
+    <i class="fas fa-save"></i>
+    Save Article
+  </button>
+</form>
+
+<!-- Custom Checkbox and Radio Styles -->
+<style>
+.form-checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  cursor: pointer;
+  margin-bottom: var(--spacing-3);
+  user-select: none;
+}
+
+.form-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+.checkmark {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--color-gray-400);
+  border-radius: var(--radius-base);
+  position: relative;
+  transition: all var(--transition-base);
+  flex-shrink: 0;
+}
+
+.form-checkbox input[type="checkbox"]:checked + .checkmark {
+  background-color: var(--color-primary-900);
+  border-color: var(--color-primary-900);
+}
+
+.form-checkbox input[type="checkbox"]:checked + .checkmark::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 6px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.form-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.form-actions {
+  display: flex;
+  gap: var(--spacing-4);
+  justify-content: space-between;
+  margin-top: var(--spacing-6);
+}
+
+.form-help {
+  color: var(--color-gray-500);
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-1);
+}
+
+.form-description {
+  color: var(--color-gray-500);
+  margin-bottom: var(--spacing-6);
+  font-style: italic;
+}
+
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--spacing-8);
+  background: var(--color-white);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-lg);
+}
+
+.form-container h2 {
+  text-align: center;
+  margin-bottom: var(--spacing-8);
+  color: var(--color-black);
+}
+
+.form-container h3 {
+  margin-bottom: var(--spacing-6);
+  color: var(--color-primary-900);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .form-container {
+    padding: var(--spacing-6);
+    margin: var(--spacing-4);
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .form-actions .btn {
+    width: 100%;
+  }
+}
+</style>
+
+<script>
+// Initialize form validation when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  // Add form validation to all forms
+  const forms = document.querySelectorAll('form[data-validate]');
+  
+  forms.forEach(form => {
+    // Add loading state on submit
+    form.addEventListener('submit', function(e) {
+      const submitButton = form.querySelector('[type="submit"]');
+      if (submitButton && !submitButton.disabled) {
+        submitButton.classList.add('btn-loading');
+        submitButton.disabled = true;
+        
+        // Re-enable after 3 seconds (for demo purposes)
+        setTimeout(() => {
+          submitButton.classList.remove('btn-loading');
+          submitButton.disabled = false;
+        }, 3000);
+      }
+    });
+  });
+
+  // Demo: Show success message after form submission
+  setTimeout(() => {
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+      // Simulate successful submission
+      // This would normally be handled by the FormValidator class
+    }
+  }, 5000);
+});
+</script>
