@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BuyRoll - Social E-commerce Platform{% endblock %}</title>
+    
+    <!-- Meta Tags -->
+    <meta name="description" content="{% block description %}BuyRoll is your social e-commerce platform where shopping meets community. Discover, share, and shop with friends.{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}social commerce, shopping, community, products, e-commerce{% endblock %}">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="{% block og_title %}{{ self.title() }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ self.description() }}{% endblock %}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.url }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloud

@@ -1,59 +1,417 @@
-<<<<<<< HEAD
-<!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Home Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuyRoll - Social E-commerce Platform</title>
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Design System CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    
+    <!-- Alpine.js -->
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
-<body>
-    <h1>URL Previews</h1>
-    {% for item in items %}
-    <div>
-        <h3><a href="{{ item['url'] }}" target="_blank">{{ item['title'] }}</a></h3>
-        <img src="{{ item['image'] }}" alt="Image preview" style="width: 100px;">
-        <p>{{ item['description'] }}</p>
-    </div>
-    {% endfor %}
-    <h1>Welcome to the Item Submission Site</h1>
-    <!-- Link to the submit page -->
-    <a href="{{ url_for('submit_item') }}">Submit New Item</a>
-    {% for item in items %}
-    <div>
-        <h2>{{ item['name'] }}</h2>
-        <p>{{ item['description'] }}</p>
-        <img src="{{ url_for('static', filename='images/' + item['image_filename']) }}" alt="{{ item['name'] }}" width="100">
-    </div>
-    {% endfor %}
+<body class="page-wrapper">
+    <!-- Skip Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Modern Navigation -->
+    <nav class="nav" x-data="{ mobileMenuOpen: false }">
+        <div class="nav-container">
+            <!-- Logo and Brand -->
+            <div class="flex items-center">
+                <a href="{{ url_for('index') }}" class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center">
+                        <i class="fas fa-shopping-bag text-white text-lg"></i>
+                    </div>
+                    <span class="text-2xl font-bold text-primary-900">BuyRoll</span>
+                </a>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center space-x-8">
+                <ul class="nav-menu">
+                    <li><a href="{{ url_for('index') }}" class="nav-link active">Home</a></li>
+                    <li><a href="#products" class="nav-link">Products</a></li>
+                    <li><a href="#friends" class="nav-link">Friends</a></li>
+                    <li><a href="#about" class="nav-link">About</a></li>
+                </ul>
+            </div>
+            
+            <!-- Search Bar -->
+            <div class="hidden lg:flex items-center flex-1 max-w-md mx-8">
+                <div class="relative w-full">
+                    <input type="search" 
+                           placeholder="Search products..." 
+                           class="form-input pl-10 pr-4 py-2 w-full">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- User Actions -->
+            <div class="flex items-center space-x-4">
+                <!-- Notifications -->
+                <button class="relative p-2 text-gray-600 hover:text-primary-800 transition">
+                    <i class="fas fa-bell text-lg"></i>
+                    <span class="absolute -top-1 -right-1 bg-error text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                </button>
+                
+                <!-- Favorites -->
+                <button class="p-2 text-gray-600 hover:text-primary-800 transition">
+                    <i class="fas fa-heart text-lg"></i>
+                </button>
+                
+                <!-- Cart -->
+                <button class="relative p-2 text-gray-600 hover:text-primary-800 transition">
+                    <i class="fas fa-shopping-cart text-lg"></i>
+                    <span class="absolute -top-1 -right-1 bg-primary-800 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">2</span>
+                </button>
+                
+                <!-- User Menu -->
+                <div class="relative" x-data="{ userMenuOpen: false }">
+                    <button @click="userMenuOpen = !userMenuOpen" 
+                            @click.away="userMenuOpen = false"
+                            class="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100 transition">
+                        <div class="w-8 h-8 bg-primary-300 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-primary-900"></i>
+                        </div>
+                        <i class="fas fa-chevron-down text-sm text-gray-400"></i>
+                    </button>
+                    
+                    <!-- User Dropdown -->
+                    <div x-show="userMenuOpen" 
+                         x-transition:enter="transition ease-out duration-100"
+                         x-transition:enter-start="transform opacity-0 scale-95"
+                         x-transition:enter-end="transform opacity-100 scale-100"
+                         x-transition:leave="transition ease-in duration-75"
+                         x-transition:leave-start="transform opacity-100 scale-100"
+                         x-transition:leave-end="transform opacity-0 scale-95"
+                         class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                        <a href="#profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-user mr-2"></i>Profile
+                        </a>
+                        <a href="#settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-cog mr-2"></i>Settings
+                        </a>
+                        <a href="#orders" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-box mr-2"></i>Orders
+                        </a>
+                        <div class="border-t border-gray-100 my-1"></div>
+                        <a href="#logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Toggle -->
+                <button @click="mobileMenuOpen = !mobileMenuOpen" 
+                        class="md:hidden p-2 text-gray-600 hover:text-primary-800 transition">
+                    <i class="fas fa-bars text-lg" x-show="!mobileMenuOpen"></i>
+                    <i class="fas fa-times text-lg" x-show="mobileMenuOpen"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div x-show="mobileMenuOpen" 
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 transform -translate-y-2"
+             x-transition:enter-end="opacity-100 transform translate-y-0"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 transform translate-y-0"
+             x-transition:leave-end="opacity-0 transform -translate-y-2"
+             class="md:hidden bg-white border-t border-gray-200 shadow-lg">
+            <div class="px-4 py-6 space-y-4">
+                <!-- Mobile Search -->
+                <div class="relative">
+                    <input type="search" 
+                           placeholder="Search products..." 
+                           class="form-input pl-10 pr-4 py-2 w-full">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <!-- Mobile Navigation Links -->
+                <nav class="space-y-2">
+                    <a href="{{ url_for('index') }}" class="block py-2 px-3 text-gray-700 hover:bg-gray-100 rounded">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                    <a href="#products" class="block py-2 px-3 text-gray-700 hover:bg-gray-100 rounded">
+                        <i class="fas fa-box mr-2"></i>Products
+                    </a>
+                    <a href="#friends" class="block py-2 px-3 text-gray-700 hover:bg-gray-100 rounded">
+                        <i class="fas fa-users mr-2"></i>Friends
+                    </a>
+                    <a href="#about" class="block py-2 px-3 text-gray-700 hover:bg-gray-100 rounded">
+                        <i class="fas fa-info-circle mr-2"></i>About
+                    </a>
+                </nav>
+                
+                <!-- Mobile Actions -->
+                <div class="pt-4 border-t border-gray-200">
+                    <a href="{{ url_for('submit_item') }}" class="btn btn-primary w-full mb-3">
+                        <i class="fas fa-plus mr-2"></i>Submit Item
+                    </a>
+                    <a href="{{ url_for('submit_url') }}" class="btn btn-secondary w-full">
+                        <i class="fas fa-link mr-2"></i>Submit URL
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Breadcrumb Navigation -->
+    <nav class="bg-gray-50 border-b border-gray-200 py-3" aria-label="Breadcrumb">
+        <div class="container">
+            <ol class="flex items-center space-x-2 text-sm">
+                <li>
+                    <a href="{{ url_for('index') }}" class="text-gray-500 hover:text-primary-800 transition">
+                        <i class="fas fa-home"></i>
+                    </a>
+                </li>
+                <li class="flex items-center">
+                    <i class="fas fa-chevron-right text-gray-400 mx-2"></i>
+                    <span class="text-gray-900 font-medium">Home</span>
+                </li>
+            </ol>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main id="main-content" class="main-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title animate-fade-in">Welcome to BuyRoll</h1>
+                <p class="hero-subtitle animate-fade-in stagger-1">Your social e-commerce platform where shopping meets community</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in stagger-2">
+                    <a href="{{ url_for('submit_item') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-plus mr-2"></i>Submit Item
+                    </a>
+                    <a href="{{ url_for('submit_url') }}" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-link mr-2"></i>Submit URL
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- URL Previews Section -->
+        {% if items %}
+        <section class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Latest Products</h2>
+                    <p class="section-subtitle">Discover the newest products shared by our community</p>
+                </div>
+                
+                <div class="product-grid">
+                    {% for item in items %}
+                    <div class="product-card scroll-fade-in">
+                        <div class="product-card-badge">
+                            <i class="fas fa-external-link-alt text-primary-900"></i>
+                        </div>
+                        
+                        {% if item.get('image') %}
+                        <img src="{{ item['image'] }}" alt="{{ item.get('title', 'Product') }}" class="product-card-image">
+                        {% else %}
+                        <div class="product-card-image bg-gray-200 flex items-center justify-center">
+                            <i class="fas fa-image text-gray-400 text-3xl"></i>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="product-card-content">
+                            <h3 class="product-card-title">
+                                <a href="{{ item.get('url', '#') }}" target="_blank" class="hover:text-primary-800 transition">
+                                    {{ item.get('title', 'Untitled Product') }}
+                                </a>
+                            </h3>
+                            
+                            {% if item.get('description') %}
+                            <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ item['description'] }}</p>
+                            {% endif %}
+                            
+                            <div class="flex items-center justify-between">
+                                <a href="{{ item.get('url', '#') }}" target="_blank" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-external-link-alt mr-1"></i>
+                                    View Product
+                                </a>
+                                <div class="flex items-center space-x-2">
+                                    <button class="text-gray-400 hover:text-red-500 transition">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    <button class="text-gray-400 hover:text-primary-800 transition">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+        
+        <!-- Submitted Items Section -->
+        {% if items %}
+        <section class="section bg-gray-50">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Community Submissions</h2>
+                    <p class="section-subtitle">Items shared by our community members</p>
+                </div>
+                
+                <div class="product-grid">
+                    {% for item in items %}
+                    {% if item.get('name') %}
+                    <div class="product-card scroll-fade-in">
+                        <div class="product-card-badge">
+                            <i class="fas fa-user text-primary-900"></i>
+                        </div>
+                        
+                        {% if item.get('image_filename') %}
+                        <img src="{{ url_for('static', filename='images/' + item['image_filename']) }}" 
+                             alt="{{ item['name'] }}" 
+                             class="product-card-image">
+                        {% else %}
+                        <div class="product-card-image bg-gray-200 flex items-center justify-center">
+                            <i class="fas fa-image text-gray-400 text-3xl"></i>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="product-card-content">
+                            <h3 class="product-card-title">{{ item['name'] }}</h3>
+                            
+                            {% if item.get('description') %}
+                            <p class="text-sm text-gray-600 mb-3">{{ item['description'] }}</p>
+                            {% endif %}
+                            
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-gray-500">Community Item</span>
+                                <div class="flex items-center space-x-2">
+                                    <button class="text-gray-400 hover:text-red-500 transition">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    <button class="text-gray-400 hover:text-primary-800 transition">
+                                        <i class="fas fa-share"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+        
+        <!-- Features Section -->
+        <section class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Why Choose BuyRoll?</h2>
+                    <p class="section-subtitle">Discover what makes our platform special</p>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-card scroll-fade-in">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 class="feature-title">Social Shopping</h3>
+                        <p class="feature-description">Connect with friends and discover products together. Share your favorite finds and get recommendations from people you trust.</p>
+                    </div>
+                    
+                    <div class="feature-card scroll-fade-in stagger-1">
+                        <div class="feature-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3 class="feature-title">Smart Discovery</h3>
+                        <p class="feature-description">Our intelligent algorithm helps you discover products that match your interests and preferences.</p>
+                    </div>
+                    
+                    <div class="feature-card scroll-fade-in stagger-2">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Secure & Trusted</h3>
+                        <p class="feature-description">Shop with confidence knowing that all products are verified and transactions are secure.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center">
+                            <i class="fas fa-shopping-bag text-white"></i>
+                        </div>
+                        <span class="text-xl font-bold text-white">BuyRoll</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">Your social e-commerce platform where shopping meets community.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-primary-300 transition">
+                            <i class="fab fa-facebook text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary-300 transition">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-primary-300 transition">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="{{ url_for('index') }}">Home</a></li>
+                        <li><a href="{{ url_for('submit_item') }}">Submit Item</a></li>
+                        <li><a href="{{ url_for('submit_url') }}">Submit URL</a></li>
+                        <li><a href="#about">About Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#help">Help Center</a></li>
+                        <li><a href="#contact">Contact Us</a></li>
+                        <li><a href="#privacy">Privacy Policy</a></li>
+                        <li><a href="#terms">Terms of Service</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Newsletter</h3>
+                    <p class="text-gray-400 mb-4">Stay updated with the latest products and features.</p>
+                    <form class="space-y-3">
+                        <input type="email" placeholder="Enter your email" class="form-input w-full">
+                        <button type="submit" class="btn btn-primary w-full">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 BuyRoll. All rights reserved.</p>
+                <p>Made with <i class="fas fa-heart text-red-500"></i> for the community</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Design System JavaScript -->
+    <script src="{{ url_for('static', filename='js/design-system.js') }}"></script>
 </body>
 </html>
-=======
-<!-- templates/index.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Home Page</title>
-</head>
-<body>
-    <h1>URL Previews</h1>
-    {% for item in items %}
-    <div>
-        <h3><a href="{{ item['url'] }}" target="_blank">{{ item['title'] }}</a></h3>
-        <img src="{{ item['image'] }}" alt="Image preview" style="width: 100px;">
-        <p>{{ item['description'] }}</p>
-    </div>
-    {% endfor %}
-    <h1>Welcome to the Item Submission Site</h1>
-    <!-- Link to the submit page -->
-    <a href="{{ url_for('submit_item') }}">Submit New Item</a>
-    {% for item in items %}
-    <div>
-        <h2>{{ item['name'] }}</h2>
-        <p>{{ item['description'] }}</p>
-        <img src="{{ url_for('static', filename='images/' + item['image_filename']) }}" alt="{{ item['name'] }}" width="100">
-    </div>
-    {% endfor %}
-</body>
-</html>
->>>>>>> 131466d (upload statics and update app)
