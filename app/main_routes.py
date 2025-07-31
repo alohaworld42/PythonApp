@@ -8,3 +8,8 @@ main = Blueprint('main', __name__)
 @login_required
 def home():
     return render_template('home.html', title='Home')
+
+@main.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('dashboard.html', title='Dashboard')

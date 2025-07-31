@@ -12,8 +12,7 @@
 @import url('./testimonials-section.css');
 @import url('./form-validation.css');
 @import url('./auth-pages.css');
-@import url('./animations.css');
-@import url('./layouts.css');
+@import url('./interactive-components.css');
 
 /* Global Styles */
 html {
