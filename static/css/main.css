@@ -13,6 +13,10 @@
 @import url('./form-validation.css');
 @import url('./auth-pages.css');
 @import url('./interactive-components.css');
+@import url('./advanced-animations.css');
+@import url('./dark-mode.css');
+@import url('./advanced-components.css');
+@import url('./products-page.css');
 
 /* Global Styles */
 html {

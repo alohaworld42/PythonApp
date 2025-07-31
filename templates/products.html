@@ -1,0 +1,438 @@
+{% extends "layout.html" %}
+
+{% block title %}Products - BuyRoll{% endblock %}
+
+{% block content %}
+<div class="page-transition">
+    <!-- Products Header -->
+    <section class="products-header">
+        <div class="container">
+            <div class="products-header-content">
+                <div class="scroll-reveal">
+                    <h1 class="products-title">Discover Amazing Products</h1>
+                    <p class="products-subtitle">Explore curated products shared by our community</p>
+                </div>
+                
+                <div class="products-actions scroll-reveal-right">
+                    <div class="view-toggle">
+                        <button class="view-btn active" data-view="grid" data-tooltip="Grid View">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button class="view-btn" data-view="list" data-tooltip="List View">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="sort-dropdown">
+                        <select class="form-select" id="sortProducts">
+                            <option value="newest">Newest First</option>
+                            <option value="popular">Most Popular</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="rating">Highest Rated</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Advanced Filters -->
+            <div class="products-filters scroll-reveal">
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-category="all">All</button>
+                    <button class="filter-tab" data-category="electronics">Electronics</button>
+                    <button class="filter-tab" data-category="clothing">Clothing</button>
+                    <button class="filter-tab" data-category="home">Home</button>
+                    <button class="filter-tab" data-category="sports">Sports</button>
+                </div>
+                
+                <div class="filter-actions">
+                    <button class="btn btn-outline btn-sm" id="advancedFilters">
+                        <i class="fas fa-filter mr-2"></i>Filters
+                    </button>
+                    <button class="btn btn-ghost btn-sm" id="clearFilters">
+                        <i class="fas fa-times mr-2"></i>Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Grid -->
+    <section class="products-section">
+        <div class="container">
+            <!-- Loading State -->
+            <div class="products-loading" id="productsLoading">
+                <div class="skeleton-grid">
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                    <div class="skeleton skeleton-card"></div>
+                </div>
+            </div>
+            
+            <!-- Products Container -->
+            <div class="products-container" id="productsContainer">
+                <div class="product-grid" id="productGrid">
+                    <!-- Sample Products -->
+                    <div class="product-card card-3d stagger-animation" data-category="electronics">
+                        <div class="product-card-badge">
+                            <i class="fas fa-bolt text-warning"></i>
+                        </div>
+                        
+                        <div class="product-image-container">
+                            <img src="https://via.placeholder.com/300x200" alt="Wireless Headphones" class="product-card-image">
+                            <div class="product-overlay">
+                                <button class="btn btn-primary btn-sm quick-view-btn" data-product-id="1">
+                                    <i class="fas fa-eye mr-1"></i>Quick View
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card-content">
+                            <div class="product-meta">
+                                <span class="product-category">Electronics</span>
+                                <div class="product-rating">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="rating-count">(234)</span>
+                                </div>
+                            </div>
+                            
+                            <h3 class="product-card-title">
+                                <a href="#" class="hover:text-primary-800 transition">Premium Wireless Headphones</a>
+                            </h3>
+                            
+                            <p class="product-description">High-quality wireless headphones with noise cancellation and premium sound quality.</p>
+                            
+                            <div class="product-price">
+                                <span class="current-price">$199.99</span>
+                                <span class="original-price">$249.99</span>
+                                <span class="discount">20% OFF</span>
+                            </div>
+                            
+                            <div class="product-actions">
+                                <button class="btn btn-primary btn-sm flex-1">
+                                    <i class="fas fa-shopping-cart mr-1"></i>Add to Cart
+                                </button>
+                                <button class="btn btn-outline btn-sm" data-favorite-btn>
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                                <button class="btn btn-outline btn-sm" data-share-btn>
+                                    <i class="fas fa-share"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="product-social">
+                                <div class="social-stats">
+                                    <span class="stat">
+                                        <i class="fas fa-heart text-red-500"></i> 89
+                                    </span>
+                                    <span class="stat">
+                                        <i class="fas fa-share text-blue-500"></i> 23
+                                    </span>
+                                    <span class="stat">
+                                        <i class="fas fa-eye text-gray-500"></i> 456
+                                    </span>
+                                </div>
+                                <div class="shared-by">
+                                    <span class="text-xs text-gray-500">Shared by</span>
+                                    <a href="#" class="user-link">@techguru</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- More sample products -->
+                    <div class="product-card card-3d stagger-animation" data-category="clothing">
+                        <div class="product-card-badge">
+                            <i class="fas fa-fire text-error"></i>
+                        </div>
+                        
+                        <div class="product-image-container">
+                            <img src="https://via.placeholder.com/300x200" alt="Designer T-Shirt" class="product-card-image">
+                            <div class="product-overlay">
+                                <button class="btn btn-primary btn-sm quick-view-btn" data-product-id="2">
+                                    <i class="fas fa-eye mr-1"></i>Quick View
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card-content">
+                            <div class="product-meta">
+                                <span class="product-category">Clothing</span>
+                                <div class="product-rating">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <span class="rating-count">(156)</span>
+                                </div>
+                            </div>
+                            
+                            <h3 class="product-card-title">
+                                <a href="#" class="hover:text-primary-800 transition">Premium Cotton T-Shirt</a>
+                            </h3>
+                            
+                            <p class="product-description">Comfortable and stylish cotton t-shirt with modern design and perfect fit.</p>
+                            
+                            <div class="product-price">
+                                <span class="current-price">$29.99</span>
+                            </div>
+                            
+                            <div class="product-actions">
+                                <button class="btn btn-primary btn-sm flex-1">
+                                    <i class="fas fa-shopping-cart mr-1"></i>Add to Cart
+                                </button>
+                                <button class="btn btn-outline btn-sm" data-favorite-btn>
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                                <button class="btn btn-outline btn-sm" data-share-btn>
+                                    <i class="fas fa-share"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="product-social">
+                                <div class="social-stats">
+                                    <span class="stat">
+                                        <i class="fas fa-heart text-red-500"></i> 67
+                                    </span>
+                                    <span class="stat">
+                                        <i class="fas fa-share text-blue-500"></i> 12
+                                    </span>
+                                    <span class="stat">
+                                        <i class="fas fa-eye text-gray-500"></i> 234
+                                    </span>
+                                </div>
+                                <div class="shared-by">
+                                    <span class="text-xs text-gray-500">Shared by</span>
+                                    <a href="#" class="user-link">@fashionista</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Add more products as needed -->
+                </div>
+                
+                <!-- Load More Button -->
+                <div class="load-more-container">
+                    <button class="btn btn-outline btn-lg load-more-btn" id="loadMoreBtn">
+                        <i class="fas fa-plus mr-2"></i>Load More Products
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-state-content">
+                    <i class="fas fa-search empty-state-icon"></i>
+                    <h3 class="empty-state-title">No products found</h3>
+                    <p class="empty-state-description">Try adjusting your filters or search terms</p>
+                    <button class="btn btn-primary" id="clearFiltersBtn">
+                        <i class="fas fa-refresh mr-2"></i>Clear Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick View Modal -->
+    <div class="quick-view-modal" id="quickViewModal">
+        <div class="quick-view-backdrop"></div>
+        <div class="quick-view-content">
+            <button class="quick-view-close">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="quick-view-body">
+                <div class="quick-view-image">
+                    <img src="" alt="" id="quickViewImage">
+                </div>
+                
+                <div class="quick-view-details">
+                    <h2 class="quick-view-title" id="quickViewTitle"></h2>
+                    <div class="quick-view-rating">
+                        <div class="stars" id="quickViewStars"></div>
+                        <span class="rating-count" id="quickViewRating"></span>
+                    </div>
+                    
+                    <p class="quick-view-description" id="quickViewDescription"></p>
+                    
+                    <div class="quick-view-price">
+                        <span class="current-price" id="quickViewPrice"></span>
+                        <span class="original-price" id="quickViewOriginalPrice"></span>
+                    </div>
+                    
+                    <div class="quick-view-actions">
+                        <button class="btn btn-primary btn-lg">
+                            <i class="fas fa-shopping-cart mr-2"></i>Add to Cart
+                        </button>
+                        <button class="btn btn-outline">
+                            <i class="fas fa-heart mr-2"></i>Add to Wishlist
+                        </button>
+                    </div>
+                    
+                    <div class="quick-view-features">
+                        <h4>Key Features</h4>
+                        <ul id="quickViewFeatures">
+                            <!-- Features will be populated dynamically -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize products page
+    initializeProductsPage();
+});
+
+function initializeProductsPage() {
+    // Page transition
+    document.querySelector('.page-transition').classList.add('loaded');
+    
+    // Hide loading state
+    setTimeout(() => {
+        document.getElementById('productsLoading').style.display = 'none';
+        document.getElementById('productsContainer').style.display = 'block';
+    }, 1000);
+    
+    // Setup view toggle
+    setupViewToggle();
+    
+    // Setup filters
+    setupProductFilters();
+    
+    // Setup quick view
+    setupQuickView();
+    
+    // Setup infinite scroll
+    setupInfiniteScroll();
+}
+
+function setupViewToggle() {
+    const viewBtns = document.querySelectorAll('.view-btn');
+    const productGrid = document.getElementById('productGrid');
+    
+    viewBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            viewBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            const view = btn.dataset.view;
+            productGrid.className = view === 'list' ? 'product-list' : 'product-grid';
+        });
+    });
+}
+
+function setupProductFilters() {
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    const products = document.querySelectorAll('.product-card');
+    
+    filterTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            filterTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            const category = tab.dataset.category;
+            
+            products.forEach(product => {
+                if (category === 'all' || product.dataset.category === category) {
+                    product.style.display = 'block';
+                    product.classList.add('stagger-animation');
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        });
+    });
+}
+
+function setupQuickView() {
+    const quickViewBtns = document.querySelectorAll('.quick-view-btn');
+    const modal = document.getElementById('quickViewModal');
+    const closeBtn = modal.querySelector('.quick-view-close');
+    const backdrop = modal.querySelector('.quick-view-backdrop');
+    
+    quickViewBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const productId = btn.dataset.productId;
+            showQuickView(productId);
+        });
+    });
+    
+    [closeBtn, backdrop].forEach(element => {
+        element.addEventListener('click', () => {
+            modal.classList.remove('active');
+            document.body.classList.remove('modal-open');
+        });
+    });
+}
+
+function showQuickView(productId) {
+    const modal = document.getElementById('quickViewModal');
+    
+    // Sample product data (in real app, fetch from API)
+    const productData = {
+        1: {
+            title: 'Premium Wireless Headphones',
+            image: 'https://via.placeholder.com/400x300',
+            rating: 5,
+            ratingCount: 234,
+            description: 'High-quality wireless headphones with advanced noise cancellation technology and premium sound quality.',
+            price: '$199.99',
+            originalPrice: '$249.99',
+            features: ['Noise Cancellation', '30-hour Battery', 'Wireless Charging', 'Premium Sound Quality']
+        }
+    };
+    
+    const product = productData[productId];
+    if (product) {
+        document.getElementById('quickViewTitle').textContent = product.title;
+        document.getElementById('quickViewImage').src = product.image;
+        document.getElementById('quickViewDescription').textContent = product.description;
+        document.getElementById('quickViewPrice').textContent = product.price;
+        document.getElementById('quickViewOriginalPrice').textContent = product.originalPrice;
+        
+        // Populate features
+        const featuresList = document.getElementById('quickViewFeatures');
+        featuresList.innerHTML = product.features.map(feature => `<li>${feature}</li>`).join('');
+        
+        modal.classList.add('active');
+        document.body.classList.add('modal-open');
+    }
+}
+
+function setupInfiniteScroll() {
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    
+    loadMoreBtn.addEventListener('click', () => {
+        loadMoreBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Loading...';
+        
+        // Simulate loading
+        setTimeout(() => {
+            loadMoreBtn.innerHTML = '<i class="fas fa-plus mr-2"></i>Load More Products';
+            
+            if (window.BuyRollApp) {
+                const app = new window.BuyRollApp();
+                app.showNotification('More products loaded!', 'success');
+            }
+        }, 1500);
+    });
+}
+</script>
+{% endblock %}

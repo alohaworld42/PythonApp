@@ -13,3 +13,7 @@ def home():
 @login_required
 def dashboard():
     return render_template('dashboard.html', title='Dashboard')
+
+@main.route('/products')
+def products():
+    return render_template('products.html', title='Products')
