@@ -1,0 +1,217 @@
+{% extends "layout_clean.html" %}
+
+{% block title %}BuyRoll - Social E-commerce Platform{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title animate-fade-in">Welcome to BuyRoll</h1>
+        <p class="hero-subtitle animate-fade-in delay-1">Your social e-commerce platform where shopping meets community. Discover, share, and connect with friends over amazing products.</p>
+        <div class="hero-actions animate-fade-in delay-2">
+            <a href="{{ url_for('main.submit_item') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-plus"></i>
+                Submit Item
+            </a>
+            <a href="{{ url_for('main.submit_url') }}" class="btn btn-secondary btn-lg">
+                <i class="fas fa-link"></i>
+                Submit URL
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="section">
+    <div class="container">
+        <div class="text-center mb-8">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Why Choose BuyRoll?</h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">Discover what makes our platform the perfect place for social shopping and community-driven product discovery.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="w-16 h-16 bg-gradient-to-r from-green-600 to-green-500 rounded-xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-users text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Social Shopping</h3>
+                    <p class="text-gray-600">Connect with friends and discover products together. Share your favorite finds and get recommendations from people you trust.</p>
+                </div>
+            </div>
+            
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="w-16 h-16 bg-gradient-to-r from-green-600 to-green-500 rounded-xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-search text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Smart Discovery</h3>
+                    <p class="text-gray-600">Our intelligent system helps you discover products that match your interests and preferences through community recommendations.</p>
+                </div>
+            </div>
+            
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="w-16 h-16 bg-gradient-to-r from-green-600 to-green-500 rounded-xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-heart text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">Community Driven</h3>
+                    <p class="text-gray-600">Every product is shared and reviewed by real people in our community, ensuring authentic recommendations you can trust.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Latest Products Section -->
+{% if items %}
+<section class="section bg-gray-50">
+    <div class="container">
+        <div class="text-center mb-8">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Latest Products</h2>
+            <p class="text-xl text-gray-600">Discover the newest products shared by our community</p>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for item in items %}
+            <div class="card">
+                {% if item.get('image') %}
+                <div class="relative h-48 bg-gray-200 rounded-t-lg overflow-hidden">
+                    <img src="{{ item['image'] }}" alt="{{ item.get('title', 'Product') }}" class="w-full h-full object-cover">
+                    <div class="absolute top-3 right-3">
+                        <span class="bg-white bg-opacity-90 text-green-600 px-2 py-1 rounded-full text-xs font-medium">
+                            <i class="fas fa-external-link-alt"></i>
+                        </span>
+                    </div>
+                </div>
+                {% else %}
+                <div class="h-48 bg-gray-200 rounded-t-lg flex items-center justify-center">
+                    <i class="fas fa-image text-gray-400 text-4xl"></i>
+                </div>
+                {% endif %}
+                
+                <div class="card-body">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                        <a href="{{ item.get('url', '#') }}" target="_blank" class="hover:text-green-600 transition">
+                            {{ item.get('title', 'Untitled Product') }}
+                        </a>
+                    </h3>
+                    
+                    {% if item.get('description') %}
+                    <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ item['description'] }}</p>
+                    {% endif %}
+                    
+                    <div class="flex items-center justify-between">
+                        <a href="{{ item.get('url', '#') }}" target="_blank" class="btn btn-outline btn-sm">
+                            <i class="fas fa-external-link-alt"></i>
+                            View Product
+                        </a>
+                        <div class="flex items-center gap-3">
+                            <button class="text-gray-400 hover:text-red-500 transition" title="Like">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <button class="text-gray-400 hover:text-green-600 transition" title="Share">
+                                <i class="fas fa-share"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-8">
+            <a href="{{ url_for('main.products') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-arrow-right"></i>
+                View All Products
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Community Stats Section -->
+<section class="section">
+    <div class="container">
+        <div class="text-center mb-8">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Join Our Growing Community</h2>
+            <p class="text-xl text-gray-600">Be part of a community that's passionate about discovering and sharing great products</p>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="text-center">
+                <div class="text-4xl font-bold text-green-600 mb-2">2.5K+</div>
+                <div class="text-gray-600">Products Shared</div>
+            </div>
+            <div class="text-center">
+                <div class="text-4xl font-bold text-green-600 mb-2">1.2K+</div>
+                <div class="text-gray-600">Active Users</div>
+            </div>
+            <div class="text-center">
+                <div class="text-4xl font-bold text-green-600 mb-2">850+</div>
+                <div class="text-gray-600">Communities</div>
+            </div>
+            <div class="text-center">
+                <div class="text-4xl font-bold text-green-600 mb-2">95%</div>
+                <div class="text-gray-600">Satisfaction Rate</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="section bg-gradient-to-r from-green-600 to-green-500 text-white">
+    <div class="container text-center">
+        <h2 class="text-4xl font-bold mb-4">Ready to Start Sharing?</h2>
+        <p class="text-xl mb-8 opacity-90">Join thousands of users who are already discovering and sharing amazing products on BuyRoll.</p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{{ url_for('main.submit_item') }}" class="btn bg-white text-green-600 hover:bg-gray-100 btn-lg">
+                <i class="fas fa-plus"></i>
+                Submit Your First Item
+            </a>
+            <a href="{{ url_for('main.products') }}" class="btn border-white text-white hover:bg-white hover:text-green-600 btn-lg">
+                <i class="fas fa-search"></i>
+                Explore Products
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Simple animation on scroll
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+// Observe all cards for animation
+document.querySelectorAll('.card').forEach(card => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(20px)';
+    card.style.transition = 'all 0.6s ease-out';
+    observer.observe(card);
+});
+
+// Add some interactivity to buttons
+document.querySelectorAll('.btn').forEach(btn => {
+    btn.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-2px)';
+    });
+    
+    btn.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+    });
+});
+</script>
+{% endblock %}

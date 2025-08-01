@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BuyRoll - Social E-commerce Platform{% endblock %}</title>
+    
+    <!-- Meta Tags -->
+    <meta name="description" content="{% block description %}BuyRoll is your social e-commerce platform where shopping meets community. Discover, share, and shop with friends.{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}social commerce, shopping, community, products, e-commerce{% endblock %}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Chakra UI Inspired CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chakra-inspired.css') }}">
+    
+    {% block head %}{% endblock %}
+</head>
+<body class="page-wrapper">
+    <!-- Skip Link for Accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-green-600 text-white px-4 py-2 rounded-lg">Skip to main content</a>
+    
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <!-- Logo and Brand -->
+            <a href="{{ url_for('index') }}" class="nav-brand">
+                <div class="nav-logo">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
+                BuyRoll
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <ul class="nav-menu">
+                <li><a href="{{ url_for('main.index') }}" class="nav-link">Home</a></li>
+                <li><a href="{{ url_for('main.products') }}" class="nav-link">Products</a></li>
+                <li><a href="#friends" class="nav-link">Friends</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+            </ul>
+            
+            <!-- Search Bar -->
+            <div class="nav-search">
+                <input type="search" placeholder="Search products..." class="search-input">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+            
+            <!-- User Actions -->
+            <div class="nav-actions">
+                <!-- Notifications -->
+                <button class="icon-btn" title="Notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </button>
+                
+                <!-- Favorites -->
+                <button class="icon-btn" title="Favorites">
+                    <i class="fas fa-heart"></i>
+                </button>
+                
+                <!-- User Profile -->
+                <button class="icon-btn" title="Profile">
+                    <i class="fas fa-user"></i>
+                </button>
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" id="mobileMenu">
+            <!-- Mobile Search -->
+            <div class="form-group">
+                <input type="search" placeholder="Search products..." class="form-input">
+            </div>
+            
+            <!-- Mobile Navigation Links -->
+            <ul class="mobile-nav-links">
+                <li><a href="{{ url_for('main.index') }}"><i class="fas fa-home"></i>Home</a></li>
+                <li><a href="{{ url_for('main.products') }}"><i class="fas fa-box"></i>Products</a></li>
+                <li><a href="#friends"><i class="fas fa-users"></i>Friends</a></li>
+                <li><a href="#about"><i class="fas fa-info-circle"></i>About</a></li>
+            </ul>
+            
+            <!-- Mobile Actions -->
+            <div class="flex flex-col gap-2">
+                <a href="{{ url_for('main.submit_item') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i>Submit Item
+                </a>
+                <a href="{{ url_for('main.submit_url') }}" class="btn btn-secondary">
+                    <i class="fas fa-link"></i>Submit URL
+                </a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main id="main-content" class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="nav-logo">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <span class="text-xl font-bold">BuyRoll</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">Your social e-commerce platform where shopping meets community.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="text-gray-400 hover:text-green-500 transition">
+                            <i class="fab fa-facebook text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-green-500 transition">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-green-500 transition">
+                            <i class="fab fa-instagram text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                        <li><a href="{{ url_for('main.products') }}">Products</a></li>
+                        <li><a href="{{ url_for('main.submit_item') }}">Submit Item</a></li>
+                        <li><a href="{{ url_for('main.submit_url') }}">Submit URL</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Community</h3>
+                    <ul class="footer-links">
+                        <li><a href="#friends">Friends</a></li>
+                        <li><a href="#help">Help Center</a></li>
+                        <li><a href="#contact">Contact Us</a></li>
+                        <li><a href="#about">About Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Stay Updated</h3>
+                    <p class="text-gray-400 mb-4">Get the latest products and updates.</p>
+                    <form class="flex flex-col gap-3">
+                        <input type="email" placeholder="Enter your email" class="form-input">
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 BuyRoll. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('open');
+        }
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('mobileMenu');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            
+            if (!menu.contains(event.target) && !menuBtn.contains(event.target)) {
+                menu.classList.remove('open');
+            }
+        });
+        
+        // Close mobile menu on window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 768) {
+                document.getElementById('mobileMenu').classList.remove('open');
+            }
+        });
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

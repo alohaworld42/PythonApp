@@ -62,8 +62,8 @@
             <!-- Desktop Navigation -->
             <div class="hidden md:flex items-center space-x-8">
                 <ul class="nav-menu">
-                    <li><a href="{{ url_for('main.index') }}" class="nav-link">Home</a></li>
-                    <li><a href="{{ url_for('main.products') }}" class="nav-link">Products</a></li>
+                    <li><a href="{{ url_for('index') }}" class="nav-link">Home</a></li>
+                    <li><a href="{{ url_for('products') }}" class="nav-link">Products</a></li>
                     <li><a href="#friends" class="nav-link">Friends</a></li>
                     <li><a href="#about" class="nav-link">About</a></li>
                 </ul>
@@ -178,10 +178,10 @@
                 
                 <!-- Mobile Navigation Links -->
                 <nav class="space-y-2">
-                    <a href="{{ url_for('main.index') }}" class="block py-2 px-3 text-gray-700 hover:bg-gray-100 rounded">
+                    <a href="{{ url_for('index') }}" class="block py-2 px-3 text-gray-700 hover:bg-gray-100 rounded">
                         <i class="fas fa-home mr-2"></i>Home
                     </a>
-                    <a href="{{ url_for('main.products') }}" class="block py-2 px-3 text-gray-700 hover:bg-gray-100 rounded">
+                    <a href="{{ url_for('products') }}" class="block py-2 px-3 text-gray-700 hover:bg-gray-100 rounded">
                         <i class="fas fa-box mr-2"></i>Products
                     </a>
                     <a href="#friends" class="block py-2 px-3 text-gray-700 hover:bg-gray-100 rounded">
@@ -275,6 +275,7 @@
     <!-- Main JavaScript -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script src="{{ url_for('static', filename='js/advanced-features.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/real-time-features.js') }}"></script>
     
     {% block scripts %}{% endblock %}
 </body>

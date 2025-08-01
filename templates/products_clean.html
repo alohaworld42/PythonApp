@@ -1,0 +1,370 @@
+{% extends "layout_clean.html" %}
+
+{% block title %}Products - BuyRoll{% endblock %}
+
+{% block content %}
+<!-- Products Header -->
+<section class="section-sm bg-gray-50">
+    <div class="container">
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+            <div>
+                <h1 class="text-4xl font-bold text-gray-900 mb-2">Discover Products</h1>
+                <p class="text-xl text-gray-600">Explore amazing products shared by our community</p>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <label for="sortSelect" class="text-sm font-medium text-gray-700">Sort by:</label>
+                    <select id="sortSelect" class="form-select">
+                        <option value="newest">Newest First</option>
+                        <option value="popular">Most Popular</option>
+                        <option value="alphabetical">A-Z</option>
+                    </select>
+                </div>
+                
+                <div class="flex border border-gray-300 rounded-lg overflow-hidden">
+                    <button class="px-3 py-2 bg-green-600 text-white" id="gridView" title="Grid View">
+                        <i class="fas fa-th"></i>
+                    </button>
+                    <button class="px-3 py-2 bg-white text-gray-600 hover:bg-gray-50" id="listView" title="List View">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Filters -->
+<section class="section-sm border-b border-gray-200">
+    <div class="container">
+        <div class="flex flex-wrap items-center gap-4">
+            <div class="flex items-center gap-2">
+                <span class="text-sm font-medium text-gray-700">Categories:</span>
+                <div class="flex flex-wrap gap-2">
+                    <button class="px-3 py-1 bg-green-600 text-white rounded-full text-sm font-medium" data-category="all">All</button>
+                    <button class="px-3 py-1 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-full text-sm font-medium" data-category="electronics">Electronics</button>
+                    <button class="px-3 py-1 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-full text-sm font-medium" data-category="clothing">Clothing</button>
+                    <button class="px-3 py-1 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-full text-sm font-medium" data-category="home">Home</button>
+                    <button class="px-3 py-1 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-full text-sm font-medium" data-category="sports">Sports</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Grid -->
+<section class="section">
+    <div class="container">
+        <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Sample Products -->
+            <div class="card product-card" data-category="electronics">
+                <div class="relative h-48 bg-gray-200 rounded-t-lg overflow-hidden">
+                    <img src="https://via.placeholder.com/300x200/55970f/ffffff?text=Headphones" alt="Wireless Headphones" class="w-full h-full object-cover">
+                    <div class="absolute top-3 right-3">
+                        <span class="bg-green-600 text-white px-2 py-1 rounded-full text-xs font-medium">
+                            <i class="fas fa-bolt"></i> Popular
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">Electronics</span>
+                        <div class="flex items-center gap-1">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star text-xs"></i>
+                                <i class="fas fa-star text-xs"></i>
+                                <i class="fas fa-star text-xs"></i>
+                                <i class="fas fa-star text-xs"></i>
+                                <i class="fas fa-star text-xs"></i>
+                            </div>
+                            <span class="text-xs text-gray-500">(234)</span>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Premium Wireless Headphones</h3>
+                    <p class="text-gray-600 text-sm mb-4">High-quality wireless headphones with noise cancellation and premium sound quality.</p>
+                    
+                    <div class="flex items-center justify-between">
+                        <a href="#" class="btn btn-outline btn-sm">
+                            <i class="fas fa-external-link-alt"></i>
+                            View Product
+                        </a>
+                        <div class="flex items-center gap-3">
+                            <button class="text-gray-400 hover:text-red-500 transition" title="Like">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <button class="text-gray-400 hover:text-green-600 transition" title="Share">
+                                <i class="fas fa-share"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+                        <div class="flex items-center gap-3">
+                            <span><i class="fas fa-heart text-red-500"></i> 89</span>
+                            <span><i class="fas fa-share text-blue-500"></i> 23</span>
+                            <span><i class="fas fa-eye"></i> 456</span>
+                        </div>
+                        <span>by @techguru</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card product-card" data-category="clothing">
+                <div class="relative h-48 bg-gray-200 rounded-t-lg overflow-hidden">
+                    <img src="https://via.placeholder.com/300x200/6abe11/ffffff?text=T-Shirt" alt="Designer T-Shirt" class="w-full h-full object-cover">
+                    <div class="absolute top-3 right-3">
+                        <span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+                            <i class="fas fa-fire"></i> Hot
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">Clothing</span>
+                        <div class="flex items-center gap-1">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star text-xs"></i>
+                                <i class="fas fa-star text-xs"></i>
+                                <i class="fas fa-star text-xs"></i>
+                                <i class="fas fa-star text-xs"></i>
+                                <i class="far fa-star text-xs"></i>
+                            </div>
+                            <span class="text-xs text-gray-500">(156)</span>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Premium Cotton T-Shirt</h3>
+                    <p class="text-gray-600 text-sm mb-4">Comfortable and stylish cotton t-shirt with modern design and perfect fit.</p>
+                    
+                    <div class="flex items-center justify-between">
+                        <a href="#" class="btn btn-outline btn-sm">
+                            <i class="fas fa-external-link-alt"></i>
+                            View Product
+                        </a>
+                        <div class="flex items-center gap-3">
+                            <button class="text-gray-400 hover:text-red-500 transition" title="Like">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <button class="text-gray-400 hover:text-green-600 transition" title="Share">
+                                <i class="fas fa-share"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+                        <div class="flex items-center gap-3">
+                            <span><i class="fas fa-heart text-red-500"></i> 67</span>
+                            <span><i class="fas fa-share text-blue-500"></i> 12</span>
+                            <span><i class="fas fa-eye"></i> 234</span>
+                        </div>
+                        <span>by @fashionista</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card product-card" data-category="home">
+                <div class="relative h-48 bg-gray-200 rounded-t-lg overflow-hidden">
+                    <img src="https://via.placeholder.com/300x200/8DC63F/ffffff?text=Coffee+Maker" alt="Smart Coffee Maker" class="w-full h-full object-cover">
+                </div>
+                
+                <div class="card-body">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-full">Home</span>
+                        <div class="flex items-center gap-1">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star text-xs"></i>
+                                <i class="fas fa-star text-xs"></i>
+                                <i class="fas fa-star text-xs"></i>
+                                <i class="fas fa-star text-xs"></i>
+                                <i class="fas fa-star text-xs"></i>
+                            </div>
+                            <span class="text-xs text-gray-500">(89)</span>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Smart Coffee Maker</h3>
+                    <p class="text-gray-600 text-sm mb-4">WiFi-enabled coffee maker with app control and programmable brewing schedules.</p>
+                    
+                    <div class="flex items-center justify-between">
+                        <a href="#" class="btn btn-outline btn-sm">
+                            <i class="fas fa-external-link-alt"></i>
+                            View Product
+                        </a>
+                        <div class="flex items-center gap-3">
+                            <button class="text-gray-400 hover:text-red-500 transition" title="Like">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <button class="text-gray-400 hover:text-green-600 transition" title="Share">
+                                <i class="fas fa-share"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+                        <div class="flex items-center gap-3">
+                            <span><i class="fas fa-heart text-red-500"></i> 45</span>
+                            <span><i class="fas fa-share text-blue-500"></i> 8</span>
+                            <span><i class="fas fa-eye"></i> 123</span>
+                        </div>
+                        <span>by @coffeelover</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card product-card" data-category="sports">
+                <div class="relative h-48 bg-gray-200 rounded-t-lg overflow-hidden">
+                    <img src="https://via.placeholder.com/300x200/A3E635/ffffff?text=Yoga+Mat" alt="Premium Yoga Mat" class="w-full h-full object-cover">
+                </div>
+                
+                <div class="card-body">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-medium text-orange-600 bg-orange-50 px-2 py-1 rounded-full">Sports</span>
+                        <div class="flex items-center gap-1">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star text-xs"></i>
+                                <i class="fas fa-star text-xs"></i>
+                                <i class="fas fa-star text-xs"></i>
+                                <i class="fas fa-star text-xs"></i>
+                                <i class="far fa-star text-xs"></i>
+                            </div>
+                            <span class="text-xs text-gray-500">(67)</span>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Premium Yoga Mat</h3>
+                    <p class="text-gray-600 text-sm mb-4">Eco-friendly yoga mat with superior grip and cushioning for all yoga practices.</p>
+                    
+                    <div class="flex items-center justify-between">
+                        <a href="#" class="btn btn-outline btn-sm">
+                            <i class="fas fa-external-link-alt"></i>
+                            View Product
+                        </a>
+                        <div class="flex items-center gap-3">
+                            <button class="text-gray-400 hover:text-red-500 transition" title="Like">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <button class="text-gray-400 hover:text-green-600 transition" title="Share">
+                                <i class="fas fa-share"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
+                        <div class="flex items-center gap-3">
+                            <span><i class="fas fa-heart text-red-500"></i> 34</span>
+                            <span><i class="fas fa-share text-blue-500"></i> 5</span>
+                            <span><i class="fas fa-eye"></i> 89</span>
+                        </div>
+                        <span>by @yogalife</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Load More Button -->
+        <div class="text-center mt-8">
+            <button class="btn btn-outline btn-lg" id="loadMoreBtn">
+                <i class="fas fa-plus"></i>
+                Load More Products
+            </button>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// View toggle functionality
+const gridView = document.getElementById('gridView');
+const listView = document.getElementById('listView');
+const productsGrid = document.getElementById('productsGrid');
+
+gridView.addEventListener('click', () => {
+    gridView.classList.add('bg-green-600', 'text-white');
+    gridView.classList.remove('bg-white', 'text-gray-600');
+    listView.classList.add('bg-white', 'text-gray-600');
+    listView.classList.remove('bg-green-600', 'text-white');
+    
+    productsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6';
+});
+
+listView.addEventListener('click', () => {
+    listView.classList.add('bg-green-600', 'text-white');
+    listView.classList.remove('bg-white', 'text-gray-600');
+    gridView.classList.add('bg-white', 'text-gray-600');
+    gridView.classList.remove('bg-green-600', 'text-white');
+    
+    productsGrid.className = 'grid grid-cols-1 gap-4';
+});
+
+// Category filtering
+const categoryButtons = document.querySelectorAll('[data-category]');
+const productCards = document.querySelectorAll('.product-card');
+
+categoryButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        // Update active button
+        categoryButtons.forEach(btn => {
+            btn.classList.remove('bg-green-600', 'text-white');
+            btn.classList.add('bg-gray-100', 'text-gray-700');
+        });
+        button.classList.add('bg-green-600', 'text-white');
+        button.classList.remove('bg-gray-100', 'text-gray-700');
+        
+        // Filter products
+        const category = button.dataset.category;
+        productCards.forEach(card => {
+            if (category === 'all' || card.dataset.category === category) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+});
+
+// Load more functionality
+document.getElementById('loadMoreBtn').addEventListener('click', function() {
+    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+    
+    // Simulate loading
+    setTimeout(() => {
+        this.innerHTML = '<i class="fas fa-plus"></i> Load More Products';
+        // In a real app, you would load more products here
+    }, 1500);
+});
+
+// Add hover effects to product cards
+productCards.forEach(card => {
+    card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-4px)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+    });
+});
+
+// Heart button functionality
+document.querySelectorAll('[title="Like"]').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const icon = this.querySelector('i');
+        if (icon.classList.contains('fas')) {
+            icon.classList.remove('fas');
+            icon.classList.add('far');
+            this.classList.remove('text-red-500');
+            this.classList.add('text-gray-400');
+        } else {
+            icon.classList.remove('far');
+            icon.classList.add('fas');
+            this.classList.remove('text-gray-400');
+            this.classList.add('text-red-500');
+        }
+    });
+});
+</script>
+{% endblock %}

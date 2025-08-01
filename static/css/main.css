@@ -1,22 +1,7 @@
-/* BuyRoll Main Stylesheet */
+/* BuyRoll Main Stylesheet - Clean Chakra UI Inspired Design */
 
-/* Import Design System Foundation */
-@import url('./design-system.css');
-@import url('./components.css');
-@import url('./utilities.css');
-@import url('./animations.css');
-@import url('./layouts.css');
-@import url('./loading-states.css');
-@import url('./hero-section.css');
-@import url('./features-section.css');
-@import url('./testimonials-section.css');
-@import url('./form-validation.css');
-@import url('./auth-pages.css');
-@import url('./interactive-components.css');
-@import url('./advanced-animations.css');
-@import url('./dark-mode.css');
-@import url('./advanced-components.css');
-@import url('./products-page.css');
+/* Import Clean Design System */
+@import url('./chakra-inspired.css');
 
 /* Global Styles */
 html {
