@@ -1,0 +1,323 @@
+{% extends "layout.html" %}
+
+{% set url_for = url_for %}
+
+{% block title %}Products - BuyRoll{% endblock %}
+
+{% block content %}
+<!-- Products Header -->
+<section class="bg-gradient-to-br from-green-50 via-white to-blue-50 py-16">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-bold text-gray-900 mb-4">
+                Discover Amazing <span class="text-green-600">Products</span>
+            </h1>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Explore thousands of products shared by our community. Find the perfect items for your lifestyle.
+            </p>
+        </div>
+        
+        <!-- Search and Filters -->
+        <div class="max-w-4xl mx-auto">
+            <div class="flex flex-col md:flex-row gap-4 items-center justify-between mb-8">
+                <!-- Search Bar -->
+                <div class="relative flex-1 max-w-md">
+                    <input type="search" 
+                           placeholder="Search products..." 
+                           class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <!-- Sort and View Controls -->
+                <div class="flex items-center gap-4">
+                    <select class="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                        <option>Sort by: Featured</option>
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                        <option>Newest First</option>
+                        <option>Most Popular</option>
+                    </select>
+                    
+                    <div class="flex border border-gray-200 rounded-xl overflow-hidden">
+                        <button class="px-4 py-3 bg-green-600 text-white" id="gridView" title="Grid View">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button class="px-4 py-3 bg-white text-gray-600 hover:bg-gray-50" id="listView" title="List View">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Category Filters -->
+            <div class="flex flex-wrap justify-center gap-3">
+                <button class="px-6 py-2 bg-green-600 text-white rounded-full font-medium transition-all hover:bg-green-700" data-category="all">
+                    <i class="fas fa-th mr-2"></i>All Products
+                </button>
+                <button class="px-6 py-2 bg-white text-gray-700 border border-gray-200 rounded-full font-medium transition-all hover:bg-gray-50 hover:border-green-300" data-category="electronics">
+                    <i class="fas fa-laptop mr-2"></i>Electronics
+                </button>
+                <button class="px-6 py-2 bg-white text-gray-700 border border-gray-200 rounded-full font-medium transition-all hover:bg-gray-50 hover:border-green-300" data-category="fashion">
+                    <i class="fas fa-tshirt mr-2"></i>Fashion
+                </button>
+                <button class="px-6 py-2 bg-white text-gray-700 border border-gray-200 rounded-full font-medium transition-all hover:bg-gray-50 hover:border-green-300" data-category="home">
+                    <i class="fas fa-home mr-2"></i>Home
+                </button>
+                <button class="px-6 py-2 bg-white text-gray-700 border border-gray-200 rounded-full font-medium transition-all hover:bg-gray-50 hover:border-green-300" data-category="sports">
+                    <i class="fas fa-dumbbell mr-2"></i>Sports
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Grid -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {% for item in items %}
+            <div class="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden" data-category="{{ item.get('category', 'general') }}">
+                <!-- Product Image -->
+                <div class="relative overflow-hidden">
+                    <img src="{{ item.get('image', 'https://via.placeholder.com/300x200/22c55e/ffffff?text=Product') }}" 
+                         alt="{{ item.get('title', 'Product') }}" 
+                         class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300">
+                    
+                    <!-- Overlay Actions -->
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                        <div class="flex gap-3">
+                            <button class="p-3 bg-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200">
+                                <i class="fas fa-heart text-red-500"></i>
+                            </button>
+                            <button class="p-3 bg-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200">
+                                <i class="fas fa-share text-green-600"></i>
+                            </button>
+                            <button class="p-3 bg-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200">
+                                <i class="fas fa-eye text-blue-600"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Category Badge -->
+                    <div class="absolute top-4 left-4">
+                        <span class="px-3 py-1 bg-green-600 text-white text-xs font-semibold rounded-full">
+                            {{ item.get('category', 'General').title() }}
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Product Content -->
+                <div class="p-6">
+                    <!-- Rating -->
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-1">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="far fa-star text-sm"></i>
+                            </div>
+                            <span class="text-sm text-gray-500 ml-2">(4.2)</span>
+                        </div>
+                        <div class="text-sm text-gray-500">
+                            <i class="fas fa-eye mr-1"></i>1.2k
+                        </div>
+                    </div>
+                    
+                    <!-- Product Title -->
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                        {{ item.get('title', item.get('name', 'Untitled Product')) }}
+                    </h3>
+                    
+                    <!-- Product Description -->
+                    <p class="text-gray-600 text-sm mb-4">
+                        {{ item.get('description', 'Amazing product shared by our community.') }}
+                    </p>
+                    
+                    <!-- Price -->
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-2xl font-bold text-gray-900">$29.99</span>
+                        <span class="text-lg text-gray-400 line-through">$39.99</span>
+                        <span class="px-2 py-1 bg-red-100 text-red-600 text-xs font-semibold rounded-full">-25%</span>
+                    </div>
+                    
+                    <!-- Action Button -->
+                    <a href="{{ item.get('url', '#') }}" 
+                       target="_blank" 
+                       class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-xl transition-colors duration-200 flex items-center justify-center gap-2 group">
+                        <i class="fas fa-external-link-alt"></i>
+                        <span>View Product</span>
+                    </a>
+                    
+                    <!-- Social Stats -->
+                    <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
+                        <div class="flex items-center gap-4 text-sm text-gray-500">
+                            <span class="flex items-center gap-1">
+                                <i class="fas fa-heart text-red-500"></i>
+                                <span>128</span>
+                            </span>
+                            <span class="flex items-center gap-1">
+                                <i class="fas fa-share text-green-500"></i>
+                                <span>45</span>
+                            </span>
+                        </div>
+                        
+                        <!-- Shared By -->
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-500">by</span>
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user text-white text-xs"></i>
+                                </div>
+                                <span class="text-sm font-medium text-gray-700">Sarah M.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Load More Button -->
+        <div class="text-center mt-12">
+            <button class="bg-white border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl" id="loadMoreBtn">
+                <i class="fas fa-plus mr-2"></i>Load More Products
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="py-16 bg-gradient-to-r from-green-600 to-blue-600">
+    <div class="container mx-auto px-4 text-center">
+        <div class="max-w-2xl mx-auto text-white">
+            <h2 class="text-3xl font-bold mb-4">Stay Updated with New Products</h2>
+            <p class="text-xl mb-8 opacity-90">Get notified about the latest products and exclusive deals from our community.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+                <input type="email" 
+                       placeholder="Enter your email" 
+                       class="flex-1 px-6 py-4 rounded-xl border-0 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-white">
+                <button class="bg-white text-green-600 hover:bg-gray-100 px-8 py-4 rounded-xl font-semibold transition-colors duration-200">
+                    Subscribe
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // View toggle functionality
+    const gridView = document.getElementById('gridView');
+    const listView = document.getElementById('listView');
+    const productsGrid = document.getElementById('productsGrid');
+
+    if (gridView && listView && productsGrid) {
+        gridView.addEventListener('click', () => {
+            gridView.classList.add('bg-green-600', 'text-white');
+            gridView.classList.remove('bg-white', 'text-gray-600');
+            listView.classList.add('bg-white', 'text-gray-600');
+            listView.classList.remove('bg-green-600', 'text-white');
+            
+            productsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8';
+        });
+
+        listView.addEventListener('click', () => {
+            listView.classList.add('bg-green-600', 'text-white');
+            listView.classList.remove('bg-white', 'text-gray-600');
+            gridView.classList.add('bg-white', 'text-gray-600');
+            gridView.classList.remove('bg-green-600', 'text-white');
+            
+            productsGrid.className = 'grid grid-cols-1 gap-6';
+        });
+    }
+
+    // Category filtering
+    const categoryButtons = document.querySelectorAll('[data-category]');
+    const productCards = document.querySelectorAll('[data-category]');
+
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Update active button
+            categoryButtons.forEach(btn => {
+                btn.classList.remove('bg-green-600', 'text-white');
+                btn.classList.add('bg-white', 'text-gray-700', 'border', 'border-gray-200');
+            });
+            button.classList.add('bg-green-600', 'text-white');
+            button.classList.remove('bg-white', 'text-gray-700', 'border', 'border-gray-200');
+            
+            // Filter products
+            const category = button.dataset.category;
+            productCards.forEach(card => {
+                if (card.tagName === 'BUTTON') return; // Skip button elements
+                
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Load more functionality
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', function() {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Loading...';
+            this.disabled = true;
+            
+            // Simulate loading
+            setTimeout(() => {
+                this.innerHTML = '<i class="fas fa-plus mr-2"></i>Load More Products';
+                this.disabled = false;
+            }, 1500);
+        });
+    }
+
+    // Heart button functionality
+    document.querySelectorAll('.fa-heart').forEach(heartIcon => {
+        heartIcon.closest('button').addEventListener('click', function(e) {
+            e.preventDefault();
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fas')) {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                icon.classList.remove('text-red-500');
+                icon.classList.add('text-gray-400');
+            } else {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                icon.classList.remove('text-gray-400');
+                icon.classList.add('text-red-500');
+            }
+        });
+    });
+
+    // Search functionality
+    const searchInput = document.querySelector('input[type="search"]');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            productCards.forEach(card => {
+                if (card.tagName === 'BUTTON') return;
+                
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('p').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

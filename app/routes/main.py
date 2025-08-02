@@ -105,7 +105,7 @@ def products():
             'url': '#'
         }
     ]
-    return render_template('products_clean.html', items=sample_items)
+    return render_template('products_simple.html', items=sample_items)
 
 @main_bp.route('/about')
 def about():
@@ -116,12 +116,13 @@ def about():
 def favicon():
     """Serve favicon."""
     return send_from_directory(current_app.static_folder, 'images/logo.svg', mimetype='image/svg+xml')
-@main
-_bp.route('/css-showcase')
+
+@main_bp.route('/css-showcase')
 def css_showcase():
     """CSS Architecture showcase page."""
-    return render_template('css-showcase.html')@main_bp.r
-oute('/components-showcase')
+    return render_template('css-showcase.html')
+
+@main_bp.route('/components-showcase')
 def components_showcase():
     """Component library showcase page."""
     return render_template('components-showcase.html')
