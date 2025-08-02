@@ -105,7 +105,7 @@ def products():
             'url': '#'
         }
     ]
-    return render_template('products_simple.html', items=sample_items)
+    return render_template('products_clean.html', items=sample_items)
 
 @main_bp.route('/about')
 def about():
