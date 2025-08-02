@@ -1,990 +1,302 @@
-// BuyRoll Design System JavaScript
-
-class BuyRollDesignSystem {
-  constructor() {
-    this.init();
-  }
-
-  init() {
-    this.setupNavigation();
-    this.setupModals();
-    this.setupNotifications();
-    this.setupFormValidation();
-    this.setupScrollEffects();
-    this.setupAccessibility();
-    this.setupResponsiveLayouts();
-    this.setupAdvancedAnimations();
-    this.setupPerformanceMonitoring();
-    this.setupParallax();
-    this.setupScrollProgress();
-  }
-
-  // Navigation System
-  setupNavigation() {
-    const nav = document.querySelector('.nav');
-    const navToggle = document.querySelector('.nav-toggle');
-    const navMenu = document.querySelector('.nav-menu');
-
-    // Mobile menu toggle
-    if (navToggle && navMenu) {
-      navToggle.addEventListener('click', () => {
-        navMenu.classList.toggle('show');
-        navToggle.setAttribute('aria-expanded', 
-          navToggle.getAttribute('aria-expanded') === 'true' ? 'false' : 'true'
-        );
-      });
-
-      // Close menu when clicking outside
-      document.addEventListener('click', (e) => {
-        if (!nav.contains(e.target)) {
-          navMenu.classList.remove('show');
-          navToggle.setAttribute('aria-expanded', 'false');
-        }
-      });
-
-      // Close menu on escape key
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && navMenu.classList.contains('show')) {
-          navMenu.classList.remove('show');
-          navToggle.setAttribute('aria-expanded', 'false');
-          navToggle.focus();
-        }
-      });
-    }
-
-    // Scroll effect for navigation
-    if (nav) {
-      let lastScrollY = window.scrollY;
-      
-      window.addEventListener('scroll', () => {
-        const currentScrollY = window.scrollY;
-        
-        if (currentScrollY > 100) {
-          nav.classList.add('scrolled');
-        } else {
-          nav.classList.remove('scrolled');
-        }
-
-        // Hide/show nav on scroll
-        if (currentScrollY > lastScrollY && currentScrollY > 200) {
-          nav.style.transform = 'translateY(-100%)';
-        } else {
-          nav.style.transform = 'translateY(0)';
-        }
-        
-        lastScrollY = currentScrollY;
-      });
-    }
-
-    // Active link highlighting
-    const navLinks = document.querySelectorAll('.nav-link');
-    const sections = document.querySelectorAll('section[id]');
-
-    if (navLinks.length && sections.length) {
-      window.addEventListener('scroll', () => {
-        let current = '';
-        
-        sections.forEach(section => {
-          const sectionTop = section.offsetTop;
-          const sectionHeight = section.clientHeight;
-          
-          if (window.scrollY >= sectionTop - 200) {
-            current = section.getAttribute('id');
-          }
+// Design System JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Password toggle functionality
+    const passwordToggles = document.querySelectorAll('.password-toggle');
+    passwordToggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            const input = this.previousElementSibling;
+            const icon = this.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
         });
-
-        navLinks.forEach(link => {
-          link.classList.remove('active');
-          if (link.getAttribute('href') === `#${current}`) {
-            link.classList.add('active');
-          }
-        });
-      });
-    }
-  }
-
-  // Modal System
-  setupModals() {
-    const modalTriggers = document.querySelectorAll('[data-modal-target]');
-    const modalCloses = document.querySelectorAll('[data-modal-close]');
-    const modals = document.querySelectorAll('.modal');
-
-    modalTriggers.forEach(trigger => {
-      trigger.addEventListener('click', (e) => {
-        e.preventDefault();
-        const targetModal = document.querySelector(trigger.dataset.modalTarget);
-        this.openModal(targetModal);
-      });
     });
-
-    modalCloses.forEach(close => {
-      close.addEventListener('click', () => {
-        const modal = close.closest('.modal');
-        this.closeModal(modal);
-      });
-    });
-
-    // Close modal on backdrop click
-    modals.forEach(modal => {
-      const backdrop = modal.querySelector('.modal-backdrop');
-      if (backdrop) {
-        backdrop.addEventListener('click', (e) => {
-          if (e.target === backdrop) {
-            this.closeModal(modal);
-          }
-        });
-      }
-    });
-
-    // Close modal on escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        const openModal = document.querySelector('.modal.show');
-        if (openModal) {
-          this.closeModal(openModal);
-        }
-      }
-    });
-  }
-
-  openModal(modal) {
-    if (!modal) return;
     
-    modal.classList.add('show');
-    const backdrop = modal.querySelector('.modal-backdrop');
-    if (backdrop) backdrop.classList.add('show');
-    
-    document.body.style.overflow = 'hidden';
-    
-    // Focus management
-    const focusableElements = modal.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
-    if (focusableElements.length) {
-      focusableElements[0].focus();
-    }
-  }
-
-  closeModal(modal) {
-    if (!modal) return;
-    
-    modal.classList.remove('show');
-    const backdrop = modal.querySelector('.modal-backdrop');
-    if (backdrop) backdrop.classList.remove('show');
-    
-    document.body.style.overflow = '';
-  }
-
-  // Notification System
-  setupNotifications() {
-    this.notificationContainer = this.createNotificationContainer();
-  }
-
-  createNotificationContainer() {
-    let container = document.querySelector('.notification-container');
-    if (!container) {
-      container = document.createElement('div');
-      container.className = 'notification-container';
-      container.style.cssText = `
-        position: fixed;
-        top: 1rem;
-        right: 1rem;
-        z-index: 1080;
-        pointer-events: none;
-      `;
-      document.body.appendChild(container);
-    }
-    return container;
-  }
-
-  showNotification(message, type = 'info', duration = 5000) {
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type} show`;
-    notification.style.pointerEvents = 'auto';
-    
-    const icon = this.getNotificationIcon(type);
-    notification.innerHTML = `
-      <div class="flex items-center gap-3">
-        <span class="text-lg">${icon}</span>
-        <span class="flex-1">${message}</span>
-        <button class="notification-close text-gray-400 hover:text-black">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-    `;
-
-    const closeBtn = notification.querySelector('.notification-close');
-    closeBtn.addEventListener('click', () => {
-      this.hideNotification(notification);
-    });
-
-    this.notificationContainer.appendChild(notification);
-
-    // Auto-hide after duration
-    if (duration > 0) {
-      setTimeout(() => {
-        this.hideNotification(notification);
-      }, duration);
-    }
-
-    return notification;
-  }
-
-  hideNotification(notification) {
-    notification.classList.remove('show');
-    setTimeout(() => {
-      if (notification.parentNode) {
-        notification.parentNode.removeChild(notification);
-      }
-    }, 300);
-  }
-
-  getNotificationIcon(type) {
-    const icons = {
-      success: '<i class="fas fa-check-circle text-success"></i>',
-      error: '<i class="fas fa-exclamation-circle text-error"></i>',
-      warning: '<i class="fas fa-exclamation-triangle text-warning"></i>',
-      info: '<i class="fas fa-info-circle text-info"></i>'
-    };
-    return icons[type] || icons.info;
-  }
-
-  // Form Validation
-  setupFormValidation() {
-    const forms = document.querySelectorAll('form[data-validate]');
-    
+    // Form validation
+    const forms = document.querySelectorAll('form');
     forms.forEach(form => {
-      const inputs = form.querySelectorAll('input, textarea, select');
-      
-      inputs.forEach(input => {
-        input.addEventListener('blur', () => this.validateField(input));
-        input.addEventListener('input', () => this.clearFieldError(input));
-      });
-
-      form.addEventListener('submit', (e) => {
-        if (!this.validateForm(form)) {
-          e.preventDefault();
-        }
-      });
+        form.addEventListener('submit', function(e) {
+            const requiredFields = form.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.classList.add('border-red-500');
+                } else {
+                    field.classList.remove('border-red-500');
+                }
+            });
+            
+            if (!isValid) {
+                e.preventDefault();
+                alert('Please fill in all required fields.');
+            }
+        });
     });
-  }
-
-  validateField(field) {
-    const value = field.value.trim();
-    const rules = field.dataset.rules ? field.dataset.rules.split('|') : [];
-    let isValid = true;
-    let errorMessage = '';
-
-    // Required validation
-    if (rules.includes('required') && !value) {
-      isValid = false;
-      errorMessage = 'This field is required';
-    }
-
-    // Email validation
-    if (rules.includes('email') && value) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(value)) {
-        isValid = false;
-        errorMessage = 'Please enter a valid email address';
-      }
-    }
-
-    // Min length validation
-    const minLength = rules.find(rule => rule.startsWith('min:'));
-    if (minLength && value) {
-      const min = parseInt(minLength.split(':')[1]);
-      if (value.length < min) {
-        isValid = false;
-        errorMessage = `Minimum ${min} characters required`;
-      }
-    }
-
-    // Max length validation
-    const maxLength = rules.find(rule => rule.startsWith('max:'));
-    if (maxLength && value) {
-      const max = parseInt(maxLength.split(':')[1]);
-      if (value.length > max) {
-        isValid = false;
-        errorMessage = `Maximum ${max} characters allowed`;
-      }
-    }
-
-    this.showFieldValidation(field, isValid, errorMessage);
-    return isValid;
-  }
-
-  validateForm(form) {
-    const inputs = form.querySelectorAll('input[data-rules], textarea[data-rules], select[data-rules]');
-    let isFormValid = true;
-
-    inputs.forEach(input => {
-      if (!this.validateField(input)) {
-        isFormValid = false;
-      }
-    });
-
-    return isFormValid;
-  }
-
-  showFieldValidation(field, isValid, message) {
-    const errorElement = field.parentNode.querySelector('.form-error');
     
-    if (isValid) {
-      field.classList.remove('invalid');
-      if (errorElement) {
-        errorElement.remove();
-      }
-    } else {
-      field.classList.add('invalid');
-      
-      if (!errorElement) {
-        const error = document.createElement('span');
-        error.className = 'form-error';
-        error.textContent = message;
-        field.parentNode.appendChild(error);
-      } else {
-        errorElement.textContent = message;
-      }
-    }
-  }
-
-  clearFieldError(field) {
-    field.classList.remove('invalid');
-    const errorElement = field.parentNode.querySelector('.form-error');
-    if (errorElement) {
-      errorElement.remove();
-    }
-  }
-
-  // Scroll Effects
-  setupScrollEffects() {
-    // Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-        }
-      });
+    // Smooth scrolling for anchor links
+    const anchorLinks = document.querySelectorAll('a[href^="#"]');
+    anchorLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href !== '#') {
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
+        });
     });
-
-    // Intersection Observer for scroll animations
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
+    
+    // Add loading states to buttons
+    const submitButtons = document.querySelectorAll('button[type="submit"]');
+    submitButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            if (this.form && this.form.checkValidity()) {
+                this.disabled = true;
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Loading...';
+                
+                // Re-enable after form submission (you can adjust this timing)
+                setTimeout(() => {
+                    this.disabled = false;
+                    this.innerHTML = originalText;
+                }, 3000);
+            }
+        });
+    });
+    
+    // Auto-hide alerts after 5 seconds
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            alert.style.opacity = '0';
+            setTimeout(() => {
+                alert.remove();
+            }, 300);
+        }, 5000);
+    });
+    
+    // Initialize tooltips
+    const tooltipElements = document.querySelectorAll('[title]');
+    tooltipElements.forEach(element => {
+        element.addEventListener('mouseenter', function() {
+            const title = this.getAttribute('title');
+            if (title) {
+                const tooltip = document.createElement('div');
+                tooltip.className = 'tooltip';
+                tooltip.textContent = title;
+                tooltip.style.cssText = `
+                    position: absolute;
+                    background: var(--color-gray-900);
+                    color: white;
+                    padding: var(--space-2) var(--space-3);
+                    border-radius: var(--radius-md);
+                    font-size: var(--font-size-xs);
+                    z-index: 1000;
+                    pointer-events: none;
+                    white-space: nowrap;
+                `;
+                
+                document.body.appendChild(tooltip);
+                
+                const rect = this.getBoundingClientRect();
+                tooltip.style.left = rect.left + (rect.width / 2) - (tooltip.offsetWidth / 2) + 'px';
+                tooltip.style.top = rect.top - tooltip.offsetHeight - 8 + 'px';
+                
+                this.addEventListener('mouseleave', function() {
+                    tooltip.remove();
+                }, { once: true });
+            }
+        });
+    });
+    
+    // Add focus styles to interactive elements
+    const interactiveElements = document.querySelectorAll('button, a, input, select, textarea');
+    interactiveElements.forEach(element => {
+        element.addEventListener('focus', function() {
+            this.classList.add('ring-2', 'ring-primary-500', 'ring-opacity-50');
+        });
+        
+        element.addEventListener('blur', function() {
+            this.classList.remove('ring-2', 'ring-primary-500', 'ring-opacity-50');
+        });
+    });
+    
+    // Initialize animations for elements with data-animate attribute
+    const animatedElements = document.querySelectorAll('[data-animate]');
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          // Add fade-in animation
-          if (entry.target.classList.contains('scroll-fade-in')) {
-            entry.target.classList.add('in-view');
-          }
-          // Add slide animations
-          if (entry.target.classList.contains('scroll-slide-left')) {
-            entry.target.classList.add('in-view');
-          }
-          if (entry.target.classList.contains('scroll-slide-right')) {
-            entry.target.classList.add('in-view');
-          }
-          // Add scale animation
-          if (entry.target.classList.contains('scroll-scale-up')) {
-            entry.target.classList.add('in-view');
-          }
-          // Generic animate-on-scroll
-          if (entry.target.classList.contains('animate-on-scroll')) {
-            entry.target.classList.add('animate-fade-in');
-          }
-        }
-      });
-    }, observerOptions);
-
-    // Observe elements with scroll animation classes
-    const scrollElements = document.querySelectorAll(
-      '.animate-on-scroll, .scroll-fade-in, .scroll-slide-left, .scroll-slide-right, .scroll-scale-up'
-    );
-    scrollElements.forEach(el => observer.observe(el));
-
-    // Parallax effect
-    this.setupParallax();
-    
-    // Stagger animations
-    this.setupStaggerAnimations();
-  }
-
-  setupParallax() {
-    const parallaxElements = document.querySelectorAll('.parallax');
-    
-    if (parallaxElements.length) {
-      window.addEventListener('scroll', this.throttle(() => {
-        const scrolled = window.pageYOffset;
-        
-        parallaxElements.forEach(element => {
-          const rate = scrolled * -0.5;
-          element.style.transform = `translateY(${rate}px)`;
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-fade-in');
+                observer.unobserve(entry.target);
+            }
         });
-      }, 16));
-    }
-  }
-
-  setupStaggerAnimations() {
-    const staggerGroups = document.querySelectorAll('[data-stagger]');
-    
-    staggerGroups.forEach(group => {
-      const children = group.children;
-      const delay = parseInt(group.dataset.stagger) || 100;
-      
-      Array.from(children).forEach((child, index) => {
-        child.style.animationDelay = `${index * delay}ms`;
-      });
-    });
-  }
-
-  // Accessibility Features
-  setupAccessibility() {
-    // Skip link functionality
-    const skipLink = document.querySelector('.skip-link');
-    if (skipLink) {
-      skipLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        const target = document.querySelector(skipLink.getAttribute('href'));
-        if (target) {
-          target.focus();
-          target.scrollIntoView();
-        }
-      });
-    }
-
-    // Keyboard navigation for custom components
-    this.setupKeyboardNavigation();
-    
-    // Focus management
-    this.setupFocusManagement();
-  }
-
-  setupKeyboardNavigation() {
-    // Tab navigation for custom dropdowns
-    document.querySelectorAll('[role="button"]').forEach(button => {
-      button.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          button.click();
-        }
-      });
-    });
-  }
-
-  setupFocusManagement() {
-    // Focus visible polyfill
-    let hadKeyboardEvent = true;
-    const keyboardThrottleTimeout = 100;
-
-    const focusTriggersKeyboardModality = (e) => {
-      if (e.metaKey || e.altKey || e.ctrlKey) {
-        return false;
-      }
-
-      switch (e.key) {
-        case 'Control':
-        case 'Shift':
-        case 'Meta':
-        case 'Alt':
-          return false;
-        default:
-          return true;
-      }
-    };
-
-    const onKeyDown = (e) => {
-      if (focusTriggersKeyboardModality(e)) {
-        hadKeyboardEvent = true;
-      }
-    };
-
-    const onPointerDown = () => {
-      hadKeyboardEvent = false;
-    };
-
-    const onFocus = (e) => {
-      if (hadKeyboardEvent || e.target.matches(':focus-visible')) {
-        e.target.classList.add('focus-visible');
-      }
-    };
-
-    const onBlur = (e) => {
-      e.target.classList.remove('focus-visible');
-    };
-
-    document.addEventListener('keydown', onKeyDown, true);
-    document.addEventListener('mousedown', onPointerDown, true);
-    document.addEventListener('focus', onFocus, true);
-    document.addEventListener('blur', onBlur, true);
-  }
-
-  // Utility Methods
-  debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-      const later = () => {
-        clearTimeout(timeout);
-        func(...args);
-      };
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-    };
-  }
-
-  throttle(func, limit) {
-    let inThrottle;
-    return function() {
-      const args = arguments;
-      const context = this;
-      if (!inThrottle) {
-        func.apply(context, args);
-        inThrottle = true;
-        setTimeout(() => inThrottle = false, limit);
-      }
-    };
-  }
-}
-
-// Initialize the design system when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-  window.buyrollDS = new BuyRollDesignSystem();
-});
-
-// Export for module usage
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = BuyRollDesignSystem;
-}  // Adva
-nced Layout Management
-  setupAdvancedLayouts() {
-    this.setupMasonryLayout();
-    this.setupStickyElements();
-    this.setupResponsiveGrids();
-  }
-
-  setupMasonryLayout() {
-    const masonryContainers = document.querySelectorAll('.masonry');
-    
-    masonryContainers.forEach(container => {
-      // Simple masonry implementation
-      const resizeObserver = new ResizeObserver(() => {
-        this.layoutMasonry(container);
-      });
-      
-      resizeObserver.observe(container);
-      
-      // Initial layout
-      setTimeout(() => this.layoutMasonry(container), 100);
-    });
-  }
-
-  layoutMasonry(container) {
-    const items = container.querySelectorAll('.masonry-item');
-    const columnCount = parseInt(getComputedStyle(container).columnCount);
-    
-    if (columnCount === 1) return;
-    
-    const columnHeights = new Array(columnCount).fill(0);
-    
-    items.forEach(item => {
-      const shortestColumn = columnHeights.indexOf(Math.min(...columnHeights));
-      item.style.order = shortestColumn;
-      columnHeights[shortestColumn] += item.offsetHeight;
-    });
-  }
-
-  setupStickyElements() {
-    const stickyElements = document.querySelectorAll('.sticky-header, .sticky-sidebar, .sticky-footer');
-    
-    stickyElements.forEach(element => {
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          element.classList.toggle('is-stuck', !entry.isIntersecting);
-        },
-        { threshold: 1 }
-      );
-      
-      observer.observe(element);
-    });
-  }
-
-  setupResponsiveGrids() {
-    const responsiveGrids = document.querySelectorAll('[data-responsive-grid]');
-    
-    responsiveGrids.forEach(grid => {
-      const config = JSON.parse(grid.dataset.responsiveGrid);
-      
-      const updateGrid = () => {
-        const width = window.innerWidth;
-        let columns = config.default || 1;
-        
-        Object.keys(config).forEach(breakpoint => {
-          if (breakpoint !== 'default' && width >= parseInt(breakpoint)) {
-            columns = config[breakpoint];
-          }
-        });
-        
-        grid.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
-      };
-      
-      updateGrid();
-      window.addEventListener('resize', this.debounce(updateGrid, 250));
-    });
-  }
-
-  // Theme Management
-  setupThemeToggle() {
-    const themeToggle = document.querySelector('[data-theme-toggle]');
-    const currentTheme = localStorage.getItem('theme') || 'light';
-    
-    document.documentElement.setAttribute('data-theme', currentTheme);
-    
-    if (themeToggle) {
-      themeToggle.addEventListener('click', () => {
-        const newTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        
-        // Dispatch theme change event
-        window.dispatchEvent(new CustomEvent('themechange', { detail: { theme: newTheme } }));
-      });
-    }
-  }
-
-  // Advanced Form Features
-  setupAdvancedForms() {
-    this.setupAutoSave();
-    this.setupFormProgress();
-    this.setupConditionalFields();
-  }
-
-  setupAutoSave() {
-    const autoSaveForms = document.querySelectorAll('[data-auto-save]');
-    
-    autoSaveForms.forEach(form => {
-      const inputs = form.querySelectorAll('input, textarea, select');
-      const saveKey = form.dataset.autoSave;
-      
-      // Load saved data
-      const savedData = localStorage.getItem(`autosave_${saveKey}`);
-      if (savedData) {
-        const data = JSON.parse(savedData);
-        Object.keys(data).forEach(name => {
-          const input = form.querySelector(`[name="${name}"]`);
-          if (input) input.value = data[name];
-        });
-      }
-      
-      // Save on input
-      inputs.forEach(input => {
-        input.addEventListener('input', this.debounce(() => {
-          const formData = new FormData(form);
-          const data = Object.fromEntries(formData.entries());
-          localStorage.setItem(`autosave_${saveKey}`, JSON.stringify(data));
-        }, 1000));
-      });
-      
-      // Clear on submit
-      form.addEventListener('submit', () => {
-        localStorage.removeItem(`autosave_${saveKey}`);
-      });
-    });
-  }
-
-  setupFormProgress() {
-    const progressForms = document.querySelectorAll('[data-form-progress]');
-    
-    progressForms.forEach(form => {
-      const progressBar = form.querySelector('.form-progress-bar');
-      const inputs = form.querySelectorAll('input[required], textarea[required], select[required]');
-      
-      if (!progressBar) return;
-      
-      const updateProgress = () => {
-        const filledInputs = Array.from(inputs).filter(input => input.value.trim() !== '');
-        const progress = (filledInputs.length / inputs.length) * 100;
-        progressBar.style.width = `${progress}%`;
-      };
-      
-      inputs.forEach(input => {
-        input.addEventListener('input', updateProgress);
-      });
-      
-      updateProgress();
-    });
-  }
-
-  setupConditionalFields() {
-    const conditionalFields = document.querySelectorAll('[data-show-if]');
-    
-    conditionalFields.forEach(field => {
-      const condition = field.dataset.showIf;
-      const [targetName, expectedValue] = condition.split('=');
-      const targetInput = document.querySelector(`[name="${targetName}"]`);
-      
-      if (!targetInput) return;
-      
-      const toggleField = () => {
-        const shouldShow = targetInput.value === expectedValue;
-        field.style.display = shouldShow ? 'block' : 'none';
-        
-        // Toggle required attribute
-        const requiredInputs = field.querySelectorAll('[data-required-if]');
-        requiredInputs.forEach(input => {
-          input.required = shouldShow;
-        });
-      };
-      
-      targetInput.addEventListener('change', toggleField);
-      toggleField(); // Initial check
-    });
-  }
-
-  // Initialize all advanced features
-  initAdvancedFeatures() {
-    this.setupAdvancedLayouts();
-    this.setupThemeToggle();
-    this.setupAdvancedForms();
-  }
-}
-
-// Update initialization to include advanced features
-document.addEventListener('DOMContentLoaded', () => {
-  window.buyrollDS = new BuyRollDesignSystem();
-  window.buyrollDS.initAdvancedFeatures();
-});
-
-// Export for module usage
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = BuyRollDesignSystem;
-}
- 
- // Enhanced Scroll Effects
-  setupParallax() {
-    const parallaxElements = document.querySelectorAll('.parallax');
-    
-    if (parallaxElements.length === 0) return;
-    
-    const handleScroll = this.throttle(() => {
-      const scrollTop = window.pageYOffset;
-      
-      parallaxElements.forEach(element => {
-        const speed = element.dataset.speed || 0.5;
-        const yPos = -(scrollTop * speed);
-        element.style.transform = `translateY(${yPos}px)`;
-      });
-    }, 16); // 60fps
-    
-    window.addEventListener('scroll', handleScroll);
-  }
-
-  setupScrollProgress() {
-    const progressBar = document.querySelector('.scroll-progress');
-    if (!progressBar) return;
-    
-    const handleScroll = this.throttle(() => {
-      const scrollTop = window.pageYOffset;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercent = (scrollTop / docHeight) * 100;
-      
-      progressBar.style.width = `${scrollPercent}%`;
-    }, 16);
-    
-    window.addEventListener('scroll', handleScroll);
-  }
-
-  // Advanced Layout Management
-  setupResponsiveLayouts() {
-    // Handle responsive navigation
-    this.handleResponsiveNav();
-    
-    // Setup masonry layout
-    this.setupMasonryLayout();
-    
-    // Handle responsive tables
-    this.setupResponsiveTables();
-  }
-
-  handleResponsiveNav() {
-    const nav = document.querySelector('.nav');
-    const navItems = document.querySelectorAll('.nav-item');
-    
-    if (!nav || !navItems.length) return;
-    
-    const checkNavOverflow = () => {
-      const navWidth = nav.offsetWidth;
-      const itemsWidth = Array.from(navItems).reduce((total, item) => total + item.offsetWidth, 0);
-      
-      if (itemsWidth > navWidth) {
-        nav.classList.add('nav-overflow');
-      } else {
-        nav.classList.remove('nav-overflow');
-      }
-    };
-    
-    window.addEventListener('resize', this.debounce(checkNavOverflow, 250));
-    checkNavOverflow();
-  }
-
-  setupMasonryLayout() {
-    const masonryContainers = document.querySelectorAll('.masonry');
-    
-    masonryContainers.forEach(container => {
-      const resizeObserver = new ResizeObserver(() => {
-        this.layoutMasonry(container);
-      });
-      
-      resizeObserver.observe(container);
-      this.layoutMasonry(container);
-    });
-  }
-
-  layoutMasonry(container) {
-    const items = container.querySelectorAll('.masonry-item');
-    const columnCount = parseInt(getComputedStyle(container).columnCount);
-    
-    if (columnCount === 1) return;
-    
-    const columnHeights = new Array(columnCount).fill(0);
-    
-    items.forEach(item => {
-      const shortestColumn = columnHeights.indexOf(Math.min(...columnHeights));
-      item.style.order = shortestColumn;
-      columnHeights[shortestColumn] += item.offsetHeight;
-    });
-  }
-
-  setupResponsiveTables() {
-    const tables = document.querySelectorAll('.responsive-table');
-    
-    tables.forEach(table => {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'table-wrapper';
-      table.parentNode.insertBefore(wrapper, table);
-      wrapper.appendChild(table);
-      
-      // Add scroll indicators
-      const scrollIndicator = document.createElement('div');
-      scrollIndicator.className = 'table-scroll-indicator';
-      scrollIndicator.innerHTML = '← Scroll to see more →';
-      wrapper.appendChild(scrollIndicator);
-      
-      wrapper.addEventListener('scroll', () => {
-        const isScrollable = wrapper.scrollWidth > wrapper.clientWidth;
-        const isAtStart = wrapper.scrollLeft === 0;
-        const isAtEnd = wrapper.scrollLeft >= wrapper.scrollWidth - wrapper.clientWidth;
-        
-        scrollIndicator.style.display = isScrollable && !isAtEnd ? 'block' : 'none';
-      });
-    });
-  }
-
-  // Advanced Animation Controls
-  setupAdvancedAnimations() {
-    // Stagger animations
-    this.setupStaggerAnimations();
-    
-    // Scroll-triggered animations
-    this.setupScrollAnimations();
-    
-    // Hover effect management
-    this.setupHoverEffects();
-  }
-
-  setupStaggerAnimations() {
-    const staggerGroups = document.querySelectorAll('[data-stagger-group]');
-    
-    staggerGroups.forEach(group => {
-      const items = group.querySelectorAll('[data-stagger-item]');
-      const delay = parseFloat(group.dataset.staggerDelay) || 0.1;
-      
-      items.forEach((item, index) => {
-        item.style.animationDelay = `${index * delay}s`;
-      });
-    });
-  }
-
-  setupScrollAnimations() {
-    const animatedElements = document.querySelectorAll('[data-scroll-animation]');
-    
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const animation = entry.target.dataset.scrollAnimation;
-          const delay = entry.target.dataset.animationDelay || 0;
-          
-          setTimeout(() => {
-            entry.target.classList.add(`animate-${animation}`);
-          }, delay * 1000);
-        }
-      });
     }, {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
+        threshold: 0.1
     });
     
-    animatedElements.forEach(el => observer.observe(el));
-  }
-
-  setupHoverEffects() {
-    // Enhanced hover effects with performance optimization
-    const hoverElements = document.querySelectorAll('[data-hover-effect]');
-    
-    hoverElements.forEach(element => {
-      const effect = element.dataset.hoverEffect;
-      
-      element.addEventListener('mouseenter', () => {
-        element.classList.add(`hover-${effect}`);
-      });
-      
-      element.addEventListener('mouseleave', () => {
-        element.classList.remove(`hover-${effect}`);
-      });
+    animatedElements.forEach(element => {
+        observer.observe(element);
     });
-  }
-
-  // Performance Monitoring
-  setupPerformanceMonitoring() {
-    // Monitor animation performance
-    this.monitorAnimationPerformance();
     
-    // Monitor layout shifts
-    this.monitorLayoutShifts();
-  }
-
-  monitorAnimationPerformance() {
-    if (!window.PerformanceObserver) return;
+    // Handle mobile menu toggle
+    const mobileMenuToggle = document.querySelector('[data-mobile-menu-toggle]');
+    const mobileMenu = document.querySelector('[data-mobile-menu]');
     
-    const observer = new PerformanceObserver((list) => {
-      list.getEntries().forEach(entry => {
-        if (entry.duration > 16) { // More than one frame
-          console.warn(`Slow animation detected: ${entry.name} took ${entry.duration}ms`);
+    if (mobileMenuToggle && mobileMenu) {
+        mobileMenuToggle.addEventListener('click', function() {
+            const isOpen = mobileMenu.classList.contains('hidden');
+            if (isOpen) {
+                mobileMenu.classList.remove('hidden');
+                this.setAttribute('aria-expanded', 'true');
+            } else {
+                mobileMenu.classList.add('hidden');
+                this.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+    
+    // Handle dropdown menus
+    const dropdownToggles = document.querySelectorAll('[data-dropdown-toggle]');
+    dropdownToggles.forEach(toggle => {
+        toggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const dropdown = document.querySelector(this.getAttribute('data-dropdown-toggle'));
+            if (dropdown) {
+                const isOpen = !dropdown.classList.contains('hidden');
+                
+                // Close all other dropdowns
+                document.querySelectorAll('[data-dropdown]').forEach(d => {
+                    d.classList.add('hidden');
+                });
+                
+                if (!isOpen) {
+                    dropdown.classList.remove('hidden');
+                }
+            }
+        });
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('[data-dropdown-toggle]') && !e.target.closest('[data-dropdown]')) {
+            document.querySelectorAll('[data-dropdown]').forEach(dropdown => {
+                dropdown.classList.add('hidden');
+            });
         }
-      });
     });
     
-    observer.observe({ entryTypes: ['measure'] });
-  }
-
-  monitorLayoutShifts() {
-    if (!window.PerformanceObserver) return;
-    
-    const observer = new PerformanceObserver((list) => {
-      list.getEntries().forEach(entry => {
-        if (entry.value > 0.1) { // CLS threshold
-          console.warn(`Layout shift detected: ${entry.value}`);
-        }
-      });
+    // Handle search functionality
+    const searchInputs = document.querySelectorAll('input[type="search"]');
+    searchInputs.forEach(input => {
+        let searchTimeout;
+        input.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                // Implement search functionality here
+                console.log('Searching for:', this.value);
+            }, 300);
+        });
     });
     
-    observer.observe({ entryTypes: ['layout-shift'] });
-  }
-}
+    // Handle like/unlike functionality
+    const likeButtons = document.querySelectorAll('[data-like]');
+    likeButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const icon = this.querySelector('i');
+            const isLiked = icon.classList.contains('fas');
+            
+            if (isLiked) {
+                icon.classList.remove('fas', 'text-red-500');
+                icon.classList.add('far', 'text-gray-400');
+            } else {
+                icon.classList.remove('far', 'text-gray-400');
+                icon.classList.add('fas', 'text-red-500');
+            }
+            
+            // You can add AJAX call here to update the like status
+            console.log('Like toggled:', !isLiked);
+        });
+    });
+    
+    // Handle share functionality
+    const shareButtons = document.querySelectorAll('[data-share]');
+    shareButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = this.getAttribute('data-share');
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Check out this product on BuyRoll',
+                    url: url
+                });
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(url).then(() => {
+                    // Show success message
+                    const message = document.createElement('div');
+                    message.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg z-50';
+                    message.textContent = 'Link copied to clipboard!';
+                    document.body.appendChild(message);
+                    
+                    setTimeout(() => {
+                        message.remove();
+                    }, 3000);
+                });
+            }
+        });
+    });
+    
+    // Initialize lazy loading for images
+    const lazyImages = document.querySelectorAll('img[data-src]');
+    const imageObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                img.src = img.dataset.src;
+                img.classList.remove('lazy');
+                imageObserver.unobserve(img);
+            }
+        });
+    });
+    
+    lazyImages.forEach(img => {
+        imageObserver.observe(img);
+    });
+    
+    // Handle theme switching (if implemented)
+    const themeToggle = document.querySelector('[data-theme-toggle]');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', function() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    }
+    
+    // Initialize theme from localStorage
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    }
+    
+    console.log('Design System JavaScript loaded successfully!');
+});

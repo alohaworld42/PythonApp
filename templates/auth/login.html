@@ -4,8 +4,323 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - BuyRoll</title>
+    
+    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+    
+    <!-- Unified Design System -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/unified-design.css') }}">
+    
+    <!-- Auth-specific styles -->
+    <style>
+        .auth-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-gray-50) 100%);
+        }
+        
+        .auth-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 100vh;
+        }
+        
+        @media (max-width: 768px) {
+            .auth-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .auth-side-panel {
+            background: linear-gradient(135deg, var(--color-primary-600) 0%, var(--color-primary-700) 100%);
+            color: white;
+            padding: var(--space-12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .auth-side-content {
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .auth-side-logo {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-6);
+            font-size: 2rem;
+        }
+        
+        .auth-side-title {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--space-4);
+        }
+        
+        .auth-side-subtitle {
+            font-size: var(--font-size-lg);
+            opacity: 0.9;
+            margin-bottom: var(--space-8);
+            line-height: 1.6;
+        }
+        
+        .auth-side-features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .auth-side-feature {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-4);
+            text-align: left;
+        }
+        
+        .auth-side-feature-icon {
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .auth-form-panel {
+            background: white;
+            padding: var(--space-12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .auth-form-container {
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .auth-form-header {
+            text-align: center;
+            margin-bottom: var(--space-8);
+        }
+        
+        .auth-form-title {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-gray-900);
+            margin-bottom: var(--space-2);
+        }
+        
+        .auth-form-subtitle {
+            color: var(--color-gray-600);
+            font-size: var(--font-size-lg);
+        }
+        
+        .social-login-section {
+            margin-bottom: var(--space-8);
+        }
+        
+        .social-login-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+            margin-bottom: var(--space-6);
+        }
+        
+        .social-login-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            border: 1px solid var(--color-gray-300);
+            border-radius: var(--radius-lg);
+            background: white;
+            color: var(--color-gray-700);
+            text-decoration: none;
+            font-weight: var(--font-weight-medium);
+            transition: all var(--transition-fast);
+        }
+        
+        .social-login-button:hover {
+            background: var(--color-gray-50);
+            border-color: var(--color-gray-400);
+        }
+        
+        .social-login-button.google:hover {
+            border-color: #ea4335;
+            color: #ea4335;
+        }
+        
+        .social-login-button.facebook:hover {
+            border-color: #1877f2;
+            color: #1877f2;
+        }
+        
+        .social-login-button.apple:hover {
+            border-color: #000;
+            color: #000;
+        }
+        
+        .auth-divider {
+            text-align: center;
+            color: var(--color-gray-500);
+            font-size: var(--font-size-sm);
+            position: relative;
+            margin: var(--space-6) 0;
+        }
+        
+        .auth-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--color-gray-300);
+        }
+        
+        .auth-divider span {
+            background: white;
+            padding: 0 var(--space-4);
+            position: relative;
+        }
+        
+        .auth-form {
+            space-y: var(--space-6);
+        }
+        
+        .auth-form-group {
+            margin-bottom: var(--space-4);
+        }
+        
+        .auth-form-label {
+            display: block;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-gray-700);
+            margin-bottom: var(--space-2);
+        }
+        
+        .auth-form-input {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            font-size: var(--font-size-sm);
+            line-height: 1.5;
+            color: var(--color-gray-900);
+            background-color: white;
+            border: 1px solid var(--color-gray-300);
+            border-radius: var(--radius-lg);
+            transition: all var(--transition-fast);
+            min-height: 40px;
+        }
+        
+        .auth-form-input:focus {
+            outline: none;
+            border-color: var(--color-primary-500);
+            box-shadow: 0 0 0 3px rgb(34 197 94 / 0.1);
+        }
+        
+        .password-input-container {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: var(--space-3);
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--color-gray-400);
+            cursor: pointer;
+            padding: var(--space-1);
+        }
+        
+        .password-toggle:hover {
+            color: var(--color-gray-600);
+        }
+        
+        .forgot-password-link {
+            display: block;
+            text-align: right;
+            font-size: var(--font-size-sm);
+            color: var(--color-primary-600);
+            text-decoration: none;
+            margin-top: var(--space-2);
+        }
+        
+        .forgot-password-link:hover {
+            color: var(--color-primary-700);
+        }
+        
+        .auth-checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-6);
+        }
+        
+        .auth-checkbox {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--color-primary-600);
+        }
+        
+        .auth-checkbox-label {
+            font-size: var(--font-size-sm);
+            color: var(--color-gray-700);
+        }
+        
+        .auth-submit-button {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            line-height: 1.5;
+            border-radius: var(--radius-lg);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            background-color: var(--color-primary-600);
+            color: white;
+            border-color: var(--color-primary-600);
+            min-height: 48px;
+        }
+        
+        .auth-submit-button:hover:not(:disabled) {
+            background-color: var(--color-primary-700);
+            border-color: var(--color-primary-700);
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: var(--space-8);
+        }
+        
+        .auth-footer-text {
+            color: var(--color-gray-600);
+            font-size: var(--font-size-sm);
+        }
+        
+        .auth-footer-link {
+            color: var(--color-primary-600);
+            text-decoration: none;
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .auth-footer-link:hover {
+            color: var(--color-primary-700);
+        }
+    </style>
 </head>
 <body>
     <div class="auth-page">
@@ -14,7 +329,7 @@
             <div class="auth-side-panel">
                 <div class="auth-side-content">
                     <div class="auth-side-logo">
-                        <i class="fas fa-shopping-cart"></i>
+                        <i class="fas fa-shopping-bag"></i>
                     </div>
                     <h2 class="auth-side-title">Welcome back to BuyRoll</h2>
                     <p class="auth-side-subtitle">
@@ -51,82 +366,86 @@
 
             <!-- Form Panel -->
             <div class="auth-form-panel">
-                <div class="auth-form-header">
-                    <h1 class="auth-form-title">Sign In</h1>
-                    <p class="auth-form-subtitle">Welcome back! Please sign in to your account.</p>
-                </div>
-
-                <!-- Social Login -->
-                <div class="social-login-section">
-                    <div class="social-login-buttons">
-                        <a href="#" class="social-login-button google" data-provider="google">
-                            <i class="fab fa-google social-login-icon"></i>
-                            <span>Continue with Google</span>
-                        </a>
-                        <a href="#" class="social-login-button facebook" data-provider="facebook">
-                            <i class="fab fa-facebook-f social-login-icon"></i>
-                            <span>Continue with Facebook</span>
-                        </a>
-                        <a href="#" class="social-login-button apple" data-provider="apple">
-                            <i class="fab fa-apple social-login-icon"></i>
-                            <span>Continue with Apple</span>
-                        </a>
-                    </div>
-                    
-                    <div class="auth-divider">or sign in with email</div>
-                </div>
-
-                <!-- Login Form -->
-                <form class="auth-form" data-form-type="login">
-                    <div class="auth-form-group">
-                        <label for="email" class="auth-form-label">Email Address</label>
-                        <input 
-                            type="email" 
-                            id="email" 
-                            name="email" 
-                            class="auth-form-input" 
-                            placeholder="Enter your email"
-                            required
-                            autocomplete="email"
-                        >
+                <div class="auth-form-container">
+                    <div class="auth-form-header">
+                        <h1 class="auth-form-title">Sign In</h1>
+                        <p class="auth-form-subtitle">Welcome back! Please sign in to your account.</p>
                     </div>
 
-                    <div class="auth-form-group">
-                        <label for="password" class="auth-form-label">Password</label>
-                        <div class="password-input-container">
-                            <input 
-                                type="password" 
-                                id="password" 
-                                name="password" 
-                                class="auth-form-input" 
-                                placeholder="Enter your password"
-                                required
-                                autocomplete="current-password"
-                            >
-                            <button type="button" class="password-toggle" aria-label="Show password">
-                                <i class="fas fa-eye"></i>
-                            </button>
+                    <!-- Social Login -->
+                    <div class="social-login-section">
+                        <div class="social-login-buttons">
+                            <a href="#" class="social-login-button google" data-provider="google">
+                                <i class="fab fa-google"></i>
+                                <span>Continue with Google</span>
+                            </a>
+                            <a href="#" class="social-login-button facebook" data-provider="facebook">
+                                <i class="fab fa-facebook-f"></i>
+                                <span>Continue with Facebook</span>
+                            </a>
+                            <a href="#" class="social-login-button apple" data-provider="apple">
+                                <i class="fab fa-apple"></i>
+                                <span>Continue with Apple</span>
+                            </a>
                         </div>
-                        <a href="{{ url_for('auth.forgot_password') }}" class="forgot-password-link">
-                            Forgot your password?
-                        </a>
+                        
+                        <div class="auth-divider">
+                            <span>or sign in with email</span>
+                        </div>
                     </div>
 
-                    <div class="auth-checkbox-group">
-                        <input type="checkbox" id="remember" name="remember" class="auth-checkbox">
-                        <label for="remember" class="auth-checkbox-label">Remember me for 30 days</label>
+                    <!-- Login Form -->
+                    <form class="auth-form" data-form-type="login">
+                        <div class="auth-form-group">
+                            <label for="email" class="auth-form-label">Email Address</label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                class="auth-form-input" 
+                                placeholder="Enter your email"
+                                required
+                                autocomplete="email"
+                            >
+                        </div>
+
+                        <div class="auth-form-group">
+                            <label for="password" class="auth-form-label">Password</label>
+                            <div class="password-input-container">
+                                <input 
+                                    type="password" 
+                                    id="password" 
+                                    name="password" 
+                                    class="auth-form-input" 
+                                    placeholder="Enter your password"
+                                    required
+                                    autocomplete="current-password"
+                                >
+                                <button type="button" class="password-toggle" aria-label="Show password">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <a href="{{ url_for('auth.forgot_password') }}" class="forgot-password-link">
+                                Forgot your password?
+                            </a>
+                        </div>
+
+                        <div class="auth-checkbox-group">
+                            <input type="checkbox" id="remember" name="remember" class="auth-checkbox">
+                            <label for="remember" class="auth-checkbox-label">Remember me for 30 days</label>
+                        </div>
+
+                        <button type="submit" class="auth-submit-button">
+                            Sign In
+                        </button>
+                    </form>
+
+                    <div class="auth-footer">
+                        <p class="auth-footer-text">
+                            Don't have an account? 
+                            <a href="{{ url_for('auth.register') }}" class="auth-footer-link">Sign up for free</a>
+                        </p>
                     </div>
-
-                    <button type="submit" class="auth-submit-button">
-                        Sign In
-                    </button>
-                </form>
-
-                <div class="auth-footer">
-                    <p class="auth-footer-text">
-                        Don't have an account? 
-                        <a href="{{ url_for('auth.register') }}" class="auth-footer-link">Sign up for free</a>
-                    </p>
                 </div>
             </div>
         </div>

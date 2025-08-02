@@ -7,7 +7,8 @@
         "python -c \"from tests.performance.test_performance_optimizations import TestDatabaseOptimization; print('Import successful')\"",
         "python -c \"from app.utils.asset_optimization import AssetOptimizer; print('Asset optimization import successful')\"",
         "pip *",
-        "pytest *"
+        "pytest *",
+        "git add -A && git commit -m \"Improve products page UI with modern Chakra-inspired design\n\n- Added proper products route to main blueprint with sample data\n- Completely redesigned products_clean.html with modern card-based layout\n- Added gradient backgrounds, smooth animations, and hover effects\n- Implemented proper search, filtering, and view toggle functionality\n- Added responsive design with mobile-first approach\n- Included newsletter signup section\n- Enhanced JavaScript with better error handling and animations\n- Removed shopping cart functionality as requested\n- Used clean, professional color scheme with green accent colors\""
     ],
     "html.autoClosingTags": false
 }

@@ -1,134 +1,134 @@
-{% extends "layout.html" %}
+{% extends "layout_clean.html" %}
 
 {% block title %}Profile{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto">
-    <div class="bg-white rounded-lg shadow-md overflow-hidden">
-        <div class="py-4 px-6 bg-gradient-to-r from-green-900 to-green-800">
-            <h2 class="text-2xl font-bold text-white">Your Profile</h2>
-        </div>
-        
-        <div class="p-6">
-            <div class="flex flex-col md:flex-row">
-                <!-- Profile Image -->
-                <div class="md:w-1/3 mb-6 md:mb-0 flex flex-col items-center">
-                    <div class="w-48 h-48 rounded-full overflow-hidden mb-4 border-4 border-green-100">
-                        <img src="{{ url_for('static', filename='images/profiles/' + current_user.profile_image) }}" 
-                             alt="Profile Image" 
-                             class="w-full h-full object-cover">
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">{{ current_user.name }}</h3>
-                    <p class="text-gray-600 mb-4">{{ current_user.email }}</p>
-                    <p class="text-sm text-gray-500">Member since {{ current_user.created_at.strftime('%B %d, %Y') }}</p>
-                    {% if current_user.last_login %}
-                        <p class="text-sm text-gray-500">Last login: {{ current_user.last_login.strftime('%B %d, %Y') }}</p>
-                    {% endif %}
+<section class="section">
+    <div class="container">
+        <div class="max-w-4xl mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-2xl font-bold text-gray-900">Your Profile</h2>
                 </div>
                 
-                <!-- Profile Form -->
-                <div class="md:w-2/3 md:pl-8">
-                    <form method="POST" action="" enctype="multipart/form-data">
-                        {{ form.hidden_tag() }}
-                        
-                        <div class="mb-4">
-                            {{ form.name.label(class="block text-gray-700 text-sm font-bold mb-2") }}
-                            {% if form.name.errors %}
-                                {{ form.name(class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-1 leading-tight focus:outline-none focus:shadow-outline") }}
-                                <div class="text-red-500 text-xs italic">
-                                    {% for error in form.name.errors %}
-                                        <span>{{ error }}</span>
-                                    {% endfor %}
-                                </div>
-                            {% else %}
-                                {{ form.name(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline") }}
+                <div class="card-body">
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <!-- Profile Image -->
+                        <div class="md:w-1/3 flex flex-col items-center">
+                            <div class="w-48 h-48 rounded-full overflow-hidden mb-4 border-4 border-primary-100">
+                                <img src="{{ url_for('static', filename='images/profiles/' + current_user.profile_image) }}" 
+                                     alt="Profile Image" 
+                                     class="w-full h-full object-cover">
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">{{ current_user.name }}</h3>
+                            <p class="text-gray-600 mb-4">{{ current_user.email }}</p>
+                            <p class="text-sm text-gray-500">Member since {{ current_user.created_at.strftime('%B %d, %Y') }}</p>
+                            {% if current_user.last_login %}
+                                <p class="text-sm text-gray-500">Last login: {{ current_user.last_login.strftime('%B %d, %Y') }}</p>
                             {% endif %}
                         </div>
                         
-                        <div class="mb-4">
-                            {{ form.email.label(class="block text-gray-700 text-sm font-bold mb-2") }}
-                            {% if form.email.errors %}
-                                {{ form.email(class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-1 leading-tight focus:outline-none focus:shadow-outline") }}
-                                <div class="text-red-500 text-xs italic">
-                                    {% for error in form.email.errors %}
-                                        <span>{{ error }}</span>
-                                    {% endfor %}
+                        <!-- Profile Form -->
+                        <div class="md:w-2/3">
+                            <form method="POST" action="" enctype="multipart/form-data">
+                                {{ form.hidden_tag() }}
+                                
+                                <div class="form-group">
+                                    {{ form.name.label(class="form-label") }}
+                                    {% if form.name.errors %}
+                                        {{ form.name(class="form-input border-red-500") }}
+                                        <div class="text-red-500 text-xs mt-1">
+                                            {% for error in form.name.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.name(class="form-input") }}
+                                    {% endif %}
                                 </div>
-                            {% else %}
-                                {{ form.email(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline") }}
-                            {% endif %}
-                        </div>
-                        
-                        <div class="mb-6">
-                            {{ form.profile_image.label(class="block text-gray-700 text-sm font-bold mb-2") }}
-                            {{ form.profile_image(class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100") }}
-                            {% if form.profile_image.errors %}
-                                <div class="text-red-500 text-xs italic mt-1">
-                                    {% for error in form.profile_image.errors %}
-                                        <span>{{ error }}</span>
-                                    {% endfor %}
+                                
+                                <div class="form-group">
+                                    {{ form.email.label(class="form-label") }}
+                                    {% if form.email.errors %}
+                                        {{ form.email(class="form-input border-red-500") }}
+                                        <div class="text-red-500 text-xs mt-1">
+                                            {% for error in form.email.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.email(class="form-input") }}
+                                    {% endif %}
                                 </div>
-                            {% endif %}
-                            <p class="text-xs text-gray-500 mt-1">Allowed file types: JPG, JPEG, PNG</p>
-                        </div>
-                        
-                        <div class="flex items-center justify-between">
-                            {{ form.submit(class="bg-gradient-to-r from-green-900 to-green-800 hover:from-green-800 hover:to-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline") }}
-                            <a href="{{ url_for('main.dashboard') }}" class="text-sm text-green-800 hover:text-green-900">Back to Dashboard</a>
-                        </div>
-                    </form>
-                    
-                    <hr class="my-8 border-t border-gray-300">
-                    
-                    <div>
-                        <h4 class="text-lg font-bold text-gray-800 mb-4">Account Settings</h4>
-                        
-                        <div class="mb-4">
-                            <a href="{{ url_for('user.change_password') }}" class="text-green-800 hover:text-green-900 font-medium">
-                                <i class="fas fa-key mr-2"></i> Change Password
-                            </a>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <a href="{{ url_for('user.privacy_settings') }}" class="text-green-800 hover:text-green-900 font-medium">
-                                <i class="fas fa-shield-alt mr-2"></i> Privacy Settings
-                            </a>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <a href="{{ url_for('user.notification_settings') }}" class="text-green-800 hover:text-green-900 font-medium">
-                                <i class="fas fa-bell mr-2"></i> Notification Settings
-                            </a>
-                        </div>
-                        
-                        <div>
-                            <button type="button" class="text-red-600 hover:text-red-800 font-medium" 
-                                    onclick="document.getElementById('deleteAccountModal').classList.remove('hidden')">
-                                <i class="fas fa-trash-alt mr-2"></i> Delete Account
-                            </button>
+                                
+                                <div class="form-group">
+                                    {{ form.profile_image.label(class="form-label") }}
+                                    {{ form.profile_image(class="form-input file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100") }}
+                                    {% if form.profile_image.errors %}
+                                        <div class="text-red-500 text-xs mt-1">
+                                            {% for error in form.profile_image.errors %}
+                                                <span>{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <p class="text-xs text-gray-500 mt-1">Allowed file types: JPG, JPEG, PNG</p>
+                                </div>
+                                
+                                <div class="flex items-center justify-between">
+                                    {{ form.submit(class="btn btn-primary") }}
+                                    <a href="{{ url_for('main.dashboard') }}" class="text-primary-600 hover:text-primary-700">Back to Dashboard</a>
+                                </div>
+                            </form>
+                            
+                            <hr class="my-8 border-t border-gray-200">
+                            
+                            <div>
+                                <h4 class="text-lg font-bold text-gray-900 mb-4">Account Settings</h4>
+                                
+                                <div class="space-y-3">
+                                    <a href="{{ url_for('user.change_password') }}" class="flex items-center text-primary-600 hover:text-primary-700 font-medium">
+                                        <i class="fas fa-key mr-2"></i> Change Password
+                                    </a>
+                                    
+                                    <a href="{{ url_for('user.privacy_settings') }}" class="flex items-center text-primary-600 hover:text-primary-700 font-medium">
+                                        <i class="fas fa-shield-alt mr-2"></i> Privacy Settings
+                                    </a>
+                                    
+                                    <a href="{{ url_for('user.notification_settings') }}" class="flex items-center text-primary-600 hover:text-primary-700 font-medium">
+                                        <i class="fas fa-bell mr-2"></i> Notification Settings
+                                    </a>
+                                    
+                                    <button type="button" class="flex items-center text-red-600 hover:text-red-700 font-medium" 
+                                            onclick="document.getElementById('deleteAccountModal').classList.remove('hidden')">
+                                        <i class="fas fa-trash-alt mr-2"></i> Delete Account
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
 <!-- Delete Account Modal -->
 <div id="deleteAccountModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-lg p-8 max-w-md w-full">
-        <h3 class="text-xl font-bold text-gray-800 mb-4">Delete Account</h3>
-        <p class="text-gray-600 mb-6">Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently removed.</p>
-        <div class="flex justify-end space-x-4">
-            <button type="button" class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
-                    onclick="document.getElementById('deleteAccountModal').classList.add('hidden')">
-                Cancel
-            </button>
-            <form action="{{ url_for('user.delete_account') }}" method="post">
-                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
-                    Delete Account
+    <div class="card max-w-md w-full mx-4">
+        <div class="card-body">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Delete Account</h3>
+            <p class="text-gray-600 mb-6">Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently removed.</p>
+            <div class="flex justify-end gap-4">
+                <button type="button" class="btn btn-secondary"
+                        onclick="document.getElementById('deleteAccountModal').classList.add('hidden')">
+                    Cancel
                 </button>
-            </form>
+                <form action="{{ url_for('user.delete_account') }}" method="post" class="inline">
+                    <button type="submit" class="btn bg-red-600 hover:bg-red-700 text-white">
+                        Delete Account
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>

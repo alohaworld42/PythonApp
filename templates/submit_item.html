@@ -20,7 +20,7 @@
                     
                     <div class="form-group">
                         <label for="itemDescription" class="form-label">Description</label>
-                        <textarea id="itemDescription" rows="4" class="form-input" placeholder="Tell us about this product..."></textarea>
+                        <textarea id="itemDescription" rows="4" class="form-textarea" placeholder="Tell us about this product..."></textarea>
                     </div>
                     
                     <div class="form-group">
@@ -50,10 +50,9 @@
                     
                     <div class="flex gap-4">
                         <button type="submit" class="btn btn-primary flex-1">
-                            <i class="fas fa-plus"></i>
-                            Submit Item
+                            <i class="fas fa-plus mr-2"></i>Submit Item
                         </button>
-                        <a href="{{ url_for('main.index') }}" class="btn btn-outline">
+                        <a href="{{ url_for('index') }}" class="btn btn-outline">
                             Cancel
                         </a>
                     </div>

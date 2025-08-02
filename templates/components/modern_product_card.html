@@ -1,0 +1,355 @@
+<!-- Modern Product Card Component -->
+<div class="product-card-modern group" x-data="{ 
+    isLiked: false, 
+    isShared: false,
+    showQuickView: false 
+}">
+    <!-- Product Image Container -->
+    <div class="product-image-container-modern relative overflow-hidden rounded-xl">
+        <!-- Product Image -->
+        {% if product.get('image') %}
+        <img src="{{ product['image'] }}" 
+             alt="{{ product.get('title', 'Product') }}" 
+             class="product-image-modern w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+        {% elif product.get('image_filename') %}
+        <img src="{{ url_for('static', filename='images/' + product['image_filename']) }}" 
+             alt="{{ product.get('name', 'Product') }}" 
+             class="product-image-modern w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+        {% else %}
+        <div class="product-image-modern w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+            <i class="fas fa-image text-gray-400 text-5xl"></i>
+        </div>
+        {% endif %}
+        
+        <!-- Product Badge -->
+        <div class="absolute top-3 left-3">
+            {% if product.get('url') %}
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                <i class="fas fa-external-link-alt mr-1"></i>
+                External
+            </span>
+            {% else %}
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                <i class="fas fa-user mr-1"></i>
+                Community
+            </span>
+            {% endif %}
+        </div>
+        
+        <!-- Discount Badge -->
+        {% if product.get('discount') %}
+        <div class="absolute top-3 right-3">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                -{{ product['discount'] }}%
+            </span>
+        </div>
+        {% endif %}
+        
+        <!-- Quick Actions Overlay -->
+        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
+            <div class="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <!-- Like Button -->
+                <button @click="isLiked = !isLiked" 
+                        :class="isLiked ? 'bg-red-500 text-white' : 'bg-white text-gray-700'"
+                        class="p-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300">
+                    <i class="fas fa-heart"></i>
+                </button>
+                
+                <!-- Share Button -->
+                <button @click="isShared = !isShared" 
+                        :class="isShared ? 'bg-green-500 text-white' : 'bg-white text-gray-700'"
+                        class="p-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300">
+                    <i class="fas fa-share"></i>
+                </button>
+                
+                <!-- Quick View Button -->
+                <button @click="showQuickView = true" 
+                        class="p-3 bg-white text-gray-700 rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Product Content -->
+    <div class="product-content-modern p-6">
+        <!-- Product Meta -->
+        <div class="flex items-center justify-between mb-3">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                <i class="fas fa-tag mr-1"></i>
+                {{ product.get('category', 'General') }}
+            </span>
+            
+            <!-- Rating -->
+            <div class="flex items-center space-x-1">
+                <div class="flex items-center">
+                    <i class="fas fa-star text-yellow-400 text-sm"></i>
+                    <i class="fas fa-star text-yellow-400 text-sm"></i>
+                    <i class="fas fa-star text-yellow-400 text-sm"></i>
+                    <i class="fas fa-star text-yellow-400 text-sm"></i>
+                    <i class="far fa-star text-yellow-400 text-sm"></i>
+                </div>
+                <span class="text-xs text-gray-500">(24)</span>
+            </div>
+        </div>
+        
+        <!-- Product Title -->
+        <h3 class="product-title-modern text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+            <a href="{{ product.get('url', '#') }}" target="_blank" class="hover:text-green-600 transition-colors duration-300">
+                {{ product.get('title', product.get('name', 'Untitled Product')) }}
+            </a>
+        </h3>
+        
+        <!-- Product Description -->
+        {% if product.get('description') %}
+        <p class="product-description-modern text-sm text-gray-600 mb-4 line-clamp-2">
+            {{ product['description'] }}
+        </p>
+        {% endif %}
+        
+        <!-- Product Price -->
+        <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center space-x-2">
+                <span class="text-xl font-bold text-gray-900">$29.99</span>
+                <span class="text-sm text-gray-500 line-through">$39.99</span>
+                <span class="text-sm font-medium text-red-600">-25%</span>
+            </div>
+            
+            <!-- Stock Status -->
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                <i class="fas fa-check-circle mr-1"></i>
+                In Stock
+            </span>
+        </div>
+        
+        <!-- Product Actions -->
+        <div class="space-y-3">
+            <!-- Primary Action -->
+            <a href="{{ product.get('url', '#') }}" target="_blank" 
+               class="w-full btn btn-primary rounded-xl py-3 flex items-center justify-center font-medium transition-all duration-300 hover:shadow-lg transform hover:scale-105">
+                <i class="fas fa-external-link-alt mr-2"></i>
+                View Product
+            </a>
+            
+            <!-- Secondary Actions -->
+            <div class="flex items-center justify-between">
+                <!-- Social Stats -->
+                <div class="flex items-center space-x-4 text-sm text-gray-500">
+                    <div class="flex items-center space-x-1">
+                        <i class="fas fa-heart text-red-500"></i>
+                        <span>128</span>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <i class="fas fa-share text-green-500"></i>
+                        <span>45</span>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <i class="fas fa-eye text-blue-500"></i>
+                        <span>1.2k</span>
+                    </div>
+                </div>
+                
+                <!-- Shared By -->
+                <div class="flex items-center space-x-2">
+                    <span class="text-xs text-gray-500">by</span>
+                    <a href="#" class="flex items-center space-x-1 hover:text-green-600 transition-colors duration-300">
+                        <div class="w-6 h-6 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-white text-xs"></i>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">Sarah M.</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick View Modal -->
+<div x-show="showQuickView" 
+     x-transition:enter="transition ease-out duration-300"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-200"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0"
+     class="fixed inset-0 z-50 overflow-y-auto"
+     @click.away="showQuickView = false">
+    
+    <!-- Backdrop -->
+    <div class="fixed inset-0 bg-black bg-opacity-50"></div>
+    
+    <!-- Modal Content -->
+    <div class="flex items-center justify-center min-h-screen px-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                <h3 class="text-xl font-semibold text-gray-900">Quick View</h3>
+                <button @click="showQuickView = false" 
+                        class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-all duration-300">
+                    <i class="fas fa-times text-lg"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Product Image -->
+                    <div class="space-y-4">
+                        {% if product.get('image') %}
+                        <img src="{{ product['image'] }}" 
+                             alt="{{ product.get('title', 'Product') }}" 
+                             class="w-full h-96 object-cover rounded-xl">
+                        {% elif product.get('image_filename') %}
+                        <img src="{{ url_for('static', filename='images/' + product['image_filename']) }}" 
+                             alt="{{ product.get('name', 'Product') }}" 
+                             class="w-full h-96 object-cover rounded-xl">
+                        {% else %}
+                        <div class="w-full h-96 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-image text-gray-400 text-6xl"></i>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Thumbnail Gallery -->
+                        <div class="flex space-x-2">
+                            <div class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-image text-gray-400"></i>
+                            </div>
+                            <div class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-image text-gray-400"></i>
+                            </div>
+                            <div class="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-image text-gray-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product Details -->
+                    <div class="space-y-6">
+                        <!-- Product Title -->
+                        <h2 class="text-2xl font-bold text-gray-900">
+                            {{ product.get('title', product.get('name', 'Untitled Product')) }}
+                        </h2>
+                        
+                        <!-- Rating -->
+                        <div class="flex items-center space-x-2">
+                            <div class="flex items-center">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="far fa-star text-yellow-400"></i>
+                            </div>
+                            <span class="text-sm text-gray-500">4.2 (24 reviews)</span>
+                        </div>
+                        
+                        <!-- Price -->
+                        <div class="flex items-center space-x-3">
+                            <span class="text-3xl font-bold text-gray-900">$29.99</span>
+                            <span class="text-lg text-gray-500 line-through">$39.99</span>
+                            <span class="px-2 py-1 bg-red-100 text-red-800 text-sm font-medium rounded-full">-25%</span>
+                        </div>
+                        
+                        <!-- Description -->
+                        {% if product.get('description') %}
+                        <p class="text-gray-600 leading-relaxed">
+                            {{ product['description'] }}
+                        </p>
+                        {% endif %}
+                        
+                        <!-- Features -->
+                        <div class="space-y-3">
+                            <h4 class="font-semibold text-gray-900">Key Features</h4>
+                            <ul class="space-y-2 text-sm text-gray-600">
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check text-green-500"></i>
+                                    <span>High-quality materials</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check text-green-500"></i>
+                                    <span>1-year warranty</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check text-green-500"></i>
+                                    <span>Free shipping</span>
+                                </li>
+                                <li class="flex items-center space-x-2">
+                                    <i class="fas fa-check text-green-500"></i>
+                                    <span>30-day return policy</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="space-y-3">
+                            <a href="{{ product.get('url', '#') }}" target="_blank" 
+                               class="w-full btn btn-primary rounded-xl py-3 flex items-center justify-center font-medium">
+                                <i class="fas fa-external-link-alt mr-2"></i>
+                                View on Store
+                            </a>
+                            
+                            <div class="flex space-x-3">
+                                <button class="flex-1 btn btn-outline rounded-xl py-3 flex items-center justify-center">
+                                    <i class="fas fa-heart mr-2"></i>
+                                    Add to Wishlist
+                                </button>
+                                <button class="flex-1 btn btn-outline rounded-xl py-3 flex items-center justify-center">
+                                    <i class="fas fa-share mr-2"></i>
+                                    Share
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Product Card Modern Styles */
+.product-card-modern {
+    @apply bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100;
+}
+
+.product-image-container-modern {
+    @apply relative overflow-hidden;
+}
+
+.product-image-modern {
+    @apply w-full h-64 object-cover transition-transform duration-500;
+}
+
+.product-content-modern {
+    @apply p-6;
+}
+
+.product-title-modern {
+    @apply text-lg font-semibold text-gray-900 mb-2;
+}
+
+.product-description-modern {
+    @apply text-sm text-gray-600;
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .product-card-modern {
+        @apply rounded-xl;
+    }
+    
+    .product-image-modern {
+        @apply h-48;
+    }
+    
+    .product-content-modern {
+        @apply p-4;
+    }
+}
+</style> 

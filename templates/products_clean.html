@@ -4,273 +4,204 @@
 
 {% block content %}
 <!-- Products Header -->
-<section class="section-sm bg-gray-50">
-    <div class="container">
-        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-            <div>
-                <h1 class="text-4xl font-bold text-gray-900 mb-2">Discover Products</h1>
-                <p class="text-xl text-gray-600">Explore amazing products shared by our community</p>
-            </div>
-            
-            <div class="flex items-center gap-4">
-                <div class="flex items-center gap-2">
-                    <label for="sortSelect" class="text-sm font-medium text-gray-700">Sort by:</label>
-                    <select id="sortSelect" class="form-select">
-                        <option value="newest">Newest First</option>
-                        <option value="popular">Most Popular</option>
-                        <option value="alphabetical">A-Z</option>
-                    </select>
+<section class="bg-gradient-to-br from-green-50 via-white to-blue-50 py-16">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-bold text-gray-900 mb-4">
+                Discover Amazing <span class="text-green-600">Products</span>
+            </h1>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                Explore thousands of products shared by our community. Find the perfect items for your lifestyle.
+            </p>
+        </div>
+        
+        <!-- Search and Filters -->
+        <div class="max-w-4xl mx-auto">
+            <div class="flex flex-col md:flex-row gap-4 items-center justify-between mb-8">
+                <!-- Search Bar -->
+                <div class="relative flex-1 max-w-md">
+                    <input type="search" 
+                           placeholder="Search products..." 
+                           class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
                 </div>
                 
-                <div class="flex border border-gray-300 rounded-lg overflow-hidden">
-                    <button class="px-3 py-2 bg-green-600 text-white" id="gridView" title="Grid View">
-                        <i class="fas fa-th"></i>
-                    </button>
-                    <button class="px-3 py-2 bg-white text-gray-600 hover:bg-gray-50" id="listView" title="List View">
-                        <i class="fas fa-list"></i>
-                    </button>
+                <!-- Sort and View Controls -->
+                <div class="flex items-center gap-4">
+                    <select class="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                        <option>Sort by: Featured</option>
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                        <option>Newest First</option>
+                        <option>Most Popular</option>
+                    </select>
+                    
+                    <div class="flex border border-gray-200 rounded-xl overflow-hidden">
+                        <button class="px-4 py-3 bg-green-600 text-white" id="gridView" title="Grid View">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button class="px-4 py-3 bg-white text-gray-600 hover:bg-gray-50" id="listView" title="List View">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
-
-<!-- Filters -->
-<section class="section-sm border-b border-gray-200">
-    <div class="container">
-        <div class="flex flex-wrap items-center gap-4">
-            <div class="flex items-center gap-2">
-                <span class="text-sm font-medium text-gray-700">Categories:</span>
-                <div class="flex flex-wrap gap-2">
-                    <button class="px-3 py-1 bg-green-600 text-white rounded-full text-sm font-medium" data-category="all">All</button>
-                    <button class="px-3 py-1 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-full text-sm font-medium" data-category="electronics">Electronics</button>
-                    <button class="px-3 py-1 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-full text-sm font-medium" data-category="clothing">Clothing</button>
-                    <button class="px-3 py-1 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-full text-sm font-medium" data-category="home">Home</button>
-                    <button class="px-3 py-1 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-full text-sm font-medium" data-category="sports">Sports</button>
-                </div>
+            
+            <!-- Category Filters -->
+            <div class="flex flex-wrap justify-center gap-3">
+                <button class="px-6 py-2 bg-green-600 text-white rounded-full font-medium transition-all hover:bg-green-700" data-category="all">
+                    <i class="fas fa-th mr-2"></i>All Products
+                </button>
+                <button class="px-6 py-2 bg-white text-gray-700 border border-gray-200 rounded-full font-medium transition-all hover:bg-gray-50 hover:border-green-300" data-category="electronics">
+                    <i class="fas fa-laptop mr-2"></i>Electronics
+                </button>
+                <button class="px-6 py-2 bg-white text-gray-700 border border-gray-200 rounded-full font-medium transition-all hover:bg-gray-50 hover:border-green-300" data-category="fashion">
+                    <i class="fas fa-tshirt mr-2"></i>Fashion
+                </button>
+                <button class="px-6 py-2 bg-white text-gray-700 border border-gray-200 rounded-full font-medium transition-all hover:bg-gray-50 hover:border-green-300" data-category="home">
+                    <i class="fas fa-home mr-2"></i>Home
+                </button>
+                <button class="px-6 py-2 bg-white text-gray-700 border border-gray-200 rounded-full font-medium transition-all hover:bg-gray-50 hover:border-green-300" data-category="sports">
+                    <i class="fas fa-dumbbell mr-2"></i>Sports
+                </button>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Products Grid -->
-<section class="section">
-    <div class="container">
-        <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <!-- Sample Products -->
-            <div class="card product-card" data-category="electronics">
-                <div class="relative h-48 bg-gray-200 rounded-t-lg overflow-hidden">
-                    <img src="https://via.placeholder.com/300x200/55970f/ffffff?text=Headphones" alt="Wireless Headphones" class="w-full h-full object-cover">
-                    <div class="absolute top-3 right-3">
-                        <span class="bg-green-600 text-white px-2 py-1 rounded-full text-xs font-medium">
-                            <i class="fas fa-bolt"></i> Popular
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {% for item in items %}
+            <div class="group bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden" data-category="{{ item.get('category', 'general') }}">
+                <!-- Product Image -->
+                <div class="relative overflow-hidden">
+                    <img src="{{ item.get('image', 'https://via.placeholder.com/300x200/22c55e/ffffff?text=Product') }}" 
+                         alt="{{ item.get('title', 'Product') }}" 
+                         class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300">
+                    
+                    <!-- Overlay Actions -->
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                        <div class="flex gap-3">
+                            <button class="p-3 bg-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200">
+                                <i class="fas fa-heart text-red-500"></i>
+                            </button>
+                            <button class="p-3 bg-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200">
+                                <i class="fas fa-share text-green-600"></i>
+                            </button>
+                            <button class="p-3 bg-white rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-200">
+                                <i class="fas fa-eye text-blue-600"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Category Badge -->
+                    <div class="absolute top-4 left-4">
+                        <span class="px-3 py-1 bg-green-600 text-white text-xs font-semibold rounded-full">
+                            {{ item.get('category', 'General').title() }}
                         </span>
                     </div>
                 </div>
                 
-                <div class="card-body">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">Electronics</span>
+                <!-- Product Content -->
+                <div class="p-6">
+                    <!-- Rating -->
+                    <div class="flex items-center justify-between mb-3">
                         <div class="flex items-center gap-1">
                             <div class="flex text-yellow-400">
-                                <i class="fas fa-star text-xs"></i>
-                                <i class="fas fa-star text-xs"></i>
-                                <i class="fas fa-star text-xs"></i>
-                                <i class="fas fa-star text-xs"></i>
-                                <i class="fas fa-star text-xs"></i>
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="far fa-star text-sm"></i>
                             </div>
-                            <span class="text-xs text-gray-500">(234)</span>
+                            <span class="text-sm text-gray-500 ml-2">(4.2)</span>
+                        </div>
+                        <div class="text-sm text-gray-500">
+                            <i class="fas fa-eye mr-1"></i>1.2k
                         </div>
                     </div>
                     
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Premium Wireless Headphones</h3>
-                    <p class="text-gray-600 text-sm mb-4">High-quality wireless headphones with noise cancellation and premium sound quality.</p>
+                    <!-- Product Title -->
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                        {{ item.get('title', item.get('name', 'Untitled Product')) }}
+                    </h3>
                     
-                    <div class="flex items-center justify-between">
-                        <a href="#" class="btn btn-outline btn-sm">
-                            <i class="fas fa-external-link-alt"></i>
-                            View Product
-                        </a>
-                        <div class="flex items-center gap-3">
-                            <button class="text-gray-400 hover:text-red-500 transition" title="Like">
-                                <i class="fas fa-heart"></i>
-                            </button>
-                            <button class="text-gray-400 hover:text-green-600 transition" title="Share">
-                                <i class="fas fa-share"></i>
-                            </button>
-                        </div>
+                    <!-- Product Description -->
+                    <p class="text-gray-600 text-sm mb-4 line-clamp-2">
+                        {{ item.get('description', 'Amazing product shared by our community.') }}
+                    </p>
+                    
+                    <!-- Price -->
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-2xl font-bold text-gray-900">$29.99</span>
+                        <span class="text-lg text-gray-400 line-through">$39.99</span>
+                        <span class="px-2 py-1 bg-red-100 text-red-600 text-xs font-semibold rounded-full">-25%</span>
                     </div>
                     
-                    <div class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
-                        <div class="flex items-center gap-3">
-                            <span><i class="fas fa-heart text-red-500"></i> 89</span>
-                            <span><i class="fas fa-share text-blue-500"></i> 23</span>
-                            <span><i class="fas fa-eye"></i> 456</span>
+                    <!-- Action Button -->
+                    <a href="{{ item.get('url', '#') }}" 
+                       target="_blank" 
+                       class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-xl transition-colors duration-200 flex items-center justify-center gap-2 group">
+                        <i class="fas fa-external-link-alt"></i>
+                        <span>View Product</span>
+                    </a>
+                    
+                    <!-- Social Stats -->
+                    <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
+                        <div class="flex items-center gap-4 text-sm text-gray-500">
+                            <span class="flex items-center gap-1">
+                                <i class="fas fa-heart text-red-500"></i>
+                                <span>128</span>
+                            </span>
+                            <span class="flex items-center gap-1">
+                                <i class="fas fa-share text-green-500"></i>
+                                <span>45</span>
+                            </span>
                         </div>
-                        <span>by @techguru</span>
+                        
+                        <!-- Shared By -->
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-gray-500">by</span>
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user text-white text-xs"></i>
+                                </div>
+                                <span class="text-sm font-medium text-gray-700">Sarah M.</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="card product-card" data-category="clothing">
-                <div class="relative h-48 bg-gray-200 rounded-t-lg overflow-hidden">
-                    <img src="https://via.placeholder.com/300x200/6abe11/ffffff?text=T-Shirt" alt="Designer T-Shirt" class="w-full h-full object-cover">
-                    <div class="absolute top-3 right-3">
-                        <span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-medium">
-                            <i class="fas fa-fire"></i> Hot
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-body">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">Clothing</span>
-                        <div class="flex items-center gap-1">
-                            <div class="flex text-yellow-400">
-                                <i class="fas fa-star text-xs"></i>
-                                <i class="fas fa-star text-xs"></i>
-                                <i class="fas fa-star text-xs"></i>
-                                <i class="fas fa-star text-xs"></i>
-                                <i class="far fa-star text-xs"></i>
-                            </div>
-                            <span class="text-xs text-gray-500">(156)</span>
-                        </div>
-                    </div>
-                    
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Premium Cotton T-Shirt</h3>
-                    <p class="text-gray-600 text-sm mb-4">Comfortable and stylish cotton t-shirt with modern design and perfect fit.</p>
-                    
-                    <div class="flex items-center justify-between">
-                        <a href="#" class="btn btn-outline btn-sm">
-                            <i class="fas fa-external-link-alt"></i>
-                            View Product
-                        </a>
-                        <div class="flex items-center gap-3">
-                            <button class="text-gray-400 hover:text-red-500 transition" title="Like">
-                                <i class="fas fa-heart"></i>
-                            </button>
-                            <button class="text-gray-400 hover:text-green-600 transition" title="Share">
-                                <i class="fas fa-share"></i>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
-                        <div class="flex items-center gap-3">
-                            <span><i class="fas fa-heart text-red-500"></i> 67</span>
-                            <span><i class="fas fa-share text-blue-500"></i> 12</span>
-                            <span><i class="fas fa-eye"></i> 234</span>
-                        </div>
-                        <span>by @fashionista</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card product-card" data-category="home">
-                <div class="relative h-48 bg-gray-200 rounded-t-lg overflow-hidden">
-                    <img src="https://via.placeholder.com/300x200/8DC63F/ffffff?text=Coffee+Maker" alt="Smart Coffee Maker" class="w-full h-full object-cover">
-                </div>
-                
-                <div class="card-body">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-1 rounded-full">Home</span>
-                        <div class="flex items-center gap-1">
-                            <div class="flex text-yellow-400">
-                                <i class="fas fa-star text-xs"></i>
-                                <i class="fas fa-star text-xs"></i>
-                                <i class="fas fa-star text-xs"></i>
-                                <i class="fas fa-star text-xs"></i>
-                                <i class="fas fa-star text-xs"></i>
-                            </div>
-                            <span class="text-xs text-gray-500">(89)</span>
-                        </div>
-                    </div>
-                    
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Smart Coffee Maker</h3>
-                    <p class="text-gray-600 text-sm mb-4">WiFi-enabled coffee maker with app control and programmable brewing schedules.</p>
-                    
-                    <div class="flex items-center justify-between">
-                        <a href="#" class="btn btn-outline btn-sm">
-                            <i class="fas fa-external-link-alt"></i>
-                            View Product
-                        </a>
-                        <div class="flex items-center gap-3">
-                            <button class="text-gray-400 hover:text-red-500 transition" title="Like">
-                                <i class="fas fa-heart"></i>
-                            </button>
-                            <button class="text-gray-400 hover:text-green-600 transition" title="Share">
-                                <i class="fas fa-share"></i>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
-                        <div class="flex items-center gap-3">
-                            <span><i class="fas fa-heart text-red-500"></i> 45</span>
-                            <span><i class="fas fa-share text-blue-500"></i> 8</span>
-                            <span><i class="fas fa-eye"></i> 123</span>
-                        </div>
-                        <span>by @coffeelover</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card product-card" data-category="sports">
-                <div class="relative h-48 bg-gray-200 rounded-t-lg overflow-hidden">
-                    <img src="https://via.placeholder.com/300x200/A3E635/ffffff?text=Yoga+Mat" alt="Premium Yoga Mat" class="w-full h-full object-cover">
-                </div>
-                
-                <div class="card-body">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-medium text-orange-600 bg-orange-50 px-2 py-1 rounded-full">Sports</span>
-                        <div class="flex items-center gap-1">
-                            <div class="flex text-yellow-400">
-                                <i class="fas fa-star text-xs"></i>
-                                <i class="fas fa-star text-xs"></i>
-                                <i class="fas fa-star text-xs"></i>
-                                <i class="fas fa-star text-xs"></i>
-                                <i class="far fa-star text-xs"></i>
-                            </div>
-                            <span class="text-xs text-gray-500">(67)</span>
-                        </div>
-                    </div>
-                    
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Premium Yoga Mat</h3>
-                    <p class="text-gray-600 text-sm mb-4">Eco-friendly yoga mat with superior grip and cushioning for all yoga practices.</p>
-                    
-                    <div class="flex items-center justify-between">
-                        <a href="#" class="btn btn-outline btn-sm">
-                            <i class="fas fa-external-link-alt"></i>
-                            View Product
-                        </a>
-                        <div class="flex items-center gap-3">
-                            <button class="text-gray-400 hover:text-red-500 transition" title="Like">
-                                <i class="fas fa-heart"></i>
-                            </button>
-                            <button class="text-gray-400 hover:text-green-600 transition" title="Share">
-                                <i class="fas fa-share"></i>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
-                        <div class="flex items-center gap-3">
-                            <span><i class="fas fa-heart text-red-500"></i> 34</span>
-                            <span><i class="fas fa-share text-blue-500"></i> 5</span>
-                            <span><i class="fas fa-eye"></i> 89</span>
-                        </div>
-                        <span>by @yogalife</span>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
         
         <!-- Load More Button -->
-        <div class="text-center mt-8">
-            <button class="btn btn-outline btn-lg" id="loadMoreBtn">
-                <i class="fas fa-plus"></i>
-                Load More Products
+        <div class="text-center mt-12">
+            <button class="bg-white border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl" id="loadMoreBtn">
+                <i class="fas fa-plus mr-2"></i>Load More Products
             </button>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="py-16 bg-gradient-to-r from-green-600 to-blue-600">
+    <div class="container mx-auto px-4 text-center">
+        <div class="max-w-2xl mx-auto text-white">
+            <h2 class="text-3xl font-bold mb-4">Stay Updated with New Products</h2>
+            <p class="text-xl mb-8 opacity-90">Get notified about the latest products and exclusive deals from our community.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+                <input type="email" 
+                       placeholder="Enter your email" 
+                       class="flex-1 px-6 py-4 rounded-xl border-0 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-white">
+                <button class="bg-white text-green-600 hover:bg-gray-100 px-8 py-4 rounded-xl font-semibold transition-colors duration-200">
+                    Subscribe
+                </button>
+            </div>
         </div>
     </div>
 </section>
@@ -278,93 +209,190 @@
 
 {% block scripts %}
 <script>
-// View toggle functionality
-const gridView = document.getElementById('gridView');
-const listView = document.getElementById('listView');
-const productsGrid = document.getElementById('productsGrid');
+document.addEventListener('DOMContentLoaded', function() {
+    // View toggle functionality
+    const gridView = document.getElementById('gridView');
+    const listView = document.getElementById('listView');
+    const productsGrid = document.getElementById('productsGrid');
 
-gridView.addEventListener('click', () => {
-    gridView.classList.add('bg-green-600', 'text-white');
-    gridView.classList.remove('bg-white', 'text-gray-600');
-    listView.classList.add('bg-white', 'text-gray-600');
-    listView.classList.remove('bg-green-600', 'text-white');
-    
-    productsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6';
-});
-
-listView.addEventListener('click', () => {
-    listView.classList.add('bg-green-600', 'text-white');
-    listView.classList.remove('bg-white', 'text-gray-600');
-    gridView.classList.add('bg-white', 'text-gray-600');
-    gridView.classList.remove('bg-green-600', 'text-white');
-    
-    productsGrid.className = 'grid grid-cols-1 gap-4';
-});
-
-// Category filtering
-const categoryButtons = document.querySelectorAll('[data-category]');
-const productCards = document.querySelectorAll('.product-card');
-
-categoryButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        // Update active button
-        categoryButtons.forEach(btn => {
-            btn.classList.remove('bg-green-600', 'text-white');
-            btn.classList.add('bg-gray-100', 'text-gray-700');
+    if (gridView && listView && productsGrid) {
+        gridView.addEventListener('click', () => {
+            gridView.classList.add('bg-green-600', 'text-white');
+            gridView.classList.remove('bg-white', 'text-gray-600');
+            listView.classList.add('bg-white', 'text-gray-600');
+            listView.classList.remove('bg-green-600', 'text-white');
+            
+            productsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8';
         });
-        button.classList.add('bg-green-600', 'text-white');
-        button.classList.remove('bg-gray-100', 'text-gray-700');
-        
-        // Filter products
-        const category = button.dataset.category;
-        productCards.forEach(card => {
-            if (category === 'all' || card.dataset.category === category) {
-                card.style.display = 'block';
+
+        listView.addEventListener('click', () => {
+            listView.classList.add('bg-green-600', 'text-white');
+            listView.classList.remove('bg-white', 'text-gray-600');
+            gridView.classList.add('bg-white', 'text-gray-600');
+            gridView.classList.remove('bg-green-600', 'text-white');
+            
+            productsGrid.className = 'grid grid-cols-1 gap-6';
+        });
+    }
+
+    // Category filtering
+    const categoryButtons = document.querySelectorAll('[data-category]');
+    const productCards = document.querySelectorAll('[data-category]');
+
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Update active button
+            categoryButtons.forEach(btn => {
+                btn.classList.remove('bg-green-600', 'text-white');
+                btn.classList.add('bg-white', 'text-gray-700', 'border', 'border-gray-200');
+            });
+            button.classList.add('bg-green-600', 'text-white');
+            button.classList.remove('bg-white', 'text-gray-700', 'border', 'border-gray-200');
+            
+            // Filter products
+            const category = button.dataset.category;
+            productCards.forEach(card => {
+                if (card.tagName === 'BUTTON') return; // Skip button elements
+                
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                    card.classList.add('animate-fade-in');
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Load more functionality
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', function() {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Loading...';
+            this.disabled = true;
+            
+            // Simulate loading
+            setTimeout(() => {
+                this.innerHTML = '<i class="fas fa-plus mr-2"></i>Load More Products';
+                this.disabled = false;
+                // In a real app, you would load more products here
+            }, 1500);
+        });
+    }
+
+    // Heart button functionality
+    document.querySelectorAll('.fa-heart').forEach(heartIcon => {
+        heartIcon.closest('button').addEventListener('click', function(e) {
+            e.preventDefault();
+            const icon = this.querySelector('i');
+            if (icon.classList.contains('fas')) {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                icon.classList.remove('text-red-500');
+                icon.classList.add('text-gray-400');
             } else {
-                card.style.display = 'none';
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                icon.classList.remove('text-gray-400');
+                icon.classList.add('text-red-500');
             }
         });
     });
-});
 
-// Load more functionality
-document.getElementById('loadMoreBtn').addEventListener('click', function() {
-    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+    // Search functionality
+    const searchInput = document.querySelector('input[type="search"]');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            productCards.forEach(card => {
+                if (card.tagName === 'BUTTON') return;
+                
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('p').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    }
+
+    // Add smooth scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
     
-    // Simulate loading
-    setTimeout(() => {
-        this.innerHTML = '<i class="fas fa-plus"></i> Load More Products';
-        // In a real app, you would load more products here
-    }, 1500);
-});
-
-// Add hover effects to product cards
-productCards.forEach(card => {
-    card.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-4px)';
-    });
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
     
-    card.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0)';
-    });
-});
-
-// Heart button functionality
-document.querySelectorAll('[title="Like"]').forEach(btn => {
-    btn.addEventListener('click', function() {
-        const icon = this.querySelector('i');
-        if (icon.classList.contains('fas')) {
-            icon.classList.remove('fas');
-            icon.classList.add('far');
-            this.classList.remove('text-red-500');
-            this.classList.add('text-gray-400');
-        } else {
-            icon.classList.remove('far');
-            icon.classList.add('fas');
-            this.classList.remove('text-gray-400');
-            this.classList.add('text-red-500');
+    // Observe product cards for animation
+    productCards.forEach(card => {
+        if (card.tagName !== 'BUTTON') {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
         }
     });
 });
 </script>
+
+<style>
+/* Additional styles for better product cards */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Hover effects for product cards */
+.group:hover .group-hover\:scale-110 {
+    transform: scale(1.1);
+}
+
+.group:hover .group-hover\:bg-opacity-20 {
+    background-opacity: 0.2;
+}
+
+.group:hover .group-hover\:opacity-100 {
+    opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    #productsGrid {
+        gap: 1.5rem;
+    }
+}
+</style>
 {% endblock %}

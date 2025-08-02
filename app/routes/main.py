@@ -71,6 +71,42 @@ def dashboard():
         dashboard_settings=dashboard_settings
     )
 
+@main_bp.route('/products')
+def products():
+    """Products page route."""
+    # For now, we'll use sample data. In a real app, you'd fetch from database
+    sample_items = [
+        {
+            'title': 'Premium Wireless Headphones',
+            'description': 'High-quality wireless headphones with noise cancellation',
+            'category': 'electronics',
+            'image': 'https://via.placeholder.com/300x200/55970f/ffffff?text=Headphones',
+            'url': '#'
+        },
+        {
+            'title': 'Designer Cotton T-Shirt',
+            'description': 'Comfortable and stylish cotton t-shirt with modern design',
+            'category': 'fashion',
+            'image': 'https://via.placeholder.com/300x200/6abe11/ffffff?text=T-Shirt',
+            'url': '#'
+        },
+        {
+            'title': 'Smart Coffee Maker',
+            'description': 'WiFi-enabled coffee maker with app control',
+            'category': 'home',
+            'image': 'https://via.placeholder.com/300x200/8DC63F/ffffff?text=Coffee+Maker',
+            'url': '#'
+        },
+        {
+            'title': 'Premium Yoga Mat',
+            'description': 'Eco-friendly yoga mat with superior grip',
+            'category': 'sports',
+            'image': 'https://via.placeholder.com/300x200/A3E635/ffffff?text=Yoga+Mat',
+            'url': '#'
+        }
+    ]
+    return render_template('products_clean.html', items=sample_items)
+
 @main_bp.route('/about')
 def about():
     """About page route."""

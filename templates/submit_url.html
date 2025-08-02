@@ -21,15 +21,14 @@
                     
                     <div class="form-group">
                         <label for="additionalNotes" class="form-label">Additional Notes (Optional)</label>
-                        <textarea id="additionalNotes" rows="3" class="form-input" placeholder="Add your thoughts about this product..."></textarea>
+                        <textarea id="additionalNotes" rows="3" class="form-textarea" placeholder="Add your thoughts about this product..."></textarea>
                     </div>
                     
                     <div class="flex gap-4">
                         <button type="submit" class="btn btn-primary flex-1">
-                            <i class="fas fa-link"></i>
-                            Submit URL
+                            <i class="fas fa-link mr-2"></i>Submit URL
                         </button>
-                        <a href="{{ url_for('main.index') }}" class="btn btn-outline">
+                        <a href="{{ url_for('index') }}" class="btn btn-outline">
                             Cancel
                         </a>
                     </div>
@@ -56,26 +55,32 @@
         <div class="mt-8 text-center">
             <h2 class="text-2xl font-bold text-gray-900 mb-4">How it works</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="text-center">
-                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <i class="fas fa-link text-green-600"></i>
+                <div class="card text-center">
+                    <div class="card-body">
+                        <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-link text-primary-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-900 mb-2">1. Paste URL</h3>
+                        <p class="text-sm text-gray-600">Copy and paste the product URL from any website</p>
                     </div>
-                    <h3 class="font-semibold text-gray-900 mb-2">1. Paste URL</h3>
-                    <p class="text-sm text-gray-600">Copy and paste the product URL from any website</p>
                 </div>
-                <div class="text-center">
-                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <i class="fas fa-magic text-green-600"></i>
+                <div class="card text-center">
+                    <div class="card-body">
+                        <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-magic text-primary-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-900 mb-2">2. Auto-fetch</h3>
+                        <p class="text-sm text-gray-600">We automatically fetch the product details and images</p>
                     </div>
-                    <h3 class="font-semibold text-gray-900 mb-2">2. Auto-fetch</h3>
-                    <p class="text-sm text-gray-600">We automatically fetch the product details and images</p>
                 </div>
-                <div class="text-center">
-                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <i class="fas fa-share text-green-600"></i>
+                <div class="card text-center">
+                    <div class="card-body">
+                        <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-share text-primary-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-900 mb-2">3. Share</h3>
+                        <p class="text-sm text-gray-600">Your product is shared with the community</p>
                     </div>
-                    <h3 class="font-semibold text-gray-900 mb-2">3. Share</h3>
-                    <p class="text-sm text-gray-600">Your product is shared with the community</p>
                 </div>
             </div>
         </div>

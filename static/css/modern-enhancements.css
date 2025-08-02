@@ -1,0 +1,620 @@
+/* Modern Enhancements for BuyRoll Social E-commerce - Fine-tuned */
+
+/* Enhanced Design Tokens */
+:root {
+  /* Additional Color Palette */
+  --color-emerald-50: #ecfdf5;
+  --color-emerald-100: #d1fae5;
+  --color-emerald-200: #a7f3d0;
+  --color-emerald-300: #6ee7b7;
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --color-emerald-600: #059669;
+  --color-emerald-700: #047857;
+  --color-emerald-800: #065f46;
+  --color-emerald-900: #064e3b;
+  
+  /* Gradient Definitions */
+  --gradient-primary: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --gradient-secondary: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  --gradient-accent: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  --gradient-warm: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  --gradient-cool: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+  
+  /* Enhanced Shadows */
+  --shadow-soft: 0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04);
+  --shadow-medium: 0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-strong: 0 10px 40px -10px rgba(0, 0, 0, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.3);
+  
+  /* Enhanced Border Radius */
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-4xl: 2rem;
+  
+  /* Enhanced Spacing */
+  --space-18: 4.5rem;
+  --space-22: 5.5rem;
+  --space-26: 6.5rem;
+  --space-30: 7.5rem;
+}
+
+/* Fine-tuned Button Styles */
+.btn-modern {
+  @apply inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 relative overflow-hidden;
+  min-height: 48px;
+  letter-spacing: 0.025em;
+}
+
+.btn-modern::before {
+  content: '';
+  @apply absolute inset-0 bg-white opacity-0 transition-opacity duration-300;
+}
+
+.btn-modern:hover::before {
+  @apply opacity-10;
+}
+
+.btn-modern-primary {
+  @apply bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg hover:shadow-xl hover:from-emerald-600 hover:to-emerald-700 focus:ring-emerald-500;
+  box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.25);
+}
+
+.btn-modern-primary:hover {
+  box-shadow: 0 6px 20px 0 rgba(16, 185, 129, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-modern-secondary {
+  @apply bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg hover:shadow-xl hover:from-blue-600 hover:to-blue-700 focus:ring-blue-500;
+  box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.25);
+}
+
+.btn-modern-secondary:hover {
+  box-shadow: 0 6px 20px 0 rgba(59, 130, 246, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-modern-outline {
+  @apply border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-500 hover:text-white focus:ring-emerald-500 bg-white;
+  box-shadow: 0 2px 8px 0 rgba(16, 185, 129, 0.15);
+}
+
+.btn-modern-outline:hover {
+  box-shadow: 0 4px 12px 0 rgba(16, 185, 129, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-modern-ghost {
+  @apply text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 focus:ring-emerald-500;
+}
+
+/* Button Sizes */
+.btn-modern-sm {
+  @apply px-4 py-2 text-sm;
+  min-height: 36px;
+}
+
+.btn-modern-md {
+  @apply px-6 py-3 text-base;
+  min-height: 48px;
+}
+
+.btn-modern-lg {
+  @apply px-8 py-4 text-lg;
+  min-height: 56px;
+}
+
+.btn-modern-xl {
+  @apply px-10 py-5 text-xl;
+  min-height: 64px;
+}
+
+/* Enhanced Logo Styles */
+.logo-modern {
+  @apply flex items-center space-x-3 group transition-all duration-300;
+}
+
+.logo-icon {
+  @apply w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105;
+  box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.25);
+}
+
+.logo-icon:hover {
+  box-shadow: 0 6px 20px 0 rgba(16, 185, 129, 0.35);
+}
+
+.logo-text {
+  @apply text-2xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors duration-300;
+  letter-spacing: -0.025em;
+}
+
+/* Enhanced Card Styles */
+.card-modern {
+  @apply bg-white rounded-2xl shadow-soft hover:shadow-medium transition-all duration-300 border border-gray-100 overflow-hidden;
+  backdrop-filter: blur(10px);
+}
+
+.card-modern-hover {
+  @apply transform hover:scale-105 hover:shadow-strong transition-all duration-300;
+}
+
+.card-modern-gradient {
+  @apply bg-gradient-to-br from-white to-gray-50;
+}
+
+/* Enhanced Form Styles */
+.form-input-modern {
+  @apply w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50 transition-all duration-300 bg-white;
+  min-height: 48px;
+}
+
+.form-input-modern:focus {
+  @apply shadow-lg transform scale-105;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.form-select-modern {
+  @apply w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50 transition-all duration-300 bg-white appearance-none;
+  min-height: 48px;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+}
+
+/* Enhanced Navigation */
+.nav-modern {
+  @apply bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-soft;
+  backdrop-filter: blur(20px);
+}
+
+.nav-link-modern {
+  @apply px-4 py-2 rounded-xl text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 transition-all duration-300 font-medium relative;
+  min-height: 40px;
+}
+
+.nav-link-modern::before {
+  content: '';
+  @apply absolute bottom-0 left-1/2 w-0 h-0.5 bg-emerald-500 transition-all duration-300 transform -translate-x-1/2;
+}
+
+.nav-link-modern:hover::before,
+.nav-link-modern.active::before {
+  @apply w-4;
+}
+
+.nav-link-modern.active {
+  @apply text-emerald-600 bg-emerald-50;
+}
+
+/* Enhanced Product Cards */
+.product-card-modern {
+  @apply bg-white rounded-2xl shadow-soft hover:shadow-strong transition-all duration-500 overflow-hidden border border-gray-100 group;
+  backdrop-filter: blur(10px);
+}
+
+.product-card-modern:hover {
+  @apply transform scale-105;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+}
+
+.product-image-modern {
+  @apply w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110;
+}
+
+.product-overlay-modern {
+  @apply absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100;
+}
+
+.product-actions-modern {
+  @apply flex space-x-3 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300;
+}
+
+.product-action-btn {
+  @apply p-3 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300;
+  min-width: 48px;
+  min-height: 48px;
+}
+
+/* Enhanced Loading States */
+.loading-spinner-modern {
+  @apply relative w-12 h-12;
+}
+
+.spinner-ring-modern {
+  @apply absolute inset-0 border-4 border-emerald-200 rounded-full;
+}
+
+.spinner-ring-modern::before {
+  content: '';
+  @apply absolute inset-0 border-4 border-transparent border-t-emerald-500 rounded-full animate-spin;
+}
+
+/* Enhanced Badges */
+.badge-modern {
+  @apply inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold;
+  letter-spacing: 0.025em;
+}
+
+.badge-modern-success {
+  @apply bg-emerald-100 text-emerald-800 border border-emerald-200;
+}
+
+.badge-modern-warning {
+  @apply bg-yellow-100 text-yellow-800 border border-yellow-200;
+}
+
+.badge-modern-error {
+  @apply bg-red-100 text-red-800 border border-red-200;
+}
+
+.badge-modern-info {
+  @apply bg-blue-100 text-blue-800 border border-blue-200;
+}
+
+/* Enhanced Icons */
+.icon-modern {
+  @apply flex items-center justify-center transition-all duration-300;
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.icon-modern-sm {
+  @apply w-8 h-8;
+}
+
+.icon-modern-md {
+  @apply w-10 h-10;
+}
+
+.icon-modern-lg {
+  @apply w-12 h-12;
+}
+
+.icon-modern-xl {
+  @apply w-16 h-16;
+}
+
+/* Enhanced Typography */
+.text-gradient {
+  @apply bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent;
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.6);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.6s ease-out;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-bounce-slow {
+  animation: bounce 2s infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Enhanced Modals */
+.modal-backdrop-modern {
+  @apply fixed inset-0 bg-black/50 backdrop-blur-sm;
+}
+
+.modal-content-modern {
+  @apply bg-white rounded-2xl shadow-strong max-w-lg w-full mx-4 transform transition-all duration-300;
+}
+
+.modal-content-modern.enter {
+  @apply opacity-0 scale-95;
+}
+
+.modal-content-modern.enter-active {
+  @apply opacity-100 scale-100;
+}
+
+/* Enhanced Tooltips */
+.tooltip-modern {
+  @apply absolute z-50 px-3 py-2 text-sm text-white bg-gray-900 rounded-lg shadow-lg opacity-0 pointer-events-none transition-opacity duration-300;
+}
+
+.tooltip-modern::before {
+  content: '';
+  @apply absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900;
+}
+
+/* Enhanced Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 rounded-full;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-emerald-300 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-emerald-400;
+}
+
+/* Enhanced Focus States */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2;
+}
+
+/* Enhanced Hover Effects */
+.hover-lift {
+  @apply transition-transform duration-300 hover:transform hover:scale-105;
+}
+
+.hover-glow {
+  @apply transition-shadow duration-300 hover:shadow-glow;
+}
+
+/* Enhanced Grid Layouts */
+.grid-auto-fit {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.grid-auto-fill {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+/* Enhanced Responsive Design */
+@media (max-width: 640px) {
+  .container-modern {
+    @apply px-4;
+  }
+  
+  .btn-modern {
+    @apply px-4 py-2 text-sm;
+    min-height: 40px;
+  }
+  
+  .card-modern {
+    @apply rounded-xl;
+  }
+  
+  .logo-icon {
+    @apply w-10 h-10;
+  }
+  
+  .logo-text {
+    @apply text-xl;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-modern {
+    @apply bg-white/98;
+  }
+  
+  .product-card-modern:hover {
+    @apply transform-none;
+  }
+  
+  .btn-modern {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .grid-auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+/* Enhanced Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .card-modern {
+    @apply bg-gray-800 border-gray-700;
+  }
+  
+  .form-input-modern {
+    @apply bg-gray-800 border-gray-600 text-white;
+  }
+  
+  .nav-modern {
+    @apply bg-gray-900/95 border-gray-700;
+  }
+  
+  .logo-text {
+    @apply text-white;
+  }
+}
+
+/* Enhanced Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Enhanced Print Styles */
+@media print {
+  .btn-modern,
+  .product-actions-modern,
+  .nav-modern {
+    display: none !important;
+  }
+  
+  .card-modern {
+    @apply shadow-none border border-gray-300;
+  }
+}
+
+/* Enhanced Performance Optimizations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+/* Enhanced Utility Classes */
+.glass-effect {
+  @apply bg-white/10 backdrop-blur-md border border-white/20;
+}
+
+.gradient-text {
+  @apply bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent;
+}
+
+/* Enhanced Component Variants */
+.btn-size-sm {
+  @apply px-4 py-2 text-sm;
+  min-height: 36px;
+}
+
+.btn-size-md {
+  @apply px-6 py-3 text-base;
+  min-height: 48px;
+}
+
+.btn-size-lg {
+  @apply px-8 py-4 text-lg;
+  min-height: 56px;
+}
+
+.btn-size-xl {
+  @apply px-10 py-5 text-xl;
+  min-height: 64px;
+}
+
+/* Enhanced State Classes */
+.state-loading {
+  @apply opacity-50 pointer-events-none;
+}
+
+.state-disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+.state-active {
+  @apply bg-emerald-500 text-white;
+}
+
+.state-success {
+  @apply bg-emerald-100 text-emerald-800 border-emerald-200;
+}
+
+.state-error {
+  @apply bg-red-100 text-red-800 border-red-200;
+}
+
+.state-warning {
+  @apply bg-yellow-100 text-yellow-800 border-yellow-200;
+}
+
+/* Enhanced Layout Utilities */
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+.aspect-video {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-photo {
+  aspect-ratio: 4 / 3;
+}
+
+/* Enhanced Spacing Scale */
+.space-18 { gap: 4.5rem; }
+.space-22 { gap: 5.5rem; }
+.space-26 { gap: 6.5rem; }
+.space-30 { gap: 7.5rem; }
+
+/* Enhanced Z-Index Scale */
+.z-60 { z-index: 60; }
+.z-70 { z-index: 70; }
+.z-80 { z-index: 80; }
+.z-90 { z-index: 90; }
+.z-100 { z-index: 100; } 

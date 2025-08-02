@@ -9,11 +9,11 @@
         <h1 class="hero-title animate-fade-in">Welcome to BuyRoll</h1>
         <p class="hero-subtitle animate-fade-in delay-1">Your social e-commerce platform where shopping meets community. Discover, share, and connect with friends over amazing products.</p>
         <div class="hero-actions animate-fade-in delay-2">
-            <a href="{{ url_for('main.submit_item') }}" class="btn btn-primary btn-lg">
+            <a href="{{ url_for('submit_item') }}" class="btn btn-primary btn-lg">
                 <i class="fas fa-plus"></i>
                 Submit Item
             </a>
-            <a href="{{ url_for('main.submit_url') }}" class="btn btn-secondary btn-lg">
+            <a href="{{ url_for('submit_url') }}" class="btn btn-secondary btn-lg">
                 <i class="fas fa-link"></i>
                 Submit URL
             </a>
@@ -121,7 +121,7 @@
         </div>
         
         <div class="text-center mt-8">
-            <a href="{{ url_for('main.products') }}" class="btn btn-primary btn-lg">
+            <a href="{{ url_for('products') }}" class="btn btn-primary btn-lg">
                 <i class="fas fa-arrow-right"></i>
                 View All Products
             </a>
@@ -165,11 +165,11 @@
         <h2 class="text-4xl font-bold mb-4">Ready to Start Sharing?</h2>
         <p class="text-xl mb-8 opacity-90">Join thousands of users who are already discovering and sharing amazing products on BuyRoll.</p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="{{ url_for('main.submit_item') }}" class="btn bg-white text-green-600 hover:bg-gray-100 btn-lg">
+            <a href="{{ url_for('submit_item') }}" class="btn bg-white text-green-600 hover:bg-gray-100 btn-lg">
                 <i class="fas fa-plus"></i>
                 Submit Your First Item
             </a>
-            <a href="{{ url_for('main.products') }}" class="btn border-white text-white hover:bg-white hover:text-green-600 btn-lg">
+            <a href="{{ url_for('products') }}" class="btn border-white text-white hover:bg-white hover:text-green-600 btn-lg">
                 <i class="fas fa-search"></i>
                 Explore Products
             </a>
