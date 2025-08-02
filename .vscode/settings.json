@@ -8,7 +8,10 @@
         "git add -A && git commit -m \"Improve products page UI with modern Chakra-inspired design\n\n- Added proper products route to main blueprint with sample data\n- Completely redesigned products_clean.html with modern card-based layout\n- Added gradient backgrounds, smooth animations, and hover effects\n- Implemented proper search, filtering, and view toggle functionality\n- Added responsive design with mobile-first approach\n- Included newsletter signup section\n- Enhanced JavaScript with better error handling and animations\n- Removed shopping cart functionality as requested\n- Used clean, professional color scheme with green accent colors\"",
         "pip install *",
         "python -c \"from app import create_app; app = create_app(); print('✅ App created successfully!')\"",
-        "git add *"
+        "git add *",
+        "curl *",
+        "python run.py *",
+        "Start-Process *"
     ],
     "html.autoClosingTags": false
 }

@@ -37,7 +37,7 @@
     <nav class="nav" x-data="{ mobileMenuOpen: false }">
         <div class="nav-container">
             <!-- Logo and Brand -->
-            <a href="{{ url_for('index') }}" class="nav-brand">
+            <a href="{{ url_for('main.index') }}" class="nav-brand">
                 <div class="nav-logo">
                     <i class="fas fa-shopping-bag"></i>
                 </div>
@@ -46,8 +46,8 @@
             
             <!-- Desktop Navigation -->
             <ul class="nav-menu">
-                <li><a href="{{ url_for('index') }}" class="nav-link">Home</a></li>
-                <li><a href="{{ url_for('products') }}" class="nav-link">Products</a></li>
+                <li><a href="{{ url_for('main.index') }}" class="nav-link">Home</a></li>
+                <li><a href="{{ url_for('main.products') }}" class="nav-link">Products</a></li>
                 <li><a href="#friends" class="nav-link">Friends</a></li>
                 <li><a href="#about" class="nav-link">About</a></li>
             </ul>
@@ -138,10 +138,10 @@
                 
                 <!-- Mobile Navigation Links -->
                 <nav class="space-y-2">
-                    <a href="{{ url_for('index') }}" class="nav-link block">
+                    <a href="{{ url_for('main.index') }}" class="nav-link block">
                         <i class="fas fa-home mr-2"></i>Home
                     </a>
-                    <a href="{{ url_for('products') }}" class="nav-link block">
+                    <a href="{{ url_for('main.products') }}" class="nav-link block">
                         <i class="fas fa-box mr-2"></i>Products
                     </a>
                     <a href="#friends" class="nav-link block">
@@ -154,10 +154,10 @@
                 
                 <!-- Mobile Actions -->
                 <div class="pt-4 border-t border-gray-200 space-y-3">
-                    <a href="{{ url_for('submit_item') }}" class="btn btn-primary w-full">
+                    <a href="#" class="btn btn-primary w-full">
                         <i class="fas fa-plus mr-2"></i>Submit Item
                     </a>
-                    <a href="{{ url_for('submit_url') }}" class="btn btn-outline w-full">
+                    <a href="#" class="btn btn-outline w-full">
                         <i class="fas fa-link mr-2"></i>Submit URL
                     </a>
                 </div>
@@ -206,11 +206,11 @@
                     <div>
                         <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
                         <ul class="space-y-2">
-                            <li><a href="{{ url_for('index') }}" class="text-gray-400 hover:text-white transition">Home</a></li>
-                            <li><a href="{{ url_for('submit_item') }}" class="text-gray-400 hover:text-white transition">Submit Item</a></li>
-                            <li><a href="{{ url_for('submit_url') }}" class="text-gray-400 hover:text-white transition">Submit URL</a></li>
+                            <li><a href="{{ url_for('main.index') }}" class="text-gray-400 hover:text-white transition">Home</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Submit Item</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-white transition">Submit URL</a></li>
                             <li><a href="#about" class="text-gray-400 hover:text-white transition">About Us</a></li>
-                            <li><a href="{{ url_for('products') }}" class="text-gray-400 hover:text-white transition">Products</a></li>
+                            <li><a href="{{ url_for('main.products') }}" class="text-gray-400 hover:text-white transition">Products</a></li>
                         </ul>
                     </div>
                     
