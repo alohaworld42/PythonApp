@@ -187,21 +187,12 @@ def sync_woocommerce_orders(integration_id):
                 if not product_data:
                     continue
                 
-                # Create new product
-                product = Product(
-                    external_id=str(item['product_id']),
-                    source='woocommerce',
-                    title=item['name'],
-                    description=product_data.get('description', ''),
-                    price=float(item['price']),
-                    currency=order['currency'],
-                    category=', '.join([cat['name'] for cat in product_data.get('categories', [])]),
-                    product_metadata={},  # Using product_metadata instead of metadata
-                    image_url=product_data['images'][0]['src'] if product_data.get('images') else None
-                )
+                # Create new product with high-quality images
+                from app.services.woocommerce_image_service import WooCommerceImageService
                 
-                db.session.add(product)
-                db.session.commit()
+                product = WooCommerceImageService.create_product_from_wc_data(
+                    product_data, source='woocommerce'
+                )
             
             # Create purchase
             purchase_date = datetime.fromisoformat(order['date_created'].replace('Z', '+00:00'))

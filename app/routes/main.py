@@ -73,39 +73,76 @@ def dashboard():
 
 @main_bp.route('/products')
 def products():
-    """Products page route."""
-    # For now, we'll use sample data. In a real app, you'd fetch from database
-    sample_items = [
-        {
-            'title': 'Premium Wireless Headphones',
-            'description': 'High-quality wireless headphones with noise cancellation',
-            'category': 'electronics',
-            'image': 'https://via.placeholder.com/300x200/55970f/ffffff?text=Headphones',
-            'url': '#'
-        },
-        {
-            'title': 'Designer Cotton T-Shirt',
-            'description': 'Comfortable and stylish cotton t-shirt with modern design',
-            'category': 'fashion',
-            'image': 'https://via.placeholder.com/300x200/6abe11/ffffff?text=T-Shirt',
-            'url': '#'
-        },
-        {
-            'title': 'Smart Coffee Maker',
-            'description': 'WiFi-enabled coffee maker with app control',
-            'category': 'home',
-            'image': 'https://via.placeholder.com/300x200/8DC63F/ffffff?text=Coffee+Maker',
-            'url': '#'
-        },
-        {
-            'title': 'Premium Yoga Mat',
-            'description': 'Eco-friendly yoga mat with superior grip',
-            'category': 'sports',
-            'image': 'https://via.placeholder.com/300x200/A3E635/ffffff?text=Yoga+Mat',
-            'url': '#'
-        }
-    ]
-    return render_template('products_chakra.html', items=sample_items)
+    """Products page route with high-quality images."""
+    # Get products from database with high-quality images
+    from app.models.product import Product
+    
+    # Fetch products from database
+    db_products = Product.query.limit(20).all()
+    
+    # Convert to template format with high-quality images
+    items = []
+    for product in db_products:
+        item_data = product.to_dict(include_images=True)
+        # Add template-friendly fields
+        item_data['best_image_url'] = product.get_best_image_url('large')
+        items.append(item_data)
+    
+    # If no products in database, use sample data with high-quality placeholders
+    if not items:
+        sample_items = [
+            {
+                'title': 'Premium Wireless Headphones',
+                'description': 'High-quality wireless headphones with noise cancellation',
+                'category': 'electronics',
+                'image': 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=400&fit=crop&crop=center',
+                'best_image_url': 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=400&fit=crop&crop=center',
+                'url': '#',
+                'price': 199.99,
+                'regular_price': 249.99,
+                'is_on_sale': True,
+                'discount_percentage': 20
+            },
+            {
+                'title': 'Designer Cotton T-Shirt',
+                'description': 'Comfortable and stylish cotton t-shirt with modern design',
+                'category': 'fashion',
+                'image': 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&h=400&fit=crop&crop=center',
+                'best_image_url': 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&h=400&fit=crop&crop=center',
+                'url': '#',
+                'price': 29.99,
+                'regular_price': 39.99,
+                'is_on_sale': True,
+                'discount_percentage': 25
+            },
+            {
+                'title': 'Smart Coffee Maker',
+                'description': 'WiFi-enabled coffee maker with app control',
+                'category': 'home',
+                'image': 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&h=400&fit=crop&crop=center',
+                'best_image_url': 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&h=400&fit=crop&crop=center',
+                'url': '#',
+                'price': 149.99,
+                'regular_price': 199.99,
+                'is_on_sale': True,
+                'discount_percentage': 25
+            },
+            {
+                'title': 'Premium Yoga Mat',
+                'description': 'Eco-friendly yoga mat with superior grip',
+                'category': 'sports',
+                'image': 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&h=400&fit=crop&crop=center',
+                'best_image_url': 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&h=400&fit=crop&crop=center',
+                'url': '#',
+                'price': 39.99,
+                'regular_price': 59.99,
+                'is_on_sale': True,
+                'discount_percentage': 33
+            }
+        ]
+        items = sample_items
+    
+    return render_template('products_chakra.html', items=items)
 
 @main_bp.route('/about')
 def about():

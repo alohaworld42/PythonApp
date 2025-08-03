@@ -104,11 +104,12 @@
                 <!-- Product Image -->
                 <div style="position: relative; overflow: hidden; height: 12rem;">
                     <img 
-                        src="{{ item.get('image', 'https://via.placeholder.com/300x200/38A169/ffffff?text=Product') }}" 
+                        src="{{ item.get('best_image_url', item.get('image', 'https://via.placeholder.com/300x200/38A169/ffffff?text=Product')) }}" 
                         alt="{{ item.get('title', 'Product') }}" 
                         style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;"
                         onmouseover="this.style.transform='scale(1.05)'"
                         onmouseout="this.style.transform='scale(1)'"
+                        loading="lazy"
                     >
                     
                     <!-- Product Overlay -->
