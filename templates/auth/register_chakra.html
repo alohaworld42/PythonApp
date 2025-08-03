@@ -1,0 +1,320 @@
+{% extends "base_chakra.html" %}
+
+{% block title %}Sign Up - BuyRoll{% endblock %}
+
+{% block content %}
+<div style="min-height: calc(100vh - 4rem); display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--chakra-colors-green-50), var(--chakra-colors-blue-50)); padding: var(--chakra-space-8) var(--chakra-space-4);">
+    <div class="chakra-card" style="width: 100%; max-width: 28rem; padding: var(--chakra-space-8);">
+        <!-- Header -->
+        <div class="chakra-text-center chakra-mb-8">
+            <div style="width: 4rem; height: 4rem; background: linear-gradient(135deg, var(--chakra-colors-green-400), var(--chakra-colors-blue-400)); border-radius: var(--chakra-radii-xl); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--chakra-space-4);">
+                <i class="fas fa-user-plus" style="color: white; font-size: 1.5rem;"></i>
+            </div>
+            <h1 class="chakra-heading" style="font-size: 2rem; margin-bottom: var(--chakra-space-2);">Join BuyRoll</h1>
+            <p class="chakra-text" style="font-size: 1.125rem;">Create your account and start shopping socially</p>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div style="padding: var(--chakra-space-4); border-radius: var(--chakra-radii-lg); margin-bottom: var(--chakra-space-6); 
+                    {% if category == 'error' %}
+                        background: #FED7D7; color: #C53030; border: 1px solid #FEB2B2;
+                    {% elif category == 'success' %}
+                        background: #C6F6D5; color: #2F855A; border: 1px solid #9AE6B4;
+                    {% else %}
+                        background: #BEE3F8; color: #2B77CB; border: 1px solid #90CDF4;
+                    {% endif %}">
+                    <div class="chakra-flex chakra-items-center">
+                        <i class="fas fa-{% if category == 'error' %}exclamation-circle{% elif category == 'success' %}check-circle{% else %}info-circle{% endif %}" style="margin-right: var(--chakra-space-2);"></i>
+                        {{ message }}
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Register Form -->
+        <form method="POST" action="{{ url_for('auth.register') }}">
+            {{ form.hidden_tag() if form }}
+            
+            <!-- Username Field -->
+            <div class="chakra-mb-6">
+                <label for="username" style="display: block; font-weight: 600; color: var(--chakra-colors-gray-700); margin-bottom: var(--chakra-space-2);">
+                    <i class="fas fa-user" style="margin-right: var(--chakra-space-2); color: var(--chakra-colors-gray-500);"></i>
+                    Username
+                </label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    class="chakra-input" 
+                    placeholder="Choose a username"
+                    required
+                    style="font-size: 1rem;"
+                    value="{{ form.username.data if form and form.username.data else '' }}"
+                >
+                <p style="color: var(--chakra-colors-gray-500); font-size: 0.875rem; margin-top: var(--chakra-space-1);">
+                    Must be 3-20 characters long
+                </p>
+                {% if form and form.username.errors %}
+                    {% for error in form.username.errors %}
+                    <p style="color: var(--chakra-colors-red-500); font-size: 0.875rem; margin-top: var(--chakra-space-1);">
+                        <i class="fas fa-exclamation-triangle" style="margin-right: var(--chakra-space-1);"></i>{{ error }}
+                    </p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-- Email Field -->
+            <div class="chakra-mb-6">
+                <label for="email" style="display: block; font-weight: 600; color: var(--chakra-colors-gray-700); margin-bottom: var(--chakra-space-2);">
+                    <i class="fas fa-envelope" style="margin-right: var(--chakra-space-2); color: var(--chakra-colors-gray-500);"></i>
+                    Email Address
+                </label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    class="chakra-input" 
+                    placeholder="Enter your email address"
+                    required
+                    style="font-size: 1rem;"
+                    value="{{ form.email.data if form and form.email.data else '' }}"
+                >
+                {% if form and form.email.errors %}
+                    {% for error in form.email.errors %}
+                    <p style="color: var(--chakra-colors-red-500); font-size: 0.875rem; margin-top: var(--chakra-space-1);">
+                        <i class="fas fa-exclamation-triangle" style="margin-right: var(--chakra-space-1);"></i>{{ error }}
+                    </p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-- Password Field -->
+            <div class="chakra-mb-6">
+                <label for="password" style="display: block; font-weight: 600; color: var(--chakra-colors-gray-700); margin-bottom: var(--chakra-space-2);">
+                    <i class="fas fa-lock" style="margin-right: var(--chakra-space-2); color: var(--chakra-colors-gray-500);"></i>
+                    Password
+                </label>
+                <div style="position: relative;">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="chakra-input" 
+                        placeholder="Create a strong password"
+                        required
+                        style="font-size: 1rem; padding-right: 3rem;"
+                    >
+                    <button 
+                        type="button" 
+                        onclick="togglePassword('password')" 
+                        style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--chakra-colors-gray-500); cursor: pointer; padding: 0.25rem;"
+                    >
+                        <i class="fas fa-eye" id="password-toggle-icon"></i>
+                    </button>
+                </div>
+                <p style="color: var(--chakra-colors-gray-500); font-size: 0.875rem; margin-top: var(--chakra-space-1);">
+                    Must be at least 8 characters long
+                </p>
+                {% if form and form.password.errors %}
+                    {% for error in form.password.errors %}
+                    <p style="color: var(--chakra-colors-red-500); font-size: 0.875rem; margin-top: var(--chakra-space-1);">
+                        <i class="fas fa-exclamation-triangle" style="margin-right: var(--chakra-space-1);"></i>{{ error }}
+                    </p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-- Confirm Password Field -->
+            <div class="chakra-mb-6">
+                <label for="confirm_password" style="display: block; font-weight: 600; color: var(--chakra-colors-gray-700); margin-bottom: var(--chakra-space-2);">
+                    <i class="fas fa-lock" style="margin-right: var(--chakra-space-2); color: var(--chakra-colors-gray-500);"></i>
+                    Confirm Password
+                </label>
+                <div style="position: relative;">
+                    <input 
+                        type="password" 
+                        id="confirm_password" 
+                        name="confirm_password" 
+                        class="chakra-input" 
+                        placeholder="Confirm your password"
+                        required
+                        style="font-size: 1rem; padding-right: 3rem;"
+                    >
+                    <button 
+                        type="button" 
+                        onclick="togglePassword('confirm_password')" 
+                        style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--chakra-colors-gray-500); cursor: pointer; padding: 0.25rem;"
+                    >
+                        <i class="fas fa-eye" id="confirm_password-toggle-icon"></i>
+                    </button>
+                </div>
+                {% if form and form.confirm_password.errors %}
+                    {% for error in form.confirm_password.errors %}
+                    <p style="color: var(--chakra-colors-red-500); font-size: 0.875rem; margin-top: var(--chakra-space-1);">
+                        <i class="fas fa-exclamation-triangle" style="margin-right: var(--chakra-space-1);"></i>{{ error }}
+                    </p>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-- Terms and Privacy -->
+            <div class="chakra-mb-6">
+                <label class="chakra-flex chakra-items-center" style="cursor: pointer;">
+                    <input type="checkbox" name="agree_terms" required style="margin-right: var(--chakra-space-2); accent-color: var(--chakra-colors-green-500);">
+                    <span style="font-size: 0.875rem; color: var(--chakra-colors-gray-600);">
+                        I agree to the 
+                        <a href="#" style="color: var(--chakra-colors-green-600); text-decoration: none; font-weight: 500;">Terms of Service</a> 
+                        and 
+                        <a href="#" style="color: var(--chakra-colors-green-600); text-decoration: none; font-weight: 500;">Privacy Policy</a>
+                    </span>
+                </label>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="chakra-button chakra-button-solid chakra-w-full" style="font-size: 1.125rem; height: 3rem; margin-bottom: var(--chakra-space-6);">
+                <i class="fas fa-user-plus" style="margin-right: var(--chakra-space-2);"></i>
+                Create Account
+            </button>
+        </form>
+
+        <!-- Divider -->
+        <div style="position: relative; margin: var(--chakra-space-6) 0;">
+            <div style="position: absolute; inset: 0; display: flex; align-items: center;">
+                <div style="width: 100%; border-top: 1px solid var(--chakra-colors-gray-200);"></div>
+            </div>
+            <div style="position: relative; display: flex; justify-content: center; font-size: 0.875rem;">
+                <span style="background: white; padding: 0 var(--chakra-space-4); color: var(--chakra-colors-gray-500);">Or sign up with</span>
+            </div>
+        </div>
+
+        <!-- Social Registration -->
+        <div class="chakra-grid chakra-grid-cols-2 chakra-gap-4 chakra-mb-6">
+            <button type="button" class="chakra-button chakra-button-outline" style="justify-content: center;">
+                <i class="fab fa-google" style="margin-right: var(--chakra-space-2); color: #DB4437;"></i>
+                Google
+            </button>
+            <button type="button" class="chakra-button chakra-button-outline" style="justify-content: center;">
+                <i class="fab fa-facebook" style="margin-right: var(--chakra-space-2); color: #4267B2;"></i>
+                Facebook
+            </button>
+        </div>
+
+        <!-- Login Link -->
+        <div class="chakra-text-center">
+            <p style="color: var(--chakra-colors-gray-600);">
+                Already have an account? 
+                <a href="{{ url_for('auth.login') }}" style="color: var(--chakra-colors-green-600); text-decoration: none; font-weight: 600;">
+                    Sign in here
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function togglePassword(fieldId) {
+        const passwordInput = document.getElementById(fieldId);
+        const toggleIcon = document.getElementById(fieldId + '-toggle-icon');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleIcon.className = 'fas fa-eye-slash';
+        } else {
+            passwordInput.type = 'password';
+            toggleIcon.className = 'fas fa-eye';
+        }
+    }
+
+    // Auto-focus first input
+    document.addEventListener('DOMContentLoaded', function() {
+        const firstInput = document.getElementById('username');
+        if (firstInput) {
+            firstInput.focus();
+        }
+    });
+
+    // Password strength indicator
+    document.getElementById('password').addEventListener('input', function() {
+        const password = this.value;
+        const strengthIndicator = document.getElementById('password-strength');
+        
+        let strength = 0;
+        if (password.length >= 8) strength++;
+        if (password.match(/[a-z]/)) strength++;
+        if (password.match(/[A-Z]/)) strength++;
+        if (password.match(/[0-9]/)) strength++;
+        if (password.match(/[^a-zA-Z0-9]/)) strength++;
+        
+        // You can add visual strength indicator here
+    });
+
+    // Password confirmation validation
+    document.getElementById('confirm_password').addEventListener('input', function() {
+        const password = document.getElementById('password').value;
+        const confirmPassword = this.value;
+        
+        if (confirmPassword && password !== confirmPassword) {
+            this.style.borderColor = 'var(--chakra-colors-red-500)';
+        } else {
+            this.style.borderColor = 'var(--chakra-colors-gray-200)';
+        }
+    });
+
+    // Form validation
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const username = document.getElementById('username').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm_password').value;
+        const agreeTerms = document.querySelector('input[name="agree_terms"]').checked;
+
+        if (!username || username.length < 3) {
+            e.preventDefault();
+            alert('Username must be at least 3 characters long');
+            return;
+        }
+
+        if (!email || !email.includes('@')) {
+            e.preventDefault();
+            alert('Please enter a valid email address');
+            return;
+        }
+
+        if (!password || password.length < 8) {
+            e.preventDefault();
+            alert('Password must be at least 8 characters long');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            e.preventDefault();
+            alert('Passwords do not match');
+            return;
+        }
+
+        if (!agreeTerms) {
+            e.preventDefault();
+            alert('Please agree to the Terms of Service and Privacy Policy');
+            return;
+        }
+
+        // Show loading state
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalText = submitButton.innerHTML;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 0.5rem;"></i>Creating Account...';
+        submitButton.disabled = true;
+
+        // Re-enable button after 5 seconds (in case of network issues)
+        setTimeout(() => {
+            submitButton.innerHTML = originalText;
+            submitButton.disabled = false;
+        }, 5000);
+    });
+</script>
+{% endblock %}

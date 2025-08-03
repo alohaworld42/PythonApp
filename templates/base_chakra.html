@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BuyRoll - Social Commerce Platform{% endblock %}</title>
+    
+    <!-- Meta Tags -->
+    <meta name="description" content="{% block description %}BuyRoll - Your social commerce platform where shopping meets community{% endblock %}">
+    <meta name="keywords" content="social commerce, shopping, community, products, e-commerce">
+    
+    <!-- Chakra UI CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/@chakra-ui/css@2.0.0/dist/index.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom Chakra-inspired CSS -->
+    <style>
+        :root {
+            /* Chakra UI Color Palette */
+            --chakra-colors-gray-50: #F7FAFC;
+            --chakra-colors-gray-100: #EDF2F7;
+            --chakra-colors-gray-200: #E2E8F0;
+            --chakra-colors-gray-300: #CBD5E0;
+            --chakra-colors-gray-400: #A0AEC0;
+            --chakra-colors-gray-500: #718096;
+            --chakra-colors-gray-600: #4A5568;
+            --chakra-colors-gray-700: #2D3748;
+            --chakra-colors-gray-800: #1A202C;
+            --chakra-colors-gray-900: #171923;
+            
+            --chakra-colors-green-50: #F0FFF4;
+            --chakra-colors-green-100: #C6F6D5;
+            --chakra-colors-green-200: #9AE6B4;
+            --chakra-colors-green-300: #68D391;
+            --chakra-colors-green-400: #48BB78;
+            --chakra-colors-green-500: #38A169;
+            --chakra-colors-green-600: #2F855A;
+            --chakra-colors-green-700: #276749;
+            --chakra-colors-green-800: #22543D;
+            --chakra-colors-green-900: #1C4532;
+            
+            --chakra-colors-blue-50: #EBF8FF;
+            --chakra-colors-blue-100: #BEE3F8;
+            --chakra-colors-blue-200: #90CDF4;
+            --chakra-colors-blue-300: #63B3ED;
+            --chakra-colors-blue-400: #4299E1;
+            --chakra-colors-blue-500: #3182CE;
+            --chakra-colors-blue-600: #2B77CB;
+            --chakra-colors-blue-700: #2C5282;
+            --chakra-colors-blue-800: #2A4365;
+            --chakra-colors-blue-900: #1A365D;
+            
+            /* Chakra UI Spacing */
+            --chakra-space-1: 0.25rem;
+            --chakra-space-2: 0.5rem;
+            --chakra-space-3: 0.75rem;
+            --chakra-space-4: 1rem;
+            --chakra-space-5: 1.25rem;
+            --chakra-space-6: 1.5rem;
+            --chakra-space-8: 2rem;
+            --chakra-space-10: 2.5rem;
+            --chakra-space-12: 3rem;
+            --chakra-space-16: 4rem;
+            --chakra-space-20: 5rem;
+            
+            /* Chakra UI Shadows */
+            --chakra-shadows-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --chakra-shadows-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --chakra-shadows-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --chakra-shadows-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --chakra-shadows-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            
+            /* Chakra UI Border Radius */
+            --chakra-radii-sm: 0.125rem;
+            --chakra-radii-base: 0.25rem;
+            --chakra-radii-md: 0.375rem;
+            --chakra-radii-lg: 0.5rem;
+            --chakra-radii-xl: 0.75rem;
+            --chakra-radii-2xl: 1rem;
+            --chakra-radii-3xl: 1.5rem;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--chakra-colors-gray-800);
+            background-color: var(--chakra-colors-gray-50);
+        }
+        
+        /* Chakra UI Button Styles */
+        .chakra-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            white-space: nowrap;
+            vertical-align: middle;
+            outline: transparent solid 2px;
+            outline-offset: 2px;
+            line-height: 1.2;
+            border-radius: var(--chakra-radii-md);
+            font-weight: 600;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            border: 1px solid transparent;
+            min-height: 2.5rem;
+            min-width: 2.5rem;
+            font-size: 1rem;
+            padding: 0 1rem;
+        }
+        
+        .chakra-button:focus {
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.6);
+        }
+        
+        .chakra-button-solid {
+            background: var(--chakra-colors-green-500);
+            color: white;
+        }
+        
+        .chakra-button-solid:hover {
+            background: var(--chakra-colors-green-600);
+            transform: translateY(-1px);
+        }
+        
+        .chakra-button-outline {
+            border: 1px solid var(--chakra-colors-green-500);
+            color: var(--chakra-colors-green-500);
+            background: transparent;
+        }
+        
+        .chakra-button-outline:hover {
+            background: var(--chakra-colors-green-50);
+        }
+        
+        .chakra-button-ghost {
+            color: var(--chakra-colors-green-500);
+            background: transparent;
+        }
+        
+        .chakra-button-ghost:hover {
+            background: var(--chakra-colors-green-50);
+        }
+        
+        /* Chakra UI Card Styles */
+        .chakra-card {
+            background: white;
+            box-shadow: var(--chakra-shadows-base);
+            border-radius: var(--chakra-radii-lg);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        
+        .chakra-card:hover {
+            box-shadow: var(--chakra-shadows-lg);
+            transform: translateY(-2px);
+        }
+        
+        /* Chakra UI Input Styles */
+        .chakra-input {
+            width: 100%;
+            min-height: 2.5rem;
+            outline: transparent solid 2px;
+            outline-offset: 2px;
+            position: relative;
+            appearance: none;
+            transition: all 0.2s;
+            font-size: 1rem;
+            padding: 0 1rem;
+            border: 1px solid var(--chakra-colors-gray-200);
+            border-radius: var(--chakra-radii-md);
+            background: white;
+        }
+        
+        .chakra-input:focus {
+            z-index: 1;
+            border-color: var(--chakra-colors-green-500);
+            box-shadow: 0 0 0 1px var(--chakra-colors-green-500);
+        }
+        
+        /* Chakra UI Container */
+        .chakra-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--chakra-space-4);
+        }
+        
+        /* Chakra UI Stack */
+        .chakra-stack {
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+        }
+        
+        .chakra-hstack {
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+        }
+        
+        /* Chakra UI Text */
+        .chakra-heading {
+            font-weight: 700;
+            line-height: 1.33;
+            color: var(--chakra-colors-gray-900);
+        }
+        
+        .chakra-text {
+            color: var(--chakra-colors-gray-600);
+            line-height: 1.6;
+        }
+        
+        /* Responsive Grid */
+        .chakra-grid {
+            display: grid;
+            gap: var(--chakra-space-6);
+        }
+        
+        .chakra-grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        .chakra-grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .chakra-grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .chakra-grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        
+        @media (min-width: 768px) {
+            .chakra-grid-md-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .chakra-grid-md-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .chakra-grid-md-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        }
+        
+        @media (min-width: 1024px) {
+            .chakra-grid-lg-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .chakra-grid-lg-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        }
+        
+        /* Utility Classes */
+        .chakra-p-4 { padding: var(--chakra-space-4); }
+        .chakra-p-6 { padding: var(--chakra-space-6); }
+        .chakra-p-8 { padding: var(--chakra-space-8); }
+        .chakra-m-4 { margin: var(--chakra-space-4); }
+        .chakra-mb-4 { margin-bottom: var(--chakra-space-4); }
+        .chakra-mb-6 { margin-bottom: var(--chakra-space-6); }
+        .chakra-mb-8 { margin-bottom: var(--chakra-space-8); }
+        .chakra-mt-8 { margin-top: var(--chakra-space-8); }
+        
+        .chakra-text-center { text-align: center; }
+        .chakra-text-left { text-align: left; }
+        .chakra-text-right { text-align: right; }
+        
+        .chakra-w-full { width: 100%; }
+        .chakra-h-full { height: 100%; }
+        
+        .chakra-flex { display: flex; }
+        .chakra-items-center { align-items: center; }
+        .chakra-justify-center { justify-content: center; }
+        .chakra-justify-between { justify-content: space-between; }
+        .chakra-gap-4 { gap: var(--chakra-space-4); }
+        .chakra-gap-6 { gap: var(--chakra-space-6); }
+        
+        .chakra-rounded-lg { border-radius: var(--chakra-radii-lg); }
+        .chakra-rounded-xl { border-radius: var(--chakra-radii-xl); }
+        .chakra-rounded-full { border-radius: 9999px; }
+        
+        .chakra-shadow-md { box-shadow: var(--chakra-shadows-md); }
+        .chakra-shadow-lg { box-shadow: var(--chakra-shadows-lg); }
+        
+        /* Animations */
+        @keyframes chakra-fade-in {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .chakra-fade-in {
+            animation: chakra-fade-in 0.5s ease-out;
+        }
+        
+        /* Navigation Styles */
+        .chakra-navbar {
+            background: white;
+            box-shadow: var(--chakra-shadows-sm);
+            border-bottom: 1px solid var(--chakra-colors-gray-100);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .chakra-nav-link {
+            color: var(--chakra-colors-gray-600);
+            text-decoration: none;
+            padding: var(--chakra-space-2) var(--chakra-space-4);
+            border-radius: var(--chakra-radii-md);
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .chakra-nav-link:hover {
+            color: var(--chakra-colors-green-600);
+            background: var(--chakra-colors-green-50);
+        }
+        
+        .chakra-nav-link.active {
+            color: var(--chakra-colors-green-600);
+            background: var(--chakra-colors-green-50);
+        }
+    </style>
+    
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="chakra-navbar">
+        <div class="chakra-container">
+            <div class="chakra-flex chakra-items-center chakra-justify-between" style="height: 4rem;">
+                <!-- Logo -->
+                <div class="chakra-flex chakra-items-center chakra-gap-4">
+                    <a href="{{ url_for('main.index') }}" class="chakra-flex chakra-items-center chakra-gap-4" style="text-decoration: none;">
+                        <div style="width: 2.5rem; height: 2.5rem; background: linear-gradient(135deg, var(--chakra-colors-green-400), var(--chakra-colors-blue-400)); border-radius: var(--chakra-radii-lg); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-shopping-bag" style="color: white; font-size: 1.25rem;"></i>
+                        </div>
+                        <span class="chakra-heading" style="font-size: 1.5rem; color: var(--chakra-colors-gray-900);">BuyRoll</span>
+                    </a>
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="chakra-flex chakra-items-center chakra-gap-6" style="display: none;" id="desktop-nav">
+                    <a href="{{ url_for('main.index') }}" class="chakra-nav-link">
+                        <i class="fas fa-home" style="margin-right: 0.5rem;"></i>Home
+                    </a>
+                    <a href="{{ url_for('main.products') }}" class="chakra-nav-link">
+                        <i class="fas fa-box" style="margin-right: 0.5rem;"></i>Products
+                    </a>
+                    <a href="#" class="chakra-nav-link">
+                        <i class="fas fa-users" style="margin-right: 0.5rem;"></i>Community
+                    </a>
+                    <a href="#" class="chakra-nav-link">
+                        <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>About
+                    </a>
+                </div>
+                
+                <!-- User Actions -->
+                <div class="chakra-flex chakra-items-center chakra-gap-4">
+                    <!-- Search -->
+                    <div style="position: relative; display: none;" id="search-desktop">
+                        <input type="search" placeholder="Search products..." class="chakra-input" style="padding-left: 2.5rem; width: 20rem;">
+                        <div style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--chakra-colors-gray-400);">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Notifications -->
+                    <button class="chakra-button chakra-button-ghost" style="position: relative;">
+                        <i class="fas fa-bell"></i>
+                        <span style="position: absolute; top: -0.25rem; right: -0.25rem; background: var(--chakra-colors-green-500); color: white; border-radius: 50%; width: 1.25rem; height: 1.25rem; font-size: 0.75rem; display: flex; align-items: center; justify-content: center;">3</span>
+                    </button>
+                    
+                    <!-- Authentication -->
+                    {% if current_user.is_authenticated %}
+                    <!-- User Menu -->
+                    <div style="position: relative;">
+                        <button class="chakra-button chakra-button-ghost" id="user-menu-button" onclick="toggleUserMenu()">
+                            <div style="width: 2rem; height: 2rem; background: linear-gradient(135deg, var(--chakra-colors-green-400), var(--chakra-colors-blue-400)); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-user" style="color: white; font-size: 0.875rem;"></i>
+                            </div>
+                            <span style="margin-left: 0.5rem; font-weight: 500;">{{ current_user.username }}</span>
+                        </button>
+                        
+                        <!-- User Dropdown Menu -->
+                        <div id="user-dropdown" style="display: none; position: absolute; right: 0; top: 100%; margin-top: 0.5rem; background: white; border-radius: var(--chakra-radii-lg); box-shadow: var(--chakra-shadows-lg); border: 1px solid var(--chakra-colors-gray-200); min-width: 12rem; z-index: 1000;">
+                            <div style="padding: var(--chakra-space-2);">
+                                <div style="padding: var(--chakra-space-3); border-bottom: 1px solid var(--chakra-colors-gray-100);">
+                                    <p style="font-weight: 600; color: var(--chakra-colors-gray-900);">{{ current_user.username }}</p>
+                                    <p style="font-size: 0.875rem; color: var(--chakra-colors-gray-500);">{{ current_user.email or 'user@example.com' }}</p>
+                                </div>
+                                <a href="{{ url_for('user.profile') if url_for('user.profile') else '#' }}" class="chakra-nav-link" style="display: block; padding: var(--chakra-space-2) var(--chakra-space-3);">
+                                    <i class="fas fa-user-circle" style="margin-right: 0.5rem;"></i>Profile
+                                </a>
+                                <a href="{{ url_for('main.dashboard') if url_for('main.dashboard') else '#' }}" class="chakra-nav-link" style="display: block; padding: var(--chakra-space-2) var(--chakra-space-3);">
+                                    <i class="fas fa-tachometer-alt" style="margin-right: 0.5rem;"></i>Dashboard
+                                </a>
+                                <a href="#" class="chakra-nav-link" style="display: block; padding: var(--chakra-space-2) var(--chakra-space-3);">
+                                    <i class="fas fa-cog" style="margin-right: 0.5rem;"></i>Settings
+                                </a>
+                                <div style="border-top: 1px solid var(--chakra-colors-gray-100); margin: var(--chakra-space-2) 0;"></div>
+                                <a href="{{ url_for('auth.logout') }}" class="chakra-nav-link" style="display: block; padding: var(--chakra-space-2) var(--chakra-space-3); color: var(--chakra-colors-red-600);">
+                                    <i class="fas fa-sign-out-alt" style="margin-right: 0.5rem;"></i>Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <!-- Login/Register Buttons -->
+                    <div class="chakra-flex chakra-items-center chakra-gap-4">
+                        <a href="{{ url_for('auth.login') }}" class="chakra-button chakra-button-ghost">
+                            <i class="fas fa-sign-in-alt" style="margin-right: 0.5rem;"></i>Login
+                        </a>
+                        <a href="{{ url_for('auth.register') }}" class="chakra-button chakra-button-solid">
+                            <i class="fas fa-user-plus" style="margin-right: 0.5rem;"></i>Sign Up
+                        </a>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Mobile Menu Toggle -->
+                    <button class="chakra-button chakra-button-ghost" id="mobile-menu-toggle" style="display: block;">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" style="display: none; border-top: 1px solid var(--chakra-colors-gray-100); background: white;">
+            <div class="chakra-container chakra-p-4">
+                <!-- Mobile Search -->
+                <div style="position: relative; margin-bottom: var(--chakra-space-4);">
+                    <input type="search" placeholder="Search products..." class="chakra-input" style="padding-left: 2.5rem;">
+                    <div style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--chakra-colors-gray-400);">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                
+                <!-- Mobile Navigation Links -->
+                <div class="chakra-stack" style="gap: var(--chakra-space-2);">
+                    <a href="{{ url_for('main.index') }}" class="chakra-nav-link">
+                        <i class="fas fa-home" style="margin-right: 0.5rem;"></i>Home
+                    </a>
+                    <a href="{{ url_for('main.products') }}" class="chakra-nav-link">
+                        <i class="fas fa-box" style="margin-right: 0.5rem;"></i>Products
+                    </a>
+                    <a href="#" class="chakra-nav-link">
+                        <i class="fas fa-users" style="margin-right: 0.5rem;"></i>Community
+                    </a>
+                    <a href="#" class="chakra-nav-link">
+                        <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>About
+                    </a>
+                    
+                    {% if current_user.is_authenticated %}
+                    <!-- Mobile User Menu -->
+                    <div style="border-top: 1px solid var(--chakra-colors-gray-200); margin-top: var(--chakra-space-4); padding-top: var(--chakra-space-4);">
+                        <div style="padding: var(--chakra-space-3); background: var(--chakra-colors-gray-50); border-radius: var(--chakra-radii-lg); margin-bottom: var(--chakra-space-4);">
+                            <div class="chakra-flex chakra-items-center chakra-gap-4">
+                                <div style="width: 2.5rem; height: 2.5rem; background: linear-gradient(135deg, var(--chakra-colors-green-400), var(--chakra-colors-blue-400)); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-user" style="color: white; font-size: 1rem;"></i>
+                                </div>
+                                <div>
+                                    <p style="font-weight: 600; color: var(--chakra-colors-gray-900);">{{ current_user.username }}</p>
+                                    <p style="font-size: 0.875rem; color: var(--chakra-colors-gray-500);">{{ current_user.email or 'user@example.com' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <a href="{{ url_for('user.profile') if url_for('user.profile') else '#' }}" class="chakra-nav-link">
+                            <i class="fas fa-user-circle" style="margin-right: 0.5rem;"></i>Profile
+                        </a>
+                        <a href="{{ url_for('main.dashboard') if url_for('main.dashboard') else '#' }}" class="chakra-nav-link">
+                            <i class="fas fa-tachometer-alt" style="margin-right: 0.5rem;"></i>Dashboard
+                        </a>
+                        <a href="#" class="chakra-nav-link">
+                            <i class="fas fa-cog" style="margin-right: 0.5rem;"></i>Settings
+                        </a>
+                        <a href="{{ url_for('auth.logout') }}" class="chakra-nav-link" style="color: var(--chakra-colors-red-600);">
+                            <i class="fas fa-sign-out-alt" style="margin-right: 0.5rem;"></i>Logout
+                        </a>
+                    </div>
+                    {% else %}
+                    <!-- Mobile Login/Register -->
+                    <div style="border-top: 1px solid var(--chakra-colors-gray-200); margin-top: var(--chakra-space-4); padding-top: var(--chakra-space-4); display: flex; gap: var(--chakra-space-4);">
+                        <a href="{{ url_for('auth.login') }}" class="chakra-button chakra-button-outline" style="flex: 1; justify-content: center;">
+                            <i class="fas fa-sign-in-alt" style="margin-right: 0.5rem;"></i>Login
+                        </a>
+                        <a href="{{ url_for('auth.register') }}" class="chakra-button chakra-button-solid" style="flex: 1; justify-content: center;">
+                            <i class="fas fa-user-plus" style="margin-right: 0.5rem;"></i>Sign Up
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer style="background: var(--chakra-colors-gray-900); color: white; margin-top: var(--chakra-space-20);">
+        <div class="chakra-container chakra-p-8">
+            <div class="chakra-grid chakra-grid-cols-1 chakra-grid-md-4 chakra-gap-6">
+                <!-- Brand -->
+                <div style="grid-column: span 2;">
+                    <div class="chakra-flex chakra-items-center chakra-gap-4 chakra-mb-4">
+                        <div style="width: 2.5rem; height: 2.5rem; background: linear-gradient(135deg, var(--chakra-colors-green-400), var(--chakra-colors-blue-400)); border-radius: var(--chakra-radii-lg); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-shopping-bag" style="color: white; font-size: 1.25rem;"></i>
+                        </div>
+                        <span class="chakra-heading" style="font-size: 1.5rem; color: white;">BuyRoll</span>
+                    </div>
+                    <p style="color: var(--chakra-colors-gray-400); margin-bottom: var(--chakra-space-6); line-height: 1.6;">
+                        Your social commerce platform where shopping meets community. Discover, share, and explore products with friends.
+                    </p>
+                    <div class="chakra-flex chakra-gap-4">
+                        <a href="#" style="color: var(--chakra-colors-gray-400); font-size: 1.25rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--chakra-colors-gray-400)'">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" style="color: var(--chakra-colors-gray-400); font-size: 1.25rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--chakra-colors-gray-400)'">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" style="color: var(--chakra-colors-gray-400); font-size: 1.25rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--chakra-colors-gray-400)'">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" style="color: var(--chakra-colors-gray-400); font-size: 1.25rem; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--chakra-colors-gray-400)'">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="chakra-heading" style="font-size: 1.125rem; margin-bottom: var(--chakra-space-4); color: white;">Quick Links</h3>
+                    <div class="chakra-stack" style="gap: var(--chakra-space-2);">
+                        <a href="{{ url_for('main.index') }}" style="color: var(--chakra-colors-gray-400); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--chakra-colors-gray-400)'">Home</a>
+                        <a href="{{ url_for('main.products') }}" style="color: var(--chakra-colors-gray-400); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--chakra-colors-gray-400)'">Products</a>
+                        <a href="#" style="color: var(--chakra-colors-gray-400); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--chakra-colors-gray-400)'">Community</a>
+                        <a href="#" style="color: var(--chakra-colors-gray-400); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--chakra-colors-gray-400)'">About</a>
+                    </div>
+                </div>
+                
+                <!-- Support -->
+                <div>
+                    <h3 class="chakra-heading" style="font-size: 1.125rem; margin-bottom: var(--chakra-space-4); color: white;">Support</h3>
+                    <div class="chakra-stack" style="gap: var(--chakra-space-2);">
+                        <a href="#" style="color: var(--chakra-colors-gray-400); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--chakra-colors-gray-400)'">Help Center</a>
+                        <a href="#" style="color: var(--chakra-colors-gray-400); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--chakra-colors-gray-400)'">Contact Us</a>
+                        <a href="#" style="color: var(--chakra-colors-gray-400); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--chakra-colors-gray-400)'">Privacy Policy</a>
+                        <a href="#" style="color: var(--chakra-colors-gray-400); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--chakra-colors-gray-400)'">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer Bottom -->
+            <div style="border-top: 1px solid var(--chakra-colors-gray-700); margin-top: var(--chakra-space-8); padding-top: var(--chakra-space-6);">
+                <div class="chakra-flex chakra-items-center chakra-justify-between" style="flex-direction: column; gap: var(--chakra-space-4);">
+                    <p style="color: var(--chakra-colors-gray-400); font-size: 0.875rem;">
+                        &copy; 2024 BuyRoll. All rights reserved.
+                    </p>
+                    <p style="color: var(--chakra-colors-gray-400); font-size: 0.875rem;">
+                        Made with <i class="fas fa-heart" style="color: var(--chakra-colors-green-400);"></i> for the community
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-toggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const isVisible = mobileMenu.style.display !== 'none';
+            mobileMenu.style.display = isVisible ? 'none' : 'block';
+            
+            const icon = this.querySelector('i');
+            icon.className = isVisible ? 'fas fa-bars' : 'fas fa-times';
+        });
+        
+        // Responsive navigation
+        function updateNavigation() {
+            const desktopNav = document.getElementById('desktop-nav');
+            const searchDesktop = document.getElementById('search-desktop');
+            const mobileToggle = document.getElementById('mobile-menu-toggle');
+            
+            if (window.innerWidth >= 768) {
+                desktopNav.style.display = 'flex';
+                searchDesktop.style.display = 'block';
+                mobileToggle.style.display = 'none';
+                document.getElementById('mobile-menu').style.display = 'none';
+            } else {
+                desktopNav.style.display = 'none';
+                searchDesktop.style.display = 'none';
+                mobileToggle.style.display = 'block';
+            }
+        }
+        
+        // Initialize and listen for resize
+        updateNavigation();
+        window.addEventListener('resize', updateNavigation);
+        
+        // Active navigation link
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll('.chakra-nav-link');
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === currentPath) {
+                link.classList.add('active');
+            }
+        });
+        
+        // User menu dropdown
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('user-dropdown');
+            const isVisible = dropdown.style.display !== 'none';
+            dropdown.style.display = isVisible ? 'none' : 'block';
+        }
+        
+        // Close user menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const userMenuButton = document.getElementById('user-menu-button');
+            const userDropdown = document.getElementById('user-dropdown');
+            
+            if (userMenuButton && userDropdown && !userMenuButton.contains(event.target) && !userDropdown.contains(event.target)) {
+                userDropdown.style.display = 'none';
+            }
+        });
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

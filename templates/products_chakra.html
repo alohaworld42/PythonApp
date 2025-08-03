@@ -1,0 +1,374 @@
+{% extends "base_chakra.html" %}
+
+{% block title %}Products - BuyRoll{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section style="background: linear-gradient(135deg, var(--chakra-colors-green-50), var(--chakra-colors-blue-50)); padding: var(--chakra-space-20) 0;">
+    <div class="chakra-container">
+        <div class="chakra-text-center chakra-mb-12">
+            <h1 class="chakra-heading chakra-fade-in" style="font-size: 3.5rem; margin-bottom: var(--chakra-space-6); background: linear-gradient(135deg, var(--chakra-colors-green-600), var(--chakra-colors-blue-600)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                Discover Amazing Products
+            </h1>
+            <p class="chakra-text chakra-fade-in" style="font-size: 1.25rem; max-width: 42rem; margin: 0 auto; color: var(--chakra-colors-gray-600);">
+                Explore thousands of products shared by our community. Find the perfect items for your lifestyle and connect with fellow shoppers.
+            </p>
+        </div>
+        
+        <!-- Search and Filters -->
+        <div style="max-width: 56rem; margin: 0 auto;">
+            <div class="chakra-flex chakra-items-center chakra-gap-4 chakra-mb-8" style="flex-direction: column;">
+                <!-- Search Bar -->
+                <div style="position: relative; width: 100%; max-width: 32rem;">
+                    <input 
+                        type="search" 
+                        placeholder="Search for products..." 
+                        class="chakra-input" 
+                        style="padding-left: 3rem; padding-right: 3rem; height: 3.5rem; font-size: 1.125rem; border-radius: var(--chakra-radii-2xl);"
+                        id="product-search"
+                    >
+                    <div style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--chakra-colors-gray-400);">
+                        <i class="fas fa-search" style="font-size: 1.125rem;"></i>
+                    </div>
+                    <button style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); background: var(--chakra-colors-green-500); color: white; border: none; border-radius: var(--chakra-radii-xl); padding: 0.75rem 1rem; cursor: pointer;">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <!-- Filter Controls -->
+                <div class="chakra-flex chakra-items-center chakra-gap-4" style="flex-wrap: wrap; justify-content: center;">
+                    <select class="chakra-input" style="width: auto; min-width: 10rem;">
+                        <option>Sort by: Featured</option>
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                        <option>Newest First</option>
+                        <option>Most Popular</option>
+                        <option>Highest Rated</option>
+                    </select>
+                    
+                    <div class="chakra-flex" style="border: 1px solid var(--chakra-colors-gray-200); border-radius: var(--chakra-radii-lg); overflow: hidden;">
+                        <button class="chakra-button" style="background: var(--chakra-colors-green-500); color: white; border-radius: 0; border: none;" id="grid-view" title="Grid View">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button class="chakra-button chakra-button-ghost" style="border-radius: 0;" id="list-view" title="List View">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Category Filters -->
+            <div class="chakra-flex chakra-gap-4" style="flex-wrap: wrap; justify-content: center;">
+                <button class="chakra-button chakra-button-solid" data-category="all" style="border-radius: var(--chakra-radii-2xl);">
+                    <i class="fas fa-th mr-2"></i>All Products
+                </button>
+                <button class="chakra-button chakra-button-outline" data-category="electronics" style="border-radius: var(--chakra-radii-2xl);">
+                    <i class="fas fa-laptop mr-2"></i>Electronics
+                </button>
+                <button class="chakra-button chakra-button-outline" data-category="fashion" style="border-radius: var(--chakra-radii-2xl);">
+                    <i class="fas fa-tshirt mr-2"></i>Fashion
+                </button>
+                <button class="chakra-button chakra-button-outline" data-category="home" style="border-radius: var(--chakra-radii-2xl);">
+                    <i class="fas fa-home mr-2"></i>Home
+                </button>
+                <button class="chakra-button chakra-button-outline" data-category="sports" style="border-radius: var(--chakra-radii-2xl);">
+                    <i class="fas fa-dumbbell mr-2"></i>Sports
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Section -->
+<section style="padding: var(--chakra-space-20) 0; background: white;">
+    <div class="chakra-container">
+        <!-- Products Stats -->
+        <div class="chakra-flex chakra-items-center chakra-justify-between chakra-mb-8" style="flex-wrap: wrap; gap: var(--chakra-space-4);">
+            <div class="chakra-flex chakra-items-center chakra-gap-4">
+                <span style="color: var(--chakra-colors-gray-600);">Showing <strong>1-{{ items|length }}</strong> of <strong>{{ items|length }}</strong> products</span>
+                <div class="chakra-flex chakra-items-center chakra-gap-2">
+                    <i class="fas fa-filter" style="color: var(--chakra-colors-green-600);"></i>
+                    <span style="color: var(--chakra-colors-gray-600); font-size: 0.875rem;">Active filters: 1</span>
+                </div>
+            </div>
+            
+            <button class="chakra-button chakra-button-ghost" style="color: var(--chakra-colors-green-600);">
+                Clear all filters
+            </button>
+        </div>
+        
+        <!-- Products Grid -->
+        <div id="products-grid" class="chakra-grid chakra-grid-cols-1 chakra-grid-md-2 chakra-grid-lg-3 chakra-grid-lg-4">
+            {% for item in items %}
+            <div class="chakra-card chakra-fade-in" data-category="{{ item.get('category', 'general') }}" style="overflow: hidden; transition: all 0.3s ease;">
+                <!-- Product Image -->
+                <div style="position: relative; overflow: hidden; height: 12rem;">
+                    <img 
+                        src="{{ item.get('image', 'https://via.placeholder.com/300x200/38A169/ffffff?text=Product') }}" 
+                        alt="{{ item.get('title', 'Product') }}" 
+                        style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;"
+                        onmouseover="this.style.transform='scale(1.05)'"
+                        onmouseout="this.style.transform='scale(1)'"
+                    >
+                    
+                    <!-- Product Overlay -->
+                    <div style="position: absolute; inset: 0; background: rgba(0,0,0,0); display: flex; align-items: center; justify-content: center; opacity: 0; transition: all 0.3s ease;" 
+                         onmouseover="this.style.background='rgba(0,0,0,0.2)'; this.style.opacity='1';"
+                         onmouseout="this.style.background='rgba(0,0,0,0)'; this.style.opacity='0';">
+                        <div class="chakra-flex chakra-gap-4">
+                            <button class="chakra-button" style="background: white; color: var(--chakra-colors-red-500); border-radius: 50%; width: 3rem; height: 3rem; padding: 0; box-shadow: var(--chakra-shadows-lg);">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <button class="chakra-button" style="background: white; color: var(--chakra-colors-green-600); border-radius: 50%; width: 3rem; height: 3rem; padding: 0; box-shadow: var(--chakra-shadows-lg);">
+                                <i class="fas fa-share"></i>
+                            </button>
+                            <button class="chakra-button" style="background: white; color: var(--chakra-colors-blue-600); border-radius: 50%; width: 3rem; height: 3rem; padding: 0; box-shadow: var(--chakra-shadows-lg);">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Category Badge -->
+                    <div style="position: absolute; top: 1rem; left: 1rem;">
+                        <span style="background: var(--chakra-colors-green-500); color: white; padding: 0.25rem 0.75rem; border-radius: var(--chakra-radii-2xl); font-size: 0.75rem; font-weight: 600; text-transform: uppercase;">
+                            {{ item.get('category', 'General') }}
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Product Content -->
+                <div class="chakra-p-6">
+                    <!-- Rating -->
+                    <div class="chakra-flex chakra-items-center chakra-justify-between chakra-mb-4">
+                        <div class="chakra-flex chakra-items-center chakra-gap-2">
+                            <div class="chakra-flex" style="color: #F6AD55;">
+                                <i class="fas fa-star" style="font-size: 0.875rem;"></i>
+                                <i class="fas fa-star" style="font-size: 0.875rem;"></i>
+                                <i class="fas fa-star" style="font-size: 0.875rem;"></i>
+                                <i class="fas fa-star" style="font-size: 0.875rem;"></i>
+                                <i class="far fa-star" style="font-size: 0.875rem;"></i>
+                            </div>
+                            <span style="color: var(--chakra-colors-gray-500); font-size: 0.875rem;">(4.2)</span>
+                        </div>
+                        <div style="color: var(--chakra-colors-gray-500); font-size: 0.875rem;">
+                            <i class="fas fa-eye" style="margin-right: 0.25rem;"></i>1.2k
+                        </div>
+                    </div>
+                    
+                    <!-- Product Title -->
+                    <h3 class="chakra-heading" style="font-size: 1.125rem; margin-bottom: var(--chakra-space-2); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                        {{ item.get('title', item.get('name', 'Untitled Product')) }}
+                    </h3>
+                    
+                    <!-- Product Description -->
+                    <p class="chakra-text" style="font-size: 0.875rem; margin-bottom: var(--chakra-space-4); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                        {{ item.get('description', 'Amazing product shared by our community.') }}
+                    </p>
+                    
+                    <!-- Price -->
+                    <div class="chakra-flex chakra-items-center chakra-gap-2 chakra-mb-4">
+                        <span class="chakra-heading" style="font-size: 1.5rem; color: var(--chakra-colors-gray-900);">$29.99</span>
+                        <span style="color: var(--chakra-colors-gray-400); text-decoration: line-through;">$39.99</span>
+                        <span style="background: var(--chakra-colors-red-100); color: var(--chakra-colors-red-600); padding: 0.125rem 0.5rem; border-radius: var(--chakra-radii-2xl); font-size: 0.75rem; font-weight: 600;">-25%</span>
+                    </div>
+                    
+                    <!-- Action Button -->
+                    <a href="{{ item.get('url', '#') }}" target="_blank" class="chakra-button chakra-button-solid chakra-w-full" style="margin-bottom: var(--chakra-space-4); justify-content: center; height: 2.75rem;">
+                        <i class="fas fa-external-link-alt" style="margin-right: var(--chakra-space-2);"></i>
+                        View Product
+                    </a>
+                    
+                    <!-- Social Stats -->
+                    <div class="chakra-flex chakra-items-center chakra-justify-between" style="padding-top: var(--chakra-space-4); border-top: 1px solid var(--chakra-colors-gray-100);">
+                        <div class="chakra-flex chakra-items-center chakra-gap-4" style="color: var(--chakra-colors-gray-500); font-size: 0.875rem;">
+                            <span class="chakra-flex chakra-items-center chakra-gap-1">
+                                <i class="fas fa-heart" style="color: var(--chakra-colors-red-500);"></i>
+                                <span>128</span>
+                            </span>
+                            <span class="chakra-flex chakra-items-center chakra-gap-1">
+                                <i class="fas fa-share" style="color: var(--chakra-colors-green-500);"></i>
+                                <span>45</span>
+                            </span>
+                        </div>
+                        
+                        <!-- Shared By -->
+                        <div class="chakra-flex chakra-items-center chakra-gap-2">
+                            <span style="color: var(--chakra-colors-gray-500); font-size: 0.75rem;">by</span>
+                            <div class="chakra-flex chakra-items-center chakra-gap-2">
+                                <div style="width: 1.5rem; height: 1.5rem; background: linear-gradient(135deg, var(--chakra-colors-green-400), var(--chakra-colors-blue-400)); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-user" style="color: white; font-size: 0.625rem;"></i>
+                                </div>
+                                <span style="color: var(--chakra-colors-gray-700); font-size: 0.875rem; font-weight: 500;">Sarah M.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Load More Button -->
+        <div class="chakra-text-center chakra-mt-12">
+            <button class="chakra-button chakra-button-outline" style="padding: 1rem 2rem; font-size: 1.125rem; border-radius: var(--chakra-radii-xl);" id="load-more-btn">
+                <i class="fas fa-plus" style="margin-right: var(--chakra-space-2);"></i>
+                Load More Products
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Section -->
+<section style="background: linear-gradient(135deg, var(--chakra-colors-green-600), var(--chakra-colors-blue-600)); padding: var(--chakra-space-20) 0; color: white;">
+    <div class="chakra-container chakra-text-center">
+        <div style="max-width: 32rem; margin: 0 auto;">
+            <h2 class="chakra-heading" style="font-size: 2.25rem; margin-bottom: var(--chakra-space-4);">Stay Updated</h2>
+            <p style="font-size: 1.25rem; margin-bottom: var(--chakra-space-8); opacity: 0.9;">Get notified about the latest products and exclusive deals from our community.</p>
+            <div class="chakra-flex chakra-gap-4" style="flex-direction: column;">
+                <input type="email" placeholder="Enter your email address" class="chakra-input" style="background: white; color: var(--chakra-colors-gray-900); height: 3rem; font-size: 1rem;">
+                <button class="chakra-button" style="background: white; color: var(--chakra-colors-green-600); height: 3rem; font-size: 1rem; font-weight: 600;">
+                    Subscribe Now
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // View toggle functionality
+    const gridView = document.getElementById('grid-view');
+    const listView = document.getElementById('list-view');
+    const productsGrid = document.getElementById('products-grid');
+
+    if (gridView && listView && productsGrid) {
+        gridView.addEventListener('click', () => {
+            gridView.style.background = 'var(--chakra-colors-green-500)';
+            gridView.style.color = 'white';
+            listView.style.background = 'transparent';
+            listView.style.color = 'var(--chakra-colors-gray-600)';
+            
+            productsGrid.className = 'chakra-grid chakra-grid-cols-1 chakra-grid-md-2 chakra-grid-lg-3 chakra-grid-lg-4';
+        });
+
+        listView.addEventListener('click', () => {
+            listView.style.background = 'var(--chakra-colors-green-500)';
+            listView.style.color = 'white';
+            gridView.style.background = 'transparent';
+            gridView.style.color = 'var(--chakra-colors-gray-600)';
+            
+            productsGrid.className = 'chakra-grid chakra-grid-cols-1';
+        });
+    }
+
+    // Category filtering
+    const categoryButtons = document.querySelectorAll('[data-category]');
+    const productCards = document.querySelectorAll('[data-category]');
+
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Update active button
+            categoryButtons.forEach(btn => {
+                btn.className = 'chakra-button chakra-button-outline';
+                btn.style.borderRadius = 'var(--chakra-radii-2xl)';
+            });
+            button.className = 'chakra-button chakra-button-solid';
+            button.style.borderRadius = 'var(--chakra-radii-2xl)';
+            
+            // Filter products
+            const category = button.dataset.category;
+            productCards.forEach(card => {
+                if (card.tagName === 'BUTTON') return;
+                
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                    card.classList.add('chakra-fade-in');
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Search functionality
+    const searchInput = document.getElementById('product-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            productCards.forEach(card => {
+                if (card.tagName === 'BUTTON') return;
+                
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('p').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    }
+
+    // Load more functionality
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', function() {
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 0.5rem;"></i>Loading...';
+            this.disabled = true;
+            
+            // Simulate loading
+            setTimeout(() => {
+                this.innerHTML = originalText;
+                this.disabled = false;
+            }, 1500);
+        });
+    }
+
+    // Heart button functionality
+    document.querySelectorAll('.fa-heart').forEach(heartIcon => {
+        const button = heartIcon.closest('button');
+        if (button) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const icon = this.querySelector('i');
+                if (icon.classList.contains('fas')) {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                } else {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                }
+            });
+        }
+    });
+
+    // Scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    // Observe product cards for animation
+    productCards.forEach(card => {
+        if (card.tagName !== 'BUTTON') {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        }
+    });
+});
+</script>
+{% endblock %}

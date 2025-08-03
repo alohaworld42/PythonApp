@@ -10,7 +10,7 @@ main_bp = Blueprint('main', __name__)
 @main_bp.route('/')
 def index():
     """Home page route."""
-    return render_template('index.html')
+    return render_template('index_chakra.html')
 
 @main_bp.route('/dashboard')
 def dashboard():
@@ -105,7 +105,7 @@ def products():
             'url': '#'
         }
     ]
-    return render_template('products_clean.html', items=sample_items)
+    return render_template('products_chakra.html', items=sample_items)
 
 @main_bp.route('/about')
 def about():

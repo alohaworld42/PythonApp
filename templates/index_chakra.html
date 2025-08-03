@@ -1,0 +1,285 @@
+{% extends "base_chakra.html" %}
+
+{% block title %}BuyRoll - Social Commerce Platform{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section style="background: linear-gradient(135deg, var(--chakra-colors-green-50), var(--chakra-colors-blue-50)); padding: var(--chakra-space-20) 0; min-height: 80vh; display: flex; align-items: center;">
+    <div class="chakra-container">
+        <div class="chakra-grid chakra-grid-cols-1 chakra-grid-lg-2 chakra-items-center chakra-gap-12">
+            <!-- Hero Content -->
+            <div class="chakra-fade-in">
+                <h1 class="chakra-heading" style="font-size: 4rem; line-height: 1.1; margin-bottom: var(--chakra-space-6); background: linear-gradient(135deg, var(--chakra-colors-green-600), var(--chakra-colors-blue-600)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    Shop Socially, <br>Discover Together
+                </h1>
+                <p class="chakra-text" style="font-size: 1.25rem; margin-bottom: var(--chakra-space-8); color: var(--chakra-colors-gray-600); line-height: 1.6;">
+                    Join the future of social commerce. Discover amazing products, share your finds with friends, and shop with confidence in our vibrant community.
+                </p>
+                
+                <div class="chakra-flex chakra-gap-4" style="flex-wrap: wrap;">
+                    <a href="{{ url_for('main.products') }}" class="chakra-button chakra-button-solid" style="padding: 1rem 2rem; font-size: 1.125rem; height: auto;">
+                        <i class="fas fa-shopping-bag" style="margin-right: var(--chakra-space-2);"></i>
+                        Explore Products
+                    </a>
+                    {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('auth.register') }}" class="chakra-button chakra-button-outline" style="padding: 1rem 2rem; font-size: 1.125rem; height: auto;">
+                        <i class="fas fa-user-plus" style="margin-right: var(--chakra-space-2);"></i>
+                        Join Community
+                    </a>
+                    {% endif %}
+                </div>
+                
+                <!-- Stats -->
+                <div class="chakra-flex chakra-gap-8 chakra-mt-8" style="flex-wrap: wrap;">
+                    <div class="chakra-text-center">
+                        <div class="chakra-heading" style="font-size: 2rem; color: var(--chakra-colors-green-600);">10K+</div>
+                        <div style="color: var(--chakra-colors-gray-600); font-size: 0.875rem;">Products</div>
+                    </div>
+                    <div class="chakra-text-center">
+                        <div class="chakra-heading" style="font-size: 2rem; color: var(--chakra-colors-blue-600);">5K+</div>
+                        <div style="color: var(--chakra-colors-gray-600); font-size: 0.875rem;">Members</div>
+                    </div>
+                    <div class="chakra-text-center">
+                        <div class="chakra-heading" style="font-size: 2rem; color: var(--chakra-colors-green-600);">50K+</div>
+                        <div style="color: var(--chakra-colors-gray-600); font-size: 0.875rem;">Shares</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hero Image -->
+            <div class="chakra-fade-in" style="position: relative;">
+                <div style="background: linear-gradient(135deg, var(--chakra-colors-green-400), var(--chakra-colors-blue-400)); border-radius: var(--chakra-radii-3xl); padding: var(--chakra-space-8); text-align: center; box-shadow: var(--chakra-shadows-xl);">
+                    <div style="background: white; border-radius: var(--chakra-radii-2xl); padding: var(--chakra-space-8); margin-bottom: var(--chakra-space-6);">
+                        <i class="fas fa-shopping-bag" style="font-size: 4rem; color: var(--chakra-colors-green-500); margin-bottom: var(--chakra-space-4);"></i>
+                        <h3 class="chakra-heading" style="font-size: 1.5rem; margin-bottom: var(--chakra-space-2);">Social Shopping</h3>
+                        <p style="color: var(--chakra-colors-gray-600);">Connect, Share, Discover</p>
+                    </div>
+                    
+                    <!-- Floating Elements -->
+                    <div style="position: absolute; top: -1rem; right: -1rem; background: white; border-radius: 50%; width: 4rem; height: 4rem; display: flex; align-items: center; justify-content: center; box-shadow: var(--chakra-shadows-lg);">
+                        <i class="fas fa-heart" style="color: var(--chakra-colors-red-500); font-size: 1.5rem;"></i>
+                    </div>
+                    <div style="position: absolute; bottom: -1rem; left: -1rem; background: white; border-radius: 50%; width: 3rem; height: 3rem; display: flex; align-items: center; justify-content: center; box-shadow: var(--chakra-shadows-lg);">
+                        <i class="fas fa-share" style="color: var(--chakra-colors-blue-500); font-size: 1.25rem;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section style="padding: var(--chakra-space-20) 0; background: white;">
+    <div class="chakra-container">
+        <div class="chakra-text-center chakra-mb-16">
+            <h2 class="chakra-heading" style="font-size: 2.5rem; margin-bottom: var(--chakra-space-4);">Why Choose BuyRoll?</h2>
+            <p class="chakra-text" style="font-size: 1.125rem; max-width: 42rem; margin: 0 auto; color: var(--chakra-colors-gray-600);">
+                Experience the future of shopping with our social commerce platform designed for modern consumers.
+            </p>
+        </div>
+        
+        <div class="chakra-grid chakra-grid-cols-1 chakra-grid-md-3 chakra-gap-8">
+            <!-- Feature 1 -->
+            <div class="chakra-card chakra-text-center chakra-p-8 chakra-fade-in">
+                <div style="width: 4rem; height: 4rem; background: linear-gradient(135deg, var(--chakra-colors-green-400), var(--chakra-colors-green-600)); border-radius: var(--chakra-radii-xl); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--chakra-space-6);">
+                    <i class="fas fa-users" style="color: white; font-size: 1.5rem;"></i>
+                </div>
+                <h3 class="chakra-heading" style="font-size: 1.25rem; margin-bottom: var(--chakra-space-4);">Social Discovery</h3>
+                <p class="chakra-text">Discover products through your friends and trusted community members. See what others love and get personalized recommendations.</p>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="chakra-card chakra-text-center chakra-p-8 chakra-fade-in">
+                <div style="width: 4rem; height: 4rem; background: linear-gradient(135deg, var(--chakra-colors-blue-400), var(--chakra-colors-blue-600)); border-radius: var(--chakra-radii-xl); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--chakra-space-6);">
+                    <i class="fas fa-shield-alt" style="color: white; font-size: 1.5rem;"></i>
+                </div>
+                <h3 class="chakra-heading" style="font-size: 1.25rem; margin-bottom: var(--chakra-space-4);">Trusted Reviews</h3>
+                <p class="chakra-text">Get honest reviews from real people in your network. Make informed decisions based on authentic experiences and feedback.</p>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="chakra-card chakra-text-center chakra-p-8 chakra-fade-in">
+                <div style="width: 4rem; height: 4rem; background: linear-gradient(135deg, var(--chakra-colors-green-400), var(--chakra-colors-blue-400)); border-radius: var(--chakra-radii-xl); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--chakra-space-6);">
+                    <i class="fas fa-bolt" style="color: white; font-size: 1.5rem;"></i>
+                </div>
+                <h3 class="chakra-heading" style="font-size: 1.25rem; margin-bottom: var(--chakra-space-4);">Smart Recommendations</h3>
+                <p class="chakra-text">Our AI-powered system learns your preferences and suggests products you'll love based on your interests and social connections.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Popular Products Section -->
+<section style="padding: var(--chakra-space-20) 0; background: var(--chakra-colors-gray-50);">
+    <div class="chakra-container">
+        <div class="chakra-flex chakra-items-center chakra-justify-between chakra-mb-12">
+            <div>
+                <h2 class="chakra-heading" style="font-size: 2.25rem; margin-bottom: var(--chakra-space-2);">Trending Products</h2>
+                <p class="chakra-text" style="font-size: 1.125rem; color: var(--chakra-colors-gray-600);">Discover what's popular in our community</p>
+            </div>
+            <a href="{{ url_for('main.products') }}" class="chakra-button chakra-button-outline">
+                View All Products
+                <i class="fas fa-arrow-right" style="margin-left: var(--chakra-space-2);"></i>
+            </a>
+        </div>
+        
+        <div class="chakra-grid chakra-grid-cols-1 chakra-grid-md-2 chakra-grid-lg-4 chakra-gap-6">
+            <!-- Sample Product Cards -->
+            <div class="chakra-card chakra-fade-in" style="overflow: hidden;">
+                <div style="height: 10rem; background: linear-gradient(135deg, var(--chakra-colors-green-100), var(--chakra-colors-blue-100)); display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-headphones" style="font-size: 3rem; color: var(--chakra-colors-green-600);"></i>
+                </div>
+                <div class="chakra-p-4">
+                    <h3 class="chakra-heading" style="font-size: 1rem; margin-bottom: var(--chakra-space-2);">Wireless Headphones</h3>
+                    <p style="color: var(--chakra-colors-gray-600); font-size: 0.875rem; margin-bottom: var(--chakra-space-2);">Premium sound quality</p>
+                    <div class="chakra-flex chakra-items-center chakra-justify-between">
+                        <span class="chakra-heading" style="color: var(--chakra-colors-green-600);">$89.99</span>
+                        <div class="chakra-flex" style="color: #F6AD55;">
+                            <i class="fas fa-star" style="font-size: 0.75rem;"></i>
+                            <i class="fas fa-star" style="font-size: 0.75rem;"></i>
+                            <i class="fas fa-star" style="font-size: 0.75rem;"></i>
+                            <i class="fas fa-star" style="font-size: 0.75rem;"></i>
+                            <i class="fas fa-star" style="font-size: 0.75rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chakra-card chakra-fade-in" style="overflow: hidden;">
+                <div style="height: 10rem; background: linear-gradient(135deg, var(--chakra-colors-blue-100), var(--chakra-colors-green-100)); display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-tshirt" style="font-size: 3rem; color: var(--chakra-colors-blue-600);"></i>
+                </div>
+                <div class="chakra-p-4">
+                    <h3 class="chakra-heading" style="font-size: 1rem; margin-bottom: var(--chakra-space-2);">Cotton T-Shirt</h3>
+                    <p style="color: var(--chakra-colors-gray-600); font-size: 0.875rem; margin-bottom: var(--chakra-space-2);">Comfortable & stylish</p>
+                    <div class="chakra-flex chakra-items-center chakra-justify-between">
+                        <span class="chakra-heading" style="color: var(--chakra-colors-green-600);">$24.99</span>
+                        <div class="chakra-flex" style="color: #F6AD55;">
+                            <i class="fas fa-star" style="font-size: 0.75rem;"></i>
+                            <i class="fas fa-star" style="font-size: 0.75rem;"></i>
+                            <i class="fas fa-star" style="font-size: 0.75rem;"></i>
+                            <i class="fas fa-star" style="font-size: 0.75rem;"></i>
+                            <i class="far fa-star" style="font-size: 0.75rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chakra-card chakra-fade-in" style="overflow: hidden;">
+                <div style="height: 10rem; background: linear-gradient(135deg, var(--chakra-colors-green-100), var(--chakra-colors-blue-100)); display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-coffee" style="font-size: 3rem; color: var(--chakra-colors-green-600);"></i>
+                </div>
+                <div class="chakra-p-4">
+                    <h3 class="chakra-heading" style="font-size: 1rem; margin-bottom: var(--chakra-space-2);">Smart Coffee Maker</h3>
+                    <p style="color: var(--chakra-colors-gray-600); font-size: 0.875rem; margin-bottom: var(--chakra-space-2);">WiFi-enabled brewing</p>
+                    <div class="chakra-flex chakra-items-center chakra-justify-between">
+                        <span class="chakra-heading" style="color: var(--chakra-colors-green-600);">$149.99</span>
+                        <div class="chakra-flex" style="color: #F6AD55;">
+                            <i class="fas fa-star" style="font-size: 0.75rem;"></i>
+                            <i class="fas fa-star" style="font-size: 0.75rem;"></i>
+                            <i class="fas fa-star" style="font-size: 0.75rem;"></i>
+                            <i class="fas fa-star" style="font-size: 0.75rem;"></i>
+                            <i class="fas fa-star" style="font-size: 0.75rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chakra-card chakra-fade-in" style="overflow: hidden;">
+                <div style="height: 10rem; background: linear-gradient(135deg, var(--chakra-colors-blue-100), var(--chakra-colors-green-100)); display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-dumbbell" style="font-size: 3rem; color: var(--chakra-colors-blue-600);"></i>
+                </div>
+                <div class="chakra-p-4">
+                    <h3 class="chakra-heading" style="font-size: 1rem; margin-bottom: var(--chakra-space-2);">Yoga Mat</h3>
+                    <p style="color: var(--chakra-colors-gray-600); font-size: 0.875rem; margin-bottom: var(--chakra-space-2);">Eco-friendly material</p>
+                    <div class="chakra-flex chakra-items-center chakra-justify-between">
+                        <span class="chakra-heading" style="color: var(--chakra-colors-green-600);">$39.99</span>
+                        <div class="chakra-flex" style="color: #F6AD55;">
+                            <i class="fas fa-star" style="font-size: 0.75rem;"></i>
+                            <i class="fas fa-star" style="font-size: 0.75rem;"></i>
+                            <i class="fas fa-star" style="font-size: 0.75rem;"></i>
+                            <i class="fas fa-star" style="font-size: 0.75rem;"></i>
+                            <i class="far fa-star" style="font-size: 0.75rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section style="background: linear-gradient(135deg, var(--chakra-colors-green-600), var(--chakra-colors-blue-600)); padding: var(--chakra-space-20) 0; color: white;">
+    <div class="chakra-container chakra-text-center">
+        <div style="max-width: 42rem; margin: 0 auto;">
+            <h2 class="chakra-heading" style="font-size: 2.5rem; margin-bottom: var(--chakra-space-6);">Ready to Start Shopping Socially?</h2>
+            <p style="font-size: 1.25rem; margin-bottom: var(--chakra-space-8); opacity: 0.9;">
+                Join thousands of shoppers who are discovering amazing products through their social networks.
+            </p>
+            
+            {% if not current_user.is_authenticated %}
+            <div class="chakra-flex chakra-gap-4 chakra-justify-center" style="flex-wrap: wrap;">
+                <a href="{{ url_for('auth.register') }}" class="chakra-button" style="background: white; color: var(--chakra-colors-green-600); padding: 1rem 2rem; font-size: 1.125rem; height: auto;">
+                    <i class="fas fa-user-plus" style="margin-right: var(--chakra-space-2);"></i>
+                    Get Started Free
+                </a>
+                <a href="{{ url_for('main.products') }}" class="chakra-button chakra-button-outline" style="border-color: white; color: white; padding: 1rem 2rem; font-size: 1.125rem; height: auto;">
+                    <i class="fas fa-eye" style="margin-right: var(--chakra-space-2);"></i>
+                    Browse Products
+                </a>
+            </div>
+            {% else %}
+            <a href="{{ url_for('main.products') }}" class="chakra-button" style="background: white; color: var(--chakra-colors-green-600); padding: 1rem 2rem; font-size: 1.125rem; height: auto;">
+                <i class="fas fa-shopping-bag" style="margin-right: var(--chakra-space-2);"></i>
+                Start Shopping
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    // Observe elements for animation
+    document.querySelectorAll('.chakra-fade-in').forEach(element => {
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(20px)';
+        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(element);
+    });
+    
+    // Floating animation for hero elements
+    const floatingElements = document.querySelectorAll('[style*="position: absolute"]');
+    floatingElements.forEach((element, index) => {
+        element.style.animation = `float ${3 + index}s ease-in-out infinite`;
+    });
+});
+
+// Add floating animation keyframes
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+`;
+document.head.appendChild(style);
+</script>
+{% endblock %}
