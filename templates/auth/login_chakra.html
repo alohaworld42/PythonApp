@@ -39,24 +39,24 @@
         <form method="POST" action="{{ url_for('auth.login') }}">
             {{ form.hidden_tag() if form }}
             
-            <!-- Username/Email Field -->
+            <!-- Email Field -->
             <div class="chakra-mb-6">
-                <label for="username" style="display: block; font-weight: 600; color: var(--chakra-colors-gray-700); margin-bottom: var(--chakra-space-2);">
-                    <i class="fas fa-user" style="margin-right: var(--chakra-space-2); color: var(--chakra-colors-gray-500);"></i>
-                    Username or Email
+                <label for="email" style="display: block; font-weight: 600; color: var(--chakra-colors-gray-700); margin-bottom: var(--chakra-space-2);">
+                    <i class="fas fa-envelope" style="margin-right: var(--chakra-space-2); color: var(--chakra-colors-gray-500);"></i>
+                    Email Address
                 </label>
                 <input 
-                    type="text" 
-                    id="username" 
-                    name="username" 
+                    type="email" 
+                    id="email" 
+                    name="email" 
                     class="chakra-input" 
-                    placeholder="Enter your username or email"
+                    placeholder="Enter your email address"
                     required
                     style="font-size: 1rem;"
-                    value="{{ form.username.data if form and form.username.data else '' }}"
+                    value="{{ form.email.data if form and form.email.data else '' }}"
                 >
-                {% if form and form.username.errors %}
-                    {% for error in form.username.errors %}
+                {% if form and form.email.errors %}
+                    {% for error in form.email.errors %}
                     <p style="color: var(--chakra-colors-red-500); font-size: 0.875rem; margin-top: var(--chakra-space-1);">
                         <i class="fas fa-exclamation-triangle" style="margin-right: var(--chakra-space-1);"></i>{{ error }}
                     </p>

@@ -1,0 +1,325 @@
+{% extends "base_chakra.html" %}
+
+{% block title %}Feed - BuyRoll{% endblock %}
+
+{% block content %}
+<!-- Social Shopping Feed -->
+<div style="background: var(--chakra-colors-gray-50); min-height: 100vh;">
+    <div class="chakra-container" style="max-width: 800px; padding-top: var(--chakra-space-8);">
+        
+        <!-- Create Post Section -->
+        <div class="chakra-card chakra-mb-6" style="padding: var(--chakra-space-6);">
+            <div class="chakra-flex chakra-items-center chakra-gap-4 chakra-mb-4">
+                <div style="width: 3rem; height: 3rem; background: linear-gradient(135deg, var(--chakra-colors-green-400), var(--chakra-colors-blue-400)); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-user" style="color: white; font-size: 1.25rem;"></i>
+                </div>
+                <div class="chakra-flex-1">
+                    <input type="text" placeholder="Share a product you love..." class="chakra-input" style="border-radius: var(--chakra-radii-2xl); background: var(--chakra-colors-gray-100); border: none; font-size: 1rem;">
+                </div>
+            </div>
+            
+            <div class="chakra-flex chakra-items-center chakra-gap-4">
+                <button class="chakra-button chakra-button-ghost" style="color: var(--chakra-colors-green-600);">
+                    <i class="fas fa-camera" style="margin-right: var(--chakra-space-2);"></i>Photo
+                </button>
+                <button class="chakra-button chakra-button-ghost" style="color: var(--chakra-colors-blue-600);">
+                    <i class="fas fa-link" style="margin-right: var(--chakra-space-2);"></i>Product Link
+                </button>
+                <button class="chakra-button chakra-button-ghost" style="color: var(--chakra-colors-green-600);">
+                    <i class="fas fa-tag" style="margin-right: var(--chakra-space-2);"></i>Tag Friends
+                </button>
+            </div>
+        </div>
+
+        <!-- Feed Posts -->
+        <div class="feed-posts">
+            <!-- Post 1 -->
+            <div class="chakra-card chakra-mb-6 chakra-fade-in" style="overflow: hidden;">
+                <!-- Post Header -->
+                <div class="chakra-flex chakra-items-center chakra-justify-between chakra-p-4">
+                    <div class="chakra-flex chakra-items-center chakra-gap-4">
+                        <div style="width: 2.5rem; height: 2.5rem; background: linear-gradient(135deg, var(--chakra-colors-green-400), var(--chakra-colors-green-600)); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <span style="color: white; font-weight: 600; font-size: 0.875rem;">SM</span>
+                        </div>
+                        <div>
+                            <h4 style="font-weight: 600; color: var(--chakra-colors-gray-900); margin: 0;">Sarah Miller</h4>
+                            <p style="color: var(--chakra-colors-gray-500); font-size: 0.875rem; margin: 0;">2 hours ago</p>
+                        </div>
+                    </div>
+                    <button class="chakra-button chakra-button-ghost" style="padding: 0.5rem;">
+                        <i class="fas fa-ellipsis-h" style="color: var(--chakra-colors-gray-400);"></i>
+                    </button>
+                </div>
+
+                <!-- Post Content -->
+                <div class="chakra-p-4" style="padding-top: 0;">
+                    <p style="color: var(--chakra-colors-gray-700); margin-bottom: var(--chakra-space-4); line-height: 1.6;">
+                        Just got these amazing wireless headphones! The sound quality is incredible and they're perfect for my morning runs 🎧✨
+                    </p>
+                </div>
+
+                <!-- Product Card in Post -->
+                <div style="margin: 0 var(--chakra-space-4) var(--chakra-space-4); border: 1px solid var(--chakra-colors-gray-200); border-radius: var(--chakra-radii-xl); overflow: hidden;">
+                    <div class="chakra-flex">
+                        <div style="width: 120px; height: 120px; background: linear-gradient(135deg, var(--chakra-colors-gray-100), var(--chakra-colors-gray-200)); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-headphones" style="font-size: 2rem; color: var(--chakra-colors-gray-500);"></i>
+                        </div>
+                        <div class="chakra-flex-1 chakra-p-4">
+                            <h5 style="font-weight: 600; color: var(--chakra-colors-gray-900); margin-bottom: var(--chakra-space-2);">Sony WH-1000XM4 Headphones</h5>
+                            <p style="color: var(--chakra-colors-gray-600); font-size: 0.875rem; margin-bottom: var(--chakra-space-2);">Wireless noise-canceling headphones</p>
+                            <div class="chakra-flex chakra-items-center chakra-justify-between">
+                                <span style="font-weight: 700; color: var(--chakra-colors-green-600); font-size: 1.125rem;">$299.99</span>
+                                <button class="chakra-button chakra-button-solid" style="font-size: 0.875rem; padding: 0.5rem 1rem;">
+                                    View Product
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Post Actions -->
+                <div class="chakra-flex chakra-items-center chakra-justify-between chakra-p-4" style="border-top: 1px solid var(--chakra-colors-gray-100);">
+                    <div class="chakra-flex chakra-items-center chakra-gap-6">
+                        <button class="chakra-flex chakra-items-center chakra-gap-2 chakra-button chakra-button-ghost" style="color: var(--chakra-colors-gray-600); padding: 0.5rem;">
+                            <i class="fas fa-heart" style="color: var(--chakra-colors-red-500);"></i>
+                            <span>24</span>
+                        </button>
+                        <button class="chakra-flex chakra-items-center chakra-gap-2 chakra-button chakra-button-ghost" style="color: var(--chakra-colors-gray-600); padding: 0.5rem;">
+                            <i class="fas fa-comment"></i>
+                            <span>8</span>
+                        </button>
+                        <button class="chakra-flex chakra-items-center chakra-gap-2 chakra-button chakra-button-ghost" style="color: var(--chakra-colors-gray-600); padding: 0.5rem;">
+                            <i class="fas fa-share"></i>
+                            <span>3</span>
+                        </button>
+                    </div>
+                    <button class="chakra-button chakra-button-ghost" style="color: var(--chakra-colors-gray-600); padding: 0.5rem;">
+                        <i class="fas fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Post 2 -->
+            <div class="chakra-card chakra-mb-6 chakra-fade-in" style="overflow: hidden;">
+                <!-- Post Header -->
+                <div class="chakra-flex chakra-items-center chakra-justify-between chakra-p-4">
+                    <div class="chakra-flex chakra-items-center chakra-gap-4">
+                        <div style="width: 2.5rem; height: 2.5rem; background: linear-gradient(135deg, var(--chakra-colors-blue-400), var(--chakra-colors-blue-600)); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <span style="color: white; font-weight: 600; font-size: 0.875rem;">MJ</span>
+                        </div>
+                        <div>
+                            <h4 style="font-weight: 600; color: var(--chakra-colors-gray-900); margin: 0;">Mike Johnson</h4>
+                            <p style="color: var(--chakra-colors-gray-500); font-size: 0.875rem; margin: 0;">4 hours ago</p>
+                        </div>
+                    </div>
+                    <button class="chakra-button chakra-button-ghost" style="padding: 0.5rem;">
+                        <i class="fas fa-ellipsis-h" style="color: var(--chakra-colors-gray-400);"></i>
+                    </button>
+                </div>
+
+                <!-- Post Content -->
+                <div class="chakra-p-4" style="padding-top: 0;">
+                    <p style="color: var(--chakra-colors-gray-700); margin-bottom: var(--chakra-space-4); line-height: 1.6;">
+                        Finally upgraded my home office setup! This coffee maker has been a game changer for my productivity ☕️
+                    </p>
+                </div>
+
+                <!-- Product Image -->
+                <div style="margin: 0 var(--chakra-space-4) var(--chakra-space-4);">
+                    <div style="width: 100%; height: 300px; background: linear-gradient(135deg, var(--chakra-colors-gray-100), var(--chakra-colors-gray-200)); border-radius: var(--chakra-radii-xl); display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-coffee" style="font-size: 4rem; color: var(--chakra-colors-gray-500);"></i>
+                    </div>
+                </div>
+
+                <!-- Product Info -->
+                <div style="margin: 0 var(--chakra-space-4) var(--chakra-space-4); padding: var(--chakra-space-4); background: var(--chakra-colors-gray-50); border-radius: var(--chakra-radii-xl);">
+                    <div class="chakra-flex chakra-items-center chakra-justify-between">
+                        <div>
+                            <h5 style="font-weight: 600; color: var(--chakra-colors-gray-900); margin-bottom: var(--chakra-space-1);">Breville Barista Express</h5>
+                            <p style="color: var(--chakra-colors-gray-600); font-size: 0.875rem;">Espresso machine with built-in grinder</p>
+                        </div>
+                        <div class="chakra-text-right">
+                            <span style="font-weight: 700; color: var(--chakra-colors-green-600); font-size: 1.25rem;">$599.99</span>
+                            <button class="chakra-button chakra-button-outline" style="font-size: 0.875rem; padding: 0.5rem 1rem; margin-left: var(--chakra-space-4);">
+                                View Deal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Post Actions -->
+                <div class="chakra-flex chakra-items-center chakra-justify-between chakra-p-4" style="border-top: 1px solid var(--chakra-colors-gray-100);">
+                    <div class="chakra-flex chakra-items-center chakra-gap-6">
+                        <button class="chakra-flex chakra-items-center chakra-gap-2 chakra-button chakra-button-ghost" style="color: var(--chakra-colors-gray-600); padding: 0.5rem;">
+                            <i class="far fa-heart"></i>
+                            <span>12</span>
+                        </button>
+                        <button class="chakra-flex chakra-items-center chakra-gap-2 chakra-button chakra-button-ghost" style="color: var(--chakra-colors-gray-600); padding: 0.5rem;">
+                            <i class="fas fa-comment"></i>
+                            <span>5</span>
+                        </button>
+                        <button class="chakra-flex chakra-items-center chakra-gap-2 chakra-button chakra-button-ghost" style="color: var(--chakra-colors-gray-600); padding: 0.5rem;">
+                            <i class="fas fa-share"></i>
+                            <span>7</span>
+                        </button>
+                    </div>
+                    <button class="chakra-button chakra-button-ghost" style="color: var(--chakra-colors-gray-600); padding: 0.5rem;">
+                        <i class="far fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Post 3 - Multiple Products -->
+            <div class="chakra-card chakra-mb-6 chakra-fade-in" style="overflow: hidden;">
+                <!-- Post Header -->
+                <div class="chakra-flex chakra-items-center chakra-justify-between chakra-p-4">
+                    <div class="chakra-flex chakra-items-center chakra-gap-4">
+                        <div style="width: 2.5rem; height: 2.5rem; background: linear-gradient(135deg, var(--chakra-colors-green-400), var(--chakra-colors-blue-400)); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <span style="color: white; font-weight: 600; font-size: 0.875rem;">EW</span>
+                        </div>
+                        <div>
+                            <h4 style="font-weight: 600; color: var(--chakra-colors-gray-900); margin: 0;">Emma Wilson</h4>
+                            <p style="color: var(--chakra-colors-gray-500); font-size: 0.875rem; margin: 0;">6 hours ago</p>
+                        </div>
+                    </div>
+                    <button class="chakra-button chakra-button-ghost" style="padding: 0.5rem;">
+                        <i class="fas fa-ellipsis-h" style="color: var(--chakra-colors-gray-400);"></i>
+                    </button>
+                </div>
+
+                <!-- Post Content -->
+                <div class="chakra-p-4" style="padding-top: 0;">
+                    <p style="color: var(--chakra-colors-gray-700); margin-bottom: var(--chakra-space-4); line-height: 1.6;">
+                        My workout essentials! These have completely transformed my fitness routine 💪
+                    </p>
+                </div>
+
+                <!-- Multiple Products Grid -->
+                <div style="margin: 0 var(--chakra-space-4) var(--chakra-space-4);">
+                    <div class="chakra-grid chakra-grid-cols-2 chakra-gap-4">
+                        <div style="background: var(--chakra-colors-gray-50); border-radius: var(--chakra-radii-xl); padding: var(--chakra-space-4);">
+                            <div style="width: 100%; height: 120px; background: linear-gradient(135deg, var(--chakra-colors-gray-100), var(--chakra-colors-gray-200)); border-radius: var(--chakra-radii-lg); display: flex; align-items: center; justify-content: center; margin-bottom: var(--chakra-space-3);">
+                                <i class="fas fa-dumbbell" style="font-size: 2rem; color: var(--chakra-colors-gray-500);"></i>
+                            </div>
+                            <h6 style="font-weight: 600; font-size: 0.875rem; margin-bottom: var(--chakra-space-1);">Yoga Mat Pro</h6>
+                            <p style="color: var(--chakra-colors-green-600); font-weight: 600;">$39.99</p>
+                        </div>
+                        
+                        <div style="background: var(--chakra-colors-gray-50); border-radius: var(--chakra-radii-xl); padding: var(--chakra-space-4);">
+                            <div style="width: 100%; height: 120px; background: linear-gradient(135deg, var(--chakra-colors-gray-100), var(--chakra-colors-gray-200)); border-radius: var(--chakra-radii-lg); display: flex; align-items: center; justify-content: center; margin-bottom: var(--chakra-space-3);">
+                                <i class="fas fa-tshirt" style="font-size: 2rem; color: var(--chakra-colors-gray-500);"></i>
+                            </div>
+                            <h6 style="font-weight: 600; font-size: 0.875rem; margin-bottom: var(--chakra-space-1);">Athletic Wear</h6>
+                            <p style="color: var(--chakra-colors-green-600); font-weight: 600;">$24.99</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Post Actions -->
+                <div class="chakra-flex chakra-items-center chakra-justify-between chakra-p-4" style="border-top: 1px solid var(--chakra-colors-gray-100);">
+                    <div class="chakra-flex chakra-items-center chakra-gap-6">
+                        <button class="chakra-flex chakra-items-center chakra-gap-2 chakra-button chakra-button-ghost" style="color: var(--chakra-colors-gray-600); padding: 0.5rem;">
+                            <i class="fas fa-heart" style="color: var(--chakra-colors-red-500);"></i>
+                            <span>31</span>
+                        </button>
+                        <button class="chakra-flex chakra-items-center chakra-gap-2 chakra-button chakra-button-ghost" style="color: var(--chakra-colors-gray-600); padding: 0.5rem;">
+                            <i class="fas fa-comment"></i>
+                            <span>15</span>
+                        </button>
+                        <button class="chakra-flex chakra-items-center chakra-gap-2 chakra-button chakra-button-ghost" style="color: var(--chakra-colors-gray-600); padding: 0.5rem;">
+                            <i class="fas fa-share"></i>
+                            <span>9</span>
+                        </button>
+                    </div>
+                    <button class="chakra-button chakra-button-ghost" style="color: var(--chakra-colors-gray-600); padding: 0.5rem;">
+                        <i class="fas fa-bookmark" style="color: var(--chakra-colors-green-500);"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Load More -->
+        <div class="chakra-text-center chakra-mb-8">
+            <button class="chakra-button chakra-button-outline" style="padding: 1rem 2rem;">
+                <i class="fas fa-plus" style="margin-right: var(--chakra-space-2);"></i>
+                Load More Posts
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Heart button interactions
+    document.querySelectorAll('.fa-heart').forEach(heartIcon => {
+        const button = heartIcon.closest('button');
+        if (button) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const icon = this.querySelector('i');
+                const countSpan = this.querySelector('span');
+                let count = parseInt(countSpan.textContent);
+                
+                if (icon.classList.contains('fas')) {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    icon.style.color = 'var(--chakra-colors-gray-600)';
+                    countSpan.textContent = count - 1;
+                } else {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    icon.style.color = 'var(--chakra-colors-red-500)';
+                    countSpan.textContent = count + 1;
+                }
+            });
+        }
+    });
+
+    // Bookmark button interactions
+    document.querySelectorAll('.fa-bookmark').forEach(bookmarkIcon => {
+        const button = bookmarkIcon.closest('button');
+        if (button) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const icon = this.querySelector('i');
+                
+                if (icon.classList.contains('fas')) {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    icon.style.color = 'var(--chakra-colors-gray-600)';
+                } else {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    icon.style.color = 'var(--chakra-colors-green-500)';
+                }
+            });
+        }
+    });
+
+    // Scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    // Observe feed posts for animation
+    document.querySelectorAll('.chakra-fade-in').forEach(element => {
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(20px)';
+        element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(element);
+    });
+});
+</script>
+{% endblock %}

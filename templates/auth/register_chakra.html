@@ -39,27 +39,27 @@
         <form method="POST" action="{{ url_for('auth.register') }}">
             {{ form.hidden_tag() if form }}
             
-            <!-- Username Field -->
+            <!-- Name Field -->
             <div class="chakra-mb-6">
-                <label for="username" style="display: block; font-weight: 600; color: var(--chakra-colors-gray-700); margin-bottom: var(--chakra-space-2);">
+                <label for="name" style="display: block; font-weight: 600; color: var(--chakra-colors-gray-700); margin-bottom: var(--chakra-space-2);">
                     <i class="fas fa-user" style="margin-right: var(--chakra-space-2); color: var(--chakra-colors-gray-500);"></i>
-                    Username
+                    Full Name
                 </label>
                 <input 
                     type="text" 
-                    id="username" 
-                    name="username" 
+                    id="name" 
+                    name="name" 
                     class="chakra-input" 
-                    placeholder="Choose a username"
+                    placeholder="Enter your full name"
                     required
                     style="font-size: 1rem;"
-                    value="{{ form.username.data if form and form.username.data else '' }}"
+                    value="{{ form.name.data if form and form.name.data else '' }}"
                 >
                 <p style="color: var(--chakra-colors-gray-500); font-size: 0.875rem; margin-top: var(--chakra-space-1);">
-                    Must be 3-20 characters long
+                    Must be 2-100 characters long
                 </p>
-                {% if form and form.username.errors %}
-                    {% for error in form.username.errors %}
+                {% if form and form.name.errors %}
+                    {% for error in form.name.errors %}
                     <p style="color: var(--chakra-colors-red-500); font-size: 0.875rem; margin-top: var(--chakra-space-1);">
                         <i class="fas fa-exclamation-triangle" style="margin-right: var(--chakra-space-1);"></i>{{ error }}
                     </p>

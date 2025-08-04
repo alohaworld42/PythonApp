@@ -50,7 +50,7 @@ def login():
             import time
             time.sleep(0.5)
     
-    return render_template('auth/login.html', title='Login', form=form)
+    return render_template('auth/login_chakra.html', title='Login', form=form)
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
@@ -83,7 +83,7 @@ def register():
         
         return redirect(url_for('auth.login'))
     
-    return render_template('auth/register.html', title='Register', form=form)
+    return render_template('auth/register_chakra.html', title='Register', form=form)
 
 @auth_bp.route('/logout')
 def logout():
